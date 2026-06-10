@@ -503,7 +503,7 @@ async function connectSheet() {
   err.classList.remove("show");
   const url = document.getElementById("inputScriptUrl").value.trim();
   if (!url || !url.includes("script.google.com")) { showError(err, "Please paste a valid Google Apps Script Web App URL."); return; }
-  btn.disabled = true; btn.innerHTML = '<span class="spinner"></span> Connecting...';
+  btn.disabled = true; btn.innerHTML = "<span class="spinner"></span> Connecting...";
   try {
     scriptUrl    = url;
     anthropicKey = document.getElementById("inputAnthropicKey").value.trim();
@@ -523,7 +523,7 @@ async function connectSheet() {
     else if (e.message.includes("Failed to fetch")) msg += "Could not reach the script. Check the URL.";
     else msg += e.message;
     showError(err, msg);
-    btn.disabled = false; btn.innerHTML = '<i class="ti ti-plug-connected"></i> Connect my sheet';
+    btn.disabled = false; btn.innerHTML = "<i class="ti ti-plug-connected"></i> Connect my sheet";
   }
 }
 
@@ -681,16 +681,10 @@ async function getAISuggestion(id) {
   const c = contacts.find(c => c.id === id);
   if (!c) return;
   box.textContent = 'Thinking...';
-  console.log('API key length:', anthropicKey ? anthropicKey.length : 0);
   const days = c.lastContact ? Math.floor((Date.now() - new Date(c.lastContact)) / 86400000) : null;
   const prompt = `You are a job search coach. Give one specific, actionable next step (1-2 sentences, plain text) for this contact:\nName: ${c.name}\nCompany: ${c.company}\nRole: ${c.role}\nStatus: ${c.status}\nLast contact: ${c.lastContact||'unknown'}${days!==null?' ('+days+' days ago)':''}\nNotes: ${c.notes||'none'}\nBe direct. No preamble.`;
   try {
-    const aiUrl = scriptUrl + '?' + new URLSearchParams({ action: 'ai_suggest', apiKey: anthropicKey, prompt }).toString();
-    const resp = await fetch(aiUrl);
-    const data = await resp.json();
-    if (data.error) throw new Error(data.error);
-    const text = data.suggestion || 'No suggestion available.';
-    aiCache[id] = text; box.textContent = text;const resp = await fetch('https://api.anthropic.com/v1/messages', {
+    const resp = await fetch('https://api.anthropic.com/v1/messages', {
       method: 'POST',
       headers: { 'Content-Type': 'application/json', 'x-api-key': anthropicKey, 'anthropic-version': '2023-06-01' },
       body: JSON.stringify({ model: 'claude-sonnet-4-20250514', max_tokens: 1000, messages: [{ role:'user', content: prompt }] })
@@ -759,22 +753,21 @@ function renderAlerts() {
   }).join('');
 }
 
-const aiUrl = scriptUrl + '?' + new URLSearchParams({ action: 'ai_suggest', apiKey: anthropicKey, prompt }).toString();
-    const resp = await fetch(aiUrl);
-    const data = await resp.json();
-    if (data.error) throw new Error(data.error);
-    showToast(data.suggestion || 'No suggestion.', 6000);async function getAISuggestionInline(id) {
+async function getAISuggestionInline(id) {
   const c = contacts.find(c => c.id === id);
   if (!c || !anthropicKey) { showToast('Add Anthropic API key in Settings first.'); return; }
   showToast('Thinking...');
   const days = c.lastContact ? Math.floor((Date.now() - new Date(c.lastContact)) / 86400000) : null;
   const prompt = `Job search coach: one specific next step (1 sentence) for ${c.name} at ${c.company}, status: ${c.status}, last contact: ${days ? days+' days ago' : 'unknown'}. Notes: ${c.notes||'none'}. No preamble.`;
   try {
-    const aiUrl = scriptUrl + '?' + new URLSearchParams({ action: 'ai_suggest', apiKey: anthropicKey, prompt }).toString();
-    const resp = await fetch(aiUrl);
+    const resp = await fetch('https://api.anthropic.com/v1/messages', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json', 'x-api-key': anthropicKey, 'anthropic-version': '2023-06-01' },
+      body: JSON.stringify({ model: 'claude-sonnet-4-20250514', max_tokens: 1000, messages: [{ role:'user', content: prompt }] })
+    });
     const data = await resp.json();
-    if (data.error) throw new Error(data.error);
-    showToast(data.suggestion || 'No suggestion.', 6000);
+    const text = data.content?.find(b => b.type==='text')?.text || '';
+    showToast(text, 6000);
   } catch(e) { showToast('Could not load suggestion.'); }
 }
 
