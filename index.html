@@ -685,7 +685,12 @@ async function getAISuggestion(id) {
   const days = c.lastContact ? Math.floor((Date.now() - new Date(c.lastContact)) / 86400000) : null;
   const prompt = `You are a job search coach. Give one specific, actionable next step (1-2 sentences, plain text) for this contact:\nName: ${c.name}\nCompany: ${c.company}\nRole: ${c.role}\nStatus: ${c.status}\nLast contact: ${c.lastContact||'unknown'}${days!==null?' ('+days+' days ago)':''}\nNotes: ${c.notes||'none'}\nBe direct. No preamble.`;
   try {
-    const resp = await fetch('https://api.anthropic.com/v1/messages', {
+    const aiUrl = scriptUrl + '?' + new URLSearchParams({ action: 'ai_suggest', apiKey: anthropicKey, prompt }).toString();
+    const resp = await fetch(aiUrl);
+    const data = await resp.json();
+    if (data.error) throw new Error(data.error);
+    const text = data.suggestion || 'No suggestion available.';
+    aiCache[id] = text; box.textContent = text;const resp = await fetch('https://api.anthropic.com/v1/messages', {
       method: 'POST',
       headers: { 'Content-Type': 'application/json', 'x-api-key': anthropicKey, 'anthropic-version': '2023-06-01' },
       body: JSON.stringify({ model: 'claude-sonnet-4-20250514', max_tokens: 1000, messages: [{ role:'user', content: prompt }] })
@@ -754,21 +759,22 @@ function renderAlerts() {
   }).join('');
 }
 
-async function getAISuggestionInline(id) {
+const aiUrl = scriptUrl + '?' + new URLSearchParams({ action: 'ai_suggest', apiKey: anthropicKey, prompt }).toString();
+    const resp = await fetch(aiUrl);
+    const data = await resp.json();
+    if (data.error) throw new Error(data.error);
+    showToast(data.suggestion || 'No suggestion.', 6000);async function getAISuggestionInline(id) {
   const c = contacts.find(c => c.id === id);
   if (!c || !anthropicKey) { showToast('Add Anthropic API key in Settings first.'); return; }
   showToast('Thinking...');
   const days = c.lastContact ? Math.floor((Date.now() - new Date(c.lastContact)) / 86400000) : null;
   const prompt = `Job search coach: one specific next step (1 sentence) for ${c.name} at ${c.company}, status: ${c.status}, last contact: ${days ? days+' days ago' : 'unknown'}. Notes: ${c.notes||'none'}. No preamble.`;
   try {
-    const resp = await fetch('https://api.anthropic.com/v1/messages', {
-      method: 'POST',
-      headers: { 'Content-Type': 'application/json', 'x-api-key': anthropicKey, 'anthropic-version': '2023-06-01' },
-      body: JSON.stringify({ model: 'claude-sonnet-4-20250514', max_tokens: 1000, messages: [{ role:'user', content: prompt }] })
-    });
+    const aiUrl = scriptUrl + '?' + new URLSearchParams({ action: 'ai_suggest', apiKey: anthropicKey, prompt }).toString();
+    const resp = await fetch(aiUrl);
     const data = await resp.json();
-    const text = data.content?.find(b => b.type==='text')?.text || '';
-    showToast(text, 6000);
+    if (data.error) throw new Error(data.error);
+    showToast(data.suggestion || 'No suggestion.', 6000);
   } catch(e) { showToast('Could not load suggestion.'); }
 }
 
