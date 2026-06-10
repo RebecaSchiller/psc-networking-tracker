@@ -1,0 +1,984 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>PSC Networking Tracker</title>
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@tabler/icons-webfont@3.19.0/dist/tabler-icons.min.css" />
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+    :root {
+      --navy: #0a1f3c; --navy-mid: #0d2b52; --navy-light: #153a6b;
+      --ocean: #0e7490; --ocean-mid: #0891b2; --ocean-light: #22d3ee;
+      --seafoam: #cffafe; --sky: #e0f2fe; --white: #f8fbff;
+      --bg: #e8f4f8; --card: #ffffff;
+      --text-1: #0a1f3c; --text-2: #1e4976; --text-3: #5b8db8;
+      --border: rgba(14,116,144,0.15); --border-mid: rgba(14,116,144,0.35);
+      --radius: 10px; --radius-lg: 14px;
+      --shadow: 0 1px 4px rgba(10,31,60,0.08);
+    }
+    body { font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif; background: var(--bg); color: var(--text-1); min-height: 100vh; font-size: 15px; line-height: 1.6; }
+
+    /* TOP BAR */
+    .topbar { background: var(--navy); height: 54px; display: flex; align-items: center; justify-content: space-between; padding: 0 1.5rem; border-bottom: 2px solid var(--ocean); position: sticky; top: 0; z-index: 200; }
+    .topbar-brand { display: flex; align-items: center; gap: 9px; color: #fff; font-size: 15px; font-weight: 500; }
+    .topbar-brand i { color: var(--ocean-light); font-size: 20px; }
+    .topbar-right { display: flex; align-items: center; gap: 8px; }
+    .sheet-indicator { font-size: 12px; color: #f87171; display: flex; align-items: center; gap: 5px; }
+    .sheet-indicator.connected { color: var(--ocean-light); }
+    .btn-sm { font-size: 12px; padding: 5px 12px; border-radius: 6px; border: 1px solid rgba(255,255,255,0.2); background: rgba(255,255,255,0.08); color: #fff; cursor: pointer; display: flex; align-items: center; gap: 5px; transition: background 0.15s; }
+    .btn-sm:hover { background: rgba(255,255,255,0.16); }
+
+    /* NAV TABS */
+    .nav-tabs { background: var(--navy-mid); display: flex; gap: 0; padding: 0 1.5rem; border-bottom: 1px solid rgba(255,255,255,0.08); }
+    .nav-tab { font-size: 13px; color: rgba(255,255,255,0.5); padding: 10px 16px; cursor: pointer; border-bottom: 2px solid transparent; display: flex; align-items: center; gap: 6px; transition: color 0.15s; }
+    .nav-tab:hover { color: rgba(255,255,255,0.8); }
+    .nav-tab.active { color: var(--ocean-light); border-bottom-color: var(--ocean-light); }
+
+    /* SETUP */
+    .setup-screen { max-width: 600px; margin: 3rem auto; padding: 0 1rem; }
+    .setup-card { background: var(--card); border-radius: var(--radius-lg); border: 0.5px solid var(--border); box-shadow: var(--shadow); overflow: hidden; }
+    .setup-header { background: var(--navy); padding: 1.5rem; color: #fff; }
+    .setup-header h2 { font-size: 18px; font-weight: 500; margin-bottom: 4px; }
+    .setup-header p { font-size: 13px; color: #93c5fd; }
+    .setup-body { padding: 1.5rem; }
+    .steps { display: flex; flex-direction: column; gap: 0; margin-bottom: 1.5rem; }
+    .step { display: flex; gap: 14px; padding: 14px 0; border-bottom: 0.5px solid var(--border); }
+    .step:last-child { border-bottom: none; }
+    .step-num { width: 26px; height: 26px; border-radius: 50%; background: var(--navy); color: #fff; font-size: 12px; font-weight: 600; display: flex; align-items: center; justify-content: center; flex-shrink: 0; margin-top: 1px; }
+    .step-content { flex: 1; }
+    .step-title { font-size: 14px; font-weight: 500; color: var(--text-1); margin-bottom: 3px; }
+    .step-desc { font-size: 13px; color: var(--text-2); line-height: 1.6; }
+    code { background: var(--sky); padding: 1px 6px; border-radius: 4px; font-size: 12px; font-family: monospace; color: var(--ocean); }
+    .input-group { margin-bottom: 12px; }
+    .input-label { font-size: 11px; font-weight: 600; text-transform: uppercase; letter-spacing: 0.06em; color: var(--ocean); margin-bottom: 5px; display: block; }
+    input, select, textarea { width: 100%; background: var(--white); border: 0.5px solid var(--border-mid); border-radius: var(--radius); padding: 9px 12px; font-size: 14px; font-family: inherit; color: var(--text-1); outline: none; transition: border-color 0.15s, box-shadow 0.15s; }
+    input:focus, select:focus, textarea:focus { border-color: var(--ocean); box-shadow: 0 0 0 3px rgba(14,116,144,0.12); }
+    input::placeholder, textarea::placeholder { color: var(--text-3); }
+    select { cursor: pointer; }
+    textarea { resize: vertical; min-height: 60px; }
+    .btn-primary { width: 100%; background: var(--navy); border: none; border-radius: var(--radius); padding: 11px 20px; font-size: 14px; font-family: inherit; color: #fff; cursor: pointer; display: flex; align-items: center; justify-content: center; gap: 7px; transition: background 0.15s; }
+    .btn-primary:hover { background: var(--navy-light); }
+    .btn-primary:disabled { opacity: 0.5; cursor: not-allowed; }
+    .error-msg { font-size: 13px; color: #b91c1c; background: #fee2e2; border-radius: 6px; padding: 8px 12px; margin-top: 10px; display: none; }
+    .error-msg.show { display: block; }
+
+    /* MAIN APP */
+    .app { display: none; }
+    .app.show { display: block; }
+    .tab-panel { display: none; }
+    .tab-panel.active { display: block; }
+    .page { max-width: 1100px; margin: 0 auto; padding: 1.5rem 1rem 3rem; }
+
+    /* STATS */
+    .stats { display: flex; gap: 10px; flex-wrap: wrap; margin-bottom: 1.5rem; }
+    .stat { background: var(--navy); border: 0.5px solid rgba(14,116,144,0.3); border-radius: var(--radius); padding: 10px 18px; font-size: 13px; color: #7ec8dc; box-shadow: var(--shadow); cursor: default; }
+    .stat strong { font-size: 22px; font-weight: 500; color: #fff; display: block; line-height: 1.1; }
+    .stat.clickable { cursor: pointer; transition: background 0.15s; }
+    .stat.clickable:hover { background: var(--navy-light); }
+
+    /* ALERTS */
+    .alerts { margin-bottom: 1.25rem; }
+    .alert-item { background: #fff7ed; border: 0.5px solid #fed7aa; border-left: 3px solid #f97316; border-radius: var(--radius); padding: 10px 14px; font-size: 13px; color: #7c2d12; margin-bottom: 6px; display: flex; align-items: center; gap: 8px; }
+
+    /* GOALS */
+    .goals-bar { background: var(--card); border: 0.5px solid var(--border); border-radius: var(--radius-lg); padding: 1rem 1.25rem; margin-bottom: 1.25rem; box-shadow: var(--shadow); }
+    .goals-bar-inner { display: flex; align-items: center; gap: 16px; flex-wrap: wrap; }
+    .goal-label { font-size: 13px; color: var(--text-2); white-space: nowrap; }
+    .goal-track { flex: 1; min-width: 120px; height: 8px; background: var(--sky); border-radius: 99px; overflow: hidden; }
+    .goal-fill { height: 100%; background: var(--ocean); border-radius: 99px; transition: width 0.4s; }
+    .goal-pct { font-size: 13px; font-weight: 500; color: var(--navy); white-space: nowrap; }
+    .goal-edit { font-size: 12px; color: var(--text-3); cursor: pointer; text-decoration: underline; }
+
+    /* CARD / FORM */
+    .card { background: var(--card); border: 0.5px solid var(--border); border-radius: var(--radius-lg); padding: 1.25rem; margin-bottom: 1.25rem; box-shadow: var(--shadow); border-top: 3px solid var(--ocean); }
+    .card-label { font-size: 11px; font-weight: 600; text-transform: uppercase; letter-spacing: 0.06em; color: var(--ocean); margin-bottom: 12px; }
+    .form-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(150px, 1fr)); gap: 10px; margin-bottom: 10px; }
+    .form-row { display: flex; gap: 10px; margin-bottom: 10px; flex-wrap: wrap; }
+    .form-row > * { flex: 1; min-width: 140px; }
+    .btn { display: inline-flex; align-items: center; gap: 6px; background: var(--navy); border: none; border-radius: var(--radius); padding: 9px 18px; font-size: 14px; font-family: inherit; color: #fff; cursor: pointer; transition: background 0.15s, transform 0.1s; }
+    .btn:hover { background: var(--navy-light); }
+    .btn:active { transform: scale(0.98); }
+    .btn:disabled { opacity: 0.5; cursor: not-allowed; }
+    .btn-outline { background: transparent; border: 0.5px solid var(--border-mid); color: var(--text-2); }
+    .btn-outline:hover { background: var(--sky); color: var(--text-1); }
+
+    /* FILTER */
+    .filter-bar { display: flex; gap: 10px; flex-wrap: wrap; align-items: center; margin-bottom: 1rem; }
+    .filter-bar label { font-size: 13px; color: var(--text-2); }
+    .filter-bar select, .filter-bar input { width: auto; font-size: 13px; padding: 6px 10px; }
+    .tag-filter { display: flex; gap: 6px; flex-wrap: wrap; align-items: center; }
+    .tag-chip { font-size: 12px; padding: 3px 10px; border-radius: 99px; background: var(--sky); color: var(--text-2); border: 0.5px solid var(--border); cursor: pointer; transition: background 0.1s; }
+    .tag-chip.active { background: var(--navy); color: #fff; border-color: var(--navy); }
+
+    /* TABLE */
+    .table-wrap { background: var(--card); border: 0.5px solid var(--border); border-radius: var(--radius-lg); overflow: hidden; overflow-x: auto; box-shadow: var(--shadow); }
+    table { width: 100%; border-collapse: collapse; font-size: 14px; min-width: 800px; }
+    th { text-align: left; font-weight: 500; font-size: 11px; text-transform: uppercase; letter-spacing: 0.05em; color: #fff; background: var(--navy-mid); padding: 10px 14px; white-space: nowrap; cursor: pointer; user-select: none; }
+    th:hover { background: var(--navy-light); }
+    td { padding: 10px 14px; border-bottom: 0.5px solid var(--border); vertical-align: middle; }
+    tr:last-child td { border-bottom: none; }
+    tbody tr:hover td { background: var(--sky); }
+
+    /* BADGES */
+    .badge { display: inline-block; font-size: 12px; font-weight: 500; padding: 3px 10px; border-radius: 99px; white-space: nowrap; }
+    .s-Not-contacted { background: #e0f2fe; color: #0369a1; }
+    .s-Contacted { background: #cffafe; color: #0e7490; }
+    .s-Replied { background: #d1fae5; color: #065f46; }
+    .s-Meeting-scheduled { background: #e0e7ff; color: #3730a3; }
+    .s-Follow-up-needed { background: #fef3c7; color: #92400e; }
+    .s-Closed { background: #fee2e2; color: #991b1b; }
+
+    .priority-dot { width: 8px; height: 8px; border-radius: 50%; display: inline-block; margin-right: 5px; flex-shrink: 0; }
+    .p-High { background: #ef4444; }
+    .p-Medium { background: #f59e0b; }
+    .p-Low { background: #10b981; }
+
+    .warm-cold { font-size: 11px; padding: 2px 7px; border-radius: 99px; }
+    .warm { background: #fef3c7; color: #92400e; }
+    .cold { background: #e0f2fe; color: #0369a1; }
+
+    .edit-input { background: transparent; border: none; border-bottom: 1px solid transparent; outline: none; font-size: 14px; font-family: inherit; color: var(--text-1); width: 100%; padding: 2px 0; transition: border-color 0.15s; }
+    .edit-input:hover, .edit-input:focus { border-bottom-color: var(--ocean); }
+    .edit-select { background: transparent; border: 0.5px solid transparent; border-radius: 99px; font-size: 12px; font-weight: 500; font-family: inherit; cursor: pointer; padding: 3px 8px; }
+    .edit-select:hover { border-color: var(--border-mid); }
+
+    .del-btn { background: none; border: none; cursor: pointer; color: var(--text-3); font-size: 16px; padding: 2px 4px; border-radius: 4px; display: flex; align-items: center; transition: color 0.1s, background 0.1s; }
+    .del-btn:hover { color: #991b1b; background: #fee2e2; }
+    .icon-btn { background: none; border: none; cursor: pointer; color: var(--text-3); font-size: 15px; padding: 2px 4px; border-radius: 4px; display: flex; align-items: center; transition: color 0.1s; }
+    .icon-btn:hover { color: var(--ocean); }
+
+    .ai-chip { display: inline-flex; align-items: center; gap: 5px; font-size: 11px; color: var(--ocean); background: var(--seafoam); border-radius: 6px; padding: 3px 8px; cursor: pointer; margin-top: 4px; border: none; font-family: inherit; transition: background 0.15s; }
+    .ai-chip:hover { background: #a5f3fc; }
+    .ai-suggestion-box { background: var(--sky); border: 0.5px solid var(--border-mid); border-radius: 8px; padding: 10px 12px; font-size: 13px; color: var(--text-2); margin-top: 6px; line-height: 1.6; display: none; }
+
+    .linkedin-btn { font-size: 11px; color: #0a66c2; display: inline-flex; align-items: center; gap: 3px; text-decoration: none; }
+    .linkedin-btn:hover { text-decoration: underline; }
+
+    .overdue-row td { background: #fffbeb !important; }
+    .overdue-badge { font-size: 11px; color: #92400e; background: #fef3c7; border-radius: 4px; padding: 1px 6px; margin-left: 5px; }
+
+    .tag-pill { font-size: 11px; background: var(--sky); color: var(--ocean); border-radius: 99px; padding: 2px 8px; display: inline-block; margin: 1px 2px; }
+
+    /* NOTES HISTORY */
+    .notes-history { font-size: 13px; color: var(--text-2); }
+    .note-entry { padding: 6px 0; border-bottom: 0.5px solid var(--border); }
+    .note-entry:last-child { border-bottom: none; }
+    .note-ts { font-size: 11px; color: var(--text-3); margin-bottom: 2px; }
+
+    /* KANBAN */
+    .kanban { display: grid; grid-template-columns: repeat(auto-fit, minmax(180px, 1fr)); gap: 14px; align-items: start; }
+    .kanban-col { background: var(--card); border-radius: var(--radius-lg); border: 0.5px solid var(--border); box-shadow: var(--shadow); overflow: hidden; }
+    .kanban-header { padding: 10px 14px; font-size: 12px; font-weight: 600; text-transform: uppercase; letter-spacing: 0.05em; display: flex; align-items: center; justify-content: space-between; }
+    .kanban-body { padding: 8px; display: flex; flex-direction: column; gap: 8px; min-height: 60px; }
+    .kanban-card { background: var(--white); border: 0.5px solid var(--border); border-radius: 8px; padding: 10px 12px; font-size: 13px; cursor: pointer; transition: box-shadow 0.15s, transform 0.1s; }
+    .kanban-card:hover { box-shadow: 0 4px 12px rgba(10,31,60,0.12); transform: translateY(-1px); }
+    .kanban-card-name { font-weight: 500; color: var(--text-1); margin-bottom: 2px; }
+    .kanban-card-co { font-size: 12px; color: var(--text-3); }
+    .kanban-card-meta { margin-top: 6px; display: flex; align-items: center; gap: 6px; flex-wrap: wrap; }
+    .kanban-count { background: rgba(255,255,255,0.2); border-radius: 99px; padding: 1px 8px; font-size: 11px; }
+
+    /* EMAIL TEMPLATES */
+    .template-section { margin-bottom: 1.5rem; }
+    .template-section h3 { font-size: 14px; font-weight: 500; margin-bottom: 8px; color: var(--text-1); }
+    .template-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); gap: 12px; }
+    .template-card { background: var(--card); border: 0.5px solid var(--border); border-radius: var(--radius-lg); padding: 1rem; box-shadow: var(--shadow); }
+    .template-card h4 { font-size: 13px; font-weight: 600; color: var(--navy); margin-bottom: 6px; display: flex; align-items: center; gap: 6px; }
+    .template-body { font-size: 13px; color: var(--text-2); line-height: 1.7; background: var(--sky); border-radius: 8px; padding: 10px 12px; margin-bottom: 10px; white-space: pre-wrap; }
+    .template-actions { display: flex; gap: 8px; }
+
+    /* WEEKLY SUMMARY */
+    .summary-card { background: var(--card); border: 0.5px solid var(--border); border-radius: var(--radius-lg); padding: 1.25rem; box-shadow: var(--shadow); margin-bottom: 1.25rem; }
+    .summary-card h3 { font-size: 15px; font-weight: 500; color: var(--navy); margin-bottom: 12px; display: flex; align-items: center; gap: 8px; }
+    .summary-list { display: flex; flex-direction: column; gap: 8px; }
+    .summary-item { display: flex; align-items: flex-start; gap: 10px; font-size: 14px; padding: 8px 12px; border-radius: 8px; background: var(--sky); }
+    .summary-item i { color: var(--ocean); margin-top: 2px; flex-shrink: 0; }
+
+    /* EXPORT */
+    .empty { text-align: center; padding: 3rem; color: var(--text-3); font-size: 14px; }
+    .empty i { font-size: 32px; display: block; margin-bottom: 8px; }
+    .loading-row td { text-align: center; padding: 2rem; color: var(--text-3); }
+
+    /* MODAL */
+    .modal-overlay { position: fixed; inset: 0; background: rgba(10,31,60,0.5); z-index: 300; display: none; align-items: center; justify-content: center; padding: 1rem; }
+    .modal-overlay.show { display: flex; }
+    .modal { background: var(--card); border-radius: var(--radius-lg); box-shadow: 0 8px 32px rgba(10,31,60,0.2); width: 100%; max-width: 520px; max-height: 90vh; overflow-y: auto; }
+    .modal-header { background: var(--navy); padding: 1rem 1.25rem; display: flex; align-items: center; justify-content: space-between; border-radius: var(--radius-lg) var(--radius-lg) 0 0; }
+    .modal-header h3 { color: #fff; font-size: 15px; font-weight: 500; }
+    .modal-close { background: none; border: none; color: rgba(255,255,255,0.6); cursor: pointer; font-size: 20px; display: flex; }
+    .modal-close:hover { color: #fff; }
+    .modal-body { padding: 1.25rem; }
+    .modal-footer { padding: 0 1.25rem 1.25rem; display: flex; gap: 8px; justify-content: flex-end; }
+
+    footer { text-align: center; margin-top: 2rem; font-size: 12px; color: var(--text-3); }
+    .spinner { display: inline-block; width: 14px; height: 14px; border: 2px solid rgba(255,255,255,0.3); border-top-color: #fff; border-radius: 50%; animation: spin 0.6s linear infinite; }
+    @keyframes spin { to { transform: rotate(360deg); } }
+    .toast { position: fixed; bottom: 1.5rem; right: 1.5rem; background: var(--navy); color: #fff; padding: 10px 18px; border-radius: var(--radius); font-size: 14px; box-shadow: 0 4px 16px rgba(0,0,0,0.2); transform: translateY(80px); opacity: 0; transition: transform 0.25s, opacity 0.25s; z-index: 999; }
+    .toast.show { transform: translateY(0); opacity: 1; }
+  </style>
+</head>
+<body>
+
+<!-- Top bar -->
+<div class="topbar">
+  <div class="topbar-brand"><i class="ti ti-network"></i> PSC Networking Tracker</div>
+  <div class="topbar-right">
+    <div class="sheet-indicator" id="sheetIndicator"><i class="ti ti-table-off"></i> No sheet</div>
+    <button class="btn-sm" onclick="showSetup()" id="changeSheetBtn" style="display:none"><i class="ti ti-settings"></i> Settings</button>
+  </div>
+</div>
+
+<!-- Nav tabs (hidden until connected) -->
+<div class="nav-tabs" id="navTabs" style="display:none">
+  <div class="nav-tab active" onclick="switchTab('list')" id="tab-list"><i class="ti ti-list"></i> Contacts</div>
+  <div class="nav-tab" onclick="switchTab('kanban')" id="tab-kanban"><i class="ti ti-layout-kanban"></i> Pipeline</div>
+  <div class="nav-tab" onclick="switchTab('weekly')" id="tab-weekly"><i class="ti ti-calendar-week"></i> Weekly Plan</div>
+  <div class="nav-tab" onclick="switchTab('templates')" id="tab-templates"><i class="ti ti-mail"></i> Templates</div>
+</div>
+
+<!-- SETUP SCREEN -->
+<div id="setupScreen">
+  <div class="setup-screen">
+    <div class="setup-card">
+      <div class="setup-header">
+        <h2><i class="ti ti-table" style="margin-right:8px;"></i>Connect your Google Sheet</h2>
+        <p>Your data stays in a sheet you own. Follow these steps once, then you're set.</p>
+      </div>
+      <div class="setup-body">
+        <div class="steps">
+          <div class="step">
+            <div class="step-num">1</div>
+            <div class="step-content">
+              <div class="step-title">Create a Google Sheet</div>
+              <div class="step-desc">Go to <strong>sheets.google.com</strong>, create a blank sheet, rename the first tab to <code>Contacts</code>.</div>
+            </div>
+          </div>
+          <div class="step">
+            <div class="step-num">2</div>
+            <div class="step-content">
+              <div class="step-title">Open Apps Script & paste the script</div>
+              <div class="step-desc">Click <strong>Extensions &gt; Apps Script</strong>, delete everything, paste the script from the <a href="Code.gs" style="color:var(--ocean);">Code.gs file</a> you downloaded earlier.</div>
+            </div>
+          </div>
+          <div class="step">
+            <div class="step-num">3</div>
+            <div class="step-content">
+              <div class="step-title">Deploy as a Web App</div>
+              <div class="step-desc">Click <strong>Deploy &gt; New deployment</strong>. Set type to <strong>Web app</strong>, Execute as <strong>Me</strong>, Who has access <strong>Anyone</strong>. Click Deploy and authorize.</div>
+            </div>
+          </div>
+          <div class="step">
+            <div class="step-num">4</div>
+            <div class="step-content">
+              <div class="step-title">Paste your URLs below</div>
+              <div class="step-desc">Copy the Web App URL after deploying and paste it below. The Anthropic key is optional but powers AI suggestions.</div>
+            </div>
+          </div>
+        </div>
+
+        <div class="input-group">
+          <label class="input-label">Google Apps Script Web App URL</label>
+          <input id="inputScriptUrl" placeholder="https://script.google.com/macros/s/.../exec" />
+        </div>
+        <div class="input-group">
+          <label class="input-label">Anthropic API Key <span style="font-weight:400;text-transform:none;letter-spacing:0;color:var(--text-3)">(optional)</span></label>
+          <input id="inputAnthropicKey" type="password" placeholder="sk-ant-..." />
+          <div style="font-size:12px;color:var(--text-3);margin-top:5px;"><i class="ti ti-lock" style="font-size:11px;"></i> Stored only in your browser. <a href="https://console.anthropic.com" target="_blank" style="color:var(--ocean);">Get a key →</a></div>
+        </div>
+        <div class="input-group">
+          <label class="input-label">Weekly Goal <span style="font-weight:400;text-transform:none;letter-spacing:0;color:var(--text-3)">(new contacts per week)</span></label>
+          <input id="inputGoal" type="number" placeholder="5" min="1" max="50" value="5" />
+        </div>
+
+        <button class="btn-primary" id="connectBtn" onclick="connectSheet()">
+          <i class="ti ti-plug-connected"></i> Connect my sheet
+        </button>
+        <div class="error-msg" id="setupError"></div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- MAIN APP -->
+<div class="app" id="appScreen">
+
+  <!-- LIST TAB -->
+  <div class="tab-panel active" id="panel-list">
+    <div class="page">
+      <div class="stats" id="stats"></div>
+      <div id="goalsBar"></div>
+      <div class="alerts" id="alerts"></div>
+
+      <div class="card">
+        <div class="card-label"><i class="ti ti-user-plus" style="margin-right:4px;"></i>Add a contact</div>
+        <div class="form-grid">
+          <input id="f-name" placeholder="Full name" />
+          <input id="f-co" placeholder="Company" />
+          <input id="f-role" placeholder="Their role / title" />
+          <input id="f-linkedin" placeholder="LinkedIn URL (optional)" />
+        </div>
+        <div class="form-row">
+          <select id="f-status">
+            <option value="Not contacted">Not contacted</option>
+            <option value="Contacted">Contacted</option>
+            <option value="Replied">Replied</option>
+            <option value="Meeting scheduled">Meeting scheduled</option>
+            <option value="Follow-up needed">Follow-up needed</option>
+            <option value="Closed">Closed</option>
+          </select>
+          <select id="f-priority">
+            <option value="Medium">Medium priority</option>
+            <option value="High">High priority</option>
+            <option value="Low">Low priority</option>
+          </select>
+          <input id="f-date" type="date" />
+          <input id="f-tags" placeholder="Tags (comma separated)" />
+        </div>
+        <div style="margin-bottom:10px;">
+          <input id="f-notes" placeholder="Notes" />
+        </div>
+        <button class="btn" id="addBtn" onclick="addContact()">
+          <i class="ti ti-plus"></i> Add contact
+        </button>
+      </div>
+
+      <div class="filter-bar">
+        <label>Filter:</label>
+        <select id="filter-status" onchange="renderTable()">
+          <option value="all">All statuses</option>
+          <option value="Not contacted">Not contacted</option>
+          <option value="Contacted">Contacted</option>
+          <option value="Replied">Replied</option>
+          <option value="Meeting scheduled">Meeting scheduled</option>
+          <option value="Follow-up needed">Follow-up needed</option>
+          <option value="Closed">Closed</option>
+        </select>
+        <select id="filter-priority" onchange="renderTable()">
+          <option value="all">All priorities</option>
+          <option value="High">High</option>
+          <option value="Medium">Medium</option>
+          <option value="Low">Low</option>
+        </select>
+        <input id="filter-search" placeholder="Search name, company, tag..." oninput="renderTable()" style="min-width:180px;" />
+        <div class="tag-filter" id="tagFilter"></div>
+        <button class="btn btn-outline" onclick="loadContacts()" style="margin-left:auto;"><i class="ti ti-refresh"></i> Refresh</button>
+        <button class="btn btn-outline" onclick="exportCSV()"><i class="ti ti-download"></i> Export CSV</button>
+      </div>
+
+      <div class="table-wrap">
+        <table>
+          <thead>
+            <tr>
+              <th style="width:14%" onclick="sortBy('name')">Name <i class="ti ti-selector" style="font-size:10px;"></i></th>
+              <th style="width:13%" onclick="sortBy('company')">Company</th>
+              <th style="width:12%" onclick="sortBy('role')">Role</th>
+              <th style="width:7%">Priority</th>
+              <th style="width:13%" onclick="sortBy('status')">Status</th>
+              <th style="width:10%" onclick="sortBy('lastContact')">Last contact</th>
+              <th>Notes / Actions</th>
+              <th style="width:44px"></th>
+            </tr>
+          </thead>
+          <tbody id="tbody"></tbody>
+        </table>
+      </div>
+      <footer>Your data lives in your own Google Sheet.</footer>
+    </div>
+  </div>
+
+  <!-- KANBAN TAB -->
+  <div class="tab-panel" id="panel-kanban">
+    <div class="page">
+      <div class="kanban" id="kanban"></div>
+    </div>
+  </div>
+
+  <!-- WEEKLY PLAN TAB -->
+  <div class="tab-panel" id="panel-weekly">
+    <div class="page">
+      <div id="weeklySummary"></div>
+    </div>
+  </div>
+
+  <!-- TEMPLATES TAB -->
+  <div class="tab-panel" id="panel-templates">
+    <div class="page">
+      <div class="template-section">
+        <h3>Email templates — click a contact's name in a template to personalize it</h3>
+        <div class="template-grid" id="templateGrid"></div>
+      </div>
+    </div>
+  </div>
+
+</div>
+
+<!-- NOTES MODAL -->
+<div class="modal-overlay" id="notesModal">
+  <div class="modal">
+    <div class="modal-header">
+      <h3 id="notesModalTitle">Notes history</h3>
+      <button class="modal-close" onclick="closeModal('notesModal')"><i class="ti ti-x"></i></button>
+    </div>
+    <div class="modal-body">
+      <div id="notesHistory" class="notes-history"></div>
+      <div style="margin-top:12px;">
+        <label class="input-label">Add a note</label>
+        <textarea id="newNoteText" placeholder="Write a note..."></textarea>
+      </div>
+    </div>
+    <div class="modal-footer">
+      <button class="btn btn-outline" onclick="closeModal('notesModal')">Cancel</button>
+      <button class="btn" onclick="saveNote()"><i class="ti ti-check"></i> Save note</button>
+    </div>
+  </div>
+</div>
+
+<!-- TEMPLATE MODAL -->
+<div class="modal-overlay" id="templateModal">
+  <div class="modal">
+    <div class="modal-header">
+      <h3 id="templateModalTitle">Email template</h3>
+      <button class="modal-close" onclick="closeModal('templateModal')"><i class="ti ti-x"></i></button>
+    </div>
+    <div class="modal-body">
+      <div style="margin-bottom:10px;">
+        <label class="input-label">Select contact to personalize</label>
+        <select id="templateContactSelect" onchange="renderTemplatePreview()"></select>
+      </div>
+      <label class="input-label">Preview</label>
+      <div class="template-body" id="templatePreview" style="min-height:100px;"></div>
+    </div>
+    <div class="modal-footer">
+      <button class="btn btn-outline" onclick="closeModal('templateModal')">Close</button>
+      <button class="btn" onclick="copyTemplate()"><i class="ti ti-copy"></i> Copy to clipboard</button>
+    </div>
+  </div>
+</div>
+
+<div class="toast" id="toast"></div>
+
+<script>
+const STORAGE_KEY  = 'psc_tracker_v3';
+const OVERDUE_DAYS = 7;
+let scriptUrl    = '';
+let anthropicKey = '';
+let weeklyGoal   = 5;
+let contacts     = [];
+let aiCache      = {};
+let sortField    = 'name';
+let sortAsc      = true;
+let activeTag    = '';
+let currentNotesId   = null;
+let currentTemplateKey = null;
+
+// ── CFG ──────────────────────────────────────────────
+function saveCfg() { localStorage.setItem(STORAGE_KEY, JSON.stringify({ scriptUrl, anthropicKey, weeklyGoal })); }
+function loadCfg() {
+  try { const d = localStorage.getItem(STORAGE_KEY); if (d) { const p = JSON.parse(d); scriptUrl = p.scriptUrl||''; anthropicKey = p.anthropicKey||''; weeklyGoal = p.weeklyGoal||5; } } catch(e){}
+}
+
+// ── GAS ──────────────────────────────────────────────
+async function gas(params) {
+  const url = scriptUrl + '?' + new URLSearchParams(params).toString();
+  const r = await fetch(url);
+  if (!r.ok) throw new Error('Request failed');
+  const data = await r.json();
+  if (data.error) throw new Error(data.error);
+  return data;
+}
+
+// ── SETUP ─────────────────────────────────────────────
+function showSetup() {
+  document.getElementById('setupScreen').style.display = 'block';
+  document.getElementById('appScreen').classList.remove('show');
+  document.getElementById('navTabs').style.display = 'none';
+  document.getElementById('inputScriptUrl').value    = scriptUrl    || '';
+  document.getElementById('inputAnthropicKey').value = anthropicKey || '';
+  document.getElementById('inputGoal').value         = weeklyGoal   || 5;
+}
+
+async function connectSheet() {
+  const btn = document.getElementById("connectBtn");
+  const err = document.getElementById("setupError");
+  err.classList.remove("show");
+  const url = document.getElementById("inputScriptUrl").value.trim();
+  if (!url || !url.includes("script.google.com")) { showError(err, "Please paste a valid Google Apps Script Web App URL."); return; }
+  btn.disabled = true; btn.innerHTML = "<span class="spinner"></span> Connecting...";
+  try {
+    scriptUrl    = url;
+    anthropicKey = document.getElementById("inputAnthropicKey").value.trim();
+    weeklyGoal   = parseInt(document.getElementById("inputGoal").value) || 5;
+    const controller = new AbortController();
+    const timer = setTimeout(() => controller.abort(), 15000);
+    const testUrl = scriptUrl + "?" + new URLSearchParams({ action: "headers" }).toString();
+    const r = await fetch(testUrl, { signal: controller.signal });
+    clearTimeout(timer);
+    if (!r.ok) throw new Error("HTTP " + r.status);
+    const data = await r.json();
+    if (data.error) throw new Error(data.error);
+    saveCfg(); await launchApp();
+  } catch(e) {
+    let msg = "Could not connect. ";
+    if (e.name === "AbortError") msg += "Request timed out — check the URL and make sure Who has access is set to Anyone.";
+    else if (e.message.includes("Failed to fetch")) msg += "Could not reach the script. Check the URL.";
+    else msg += e.message;
+    showError(err, msg);
+    btn.disabled = false; btn.innerHTML = "<i class="ti ti-plug-connected"></i> Connect my sheet";
+  }
+}
+
+function showError(el, msg) { el.textContent = msg; el.classList.add('show'); }
+
+async function launchApp() {
+  document.getElementById('setupScreen').style.display = 'none';
+  document.getElementById('appScreen').classList.add('show');
+  document.getElementById('navTabs').style.display = 'flex';
+  document.getElementById('changeSheetBtn').style.display = 'flex';
+  document.getElementById('sheetIndicator').className = 'sheet-indicator connected';
+  document.getElementById('sheetIndicator').innerHTML = '<i class="ti ti-table"></i> Sheet connected';
+  renderTemplates();
+  await loadContacts();
+}
+
+// ── TABS ──────────────────────────────────────────────
+function switchTab(name) {
+  document.querySelectorAll('.nav-tab').forEach(t => t.classList.remove('active'));
+  document.querySelectorAll('.tab-panel').forEach(p => p.classList.remove('active'));
+  document.getElementById('tab-' + name).classList.add('active');
+  document.getElementById('panel-' + name).classList.add('active');
+  if (name === 'kanban') renderKanban();
+  if (name === 'weekly') renderWeekly();
+}
+
+// ── LOAD ──────────────────────────────────────────────
+async function loadContacts() {
+  document.getElementById('tbody').innerHTML = '<tr class="loading-row"><td colspan="8"><i class="ti ti-loader" style="animation:spin 1s linear infinite;font-size:18px;"></i> Loading...</td></tr>';
+  try {
+    const data = await gas({ action: 'read' });
+    const rows = (data.rows || []).slice(1);
+    contacts = rows.map(r => ({
+      id: r[0]||'', name: r[1]||'', company: r[2]||'', role: r[3]||'',
+      status: r[4]||'Not contacted', lastContact: r[5]||'', notes: r[6]||'',
+      addedAt: r[7]||'', priority: r[8]||'Medium', tags: r[9]||'',
+      linkedin: r[10]||'', notesHistory: r[11]||''
+    })).filter(c => c.id);
+    renderStats(); renderAlerts(); renderGoals(); renderTagFilter(); renderTable();
+  } catch(e) {
+    document.getElementById('tbody').innerHTML = `<tr><td colspan="8" class="empty"><i class="ti ti-alert-circle"></i><br>Could not load: ${e.message}</td></tr>`;
+  }
+}
+
+function rowIndexOf(id) { return contacts.findIndex(c => c.id === id); }
+function sheetRow(id)   { return rowIndexOf(id) + 2; }
+
+// ── ADD ───────────────────────────────────────────────
+async function addContact() {
+  const name = document.getElementById('f-name').value.trim();
+  if (!name) { document.getElementById('f-name').focus(); return; }
+  const btn = document.getElementById('addBtn');
+  btn.disabled = true; btn.innerHTML = '<span class="spinner"></span>';
+  const id    = 'c_' + Date.now();
+  const today = new Date().toISOString().split('T')[0];
+  const row   = [
+    id, name,
+    document.getElementById('f-co').value.trim(),
+    document.getElementById('f-role').value.trim(),
+    document.getElementById('f-status').value,
+    document.getElementById('f-date').value || today,
+    document.getElementById('f-notes').value.trim(),
+    today,
+    document.getElementById('f-priority').value,
+    document.getElementById('f-tags').value.trim(),
+    document.getElementById('f-linkedin').value.trim(),
+    ''
+  ];
+  try {
+    await gas({ action: 'append', row: JSON.stringify(row) });
+    contacts.push({ id, name, company:row[2], role:row[3], status:row[4], lastContact:row[5], notes:row[6], addedAt:row[7], priority:row[8], tags:row[9], linkedin:row[10], notesHistory:'' });
+    ['f-name','f-co','f-role','f-notes','f-date','f-tags','f-linkedin'].forEach(i => document.getElementById(i).value = '');
+    document.getElementById('f-status').value = 'Not contacted';
+    document.getElementById('f-priority').value = 'Medium';
+    renderStats(); renderAlerts(); renderGoals(); renderTagFilter(); renderTable();
+    showToast('Contact added');
+  } catch(e) { showToast('Error: ' + e.message); }
+  btn.disabled = false; btn.innerHTML = '<i class="ti ti-plus"></i> Add contact';
+}
+
+// ── UPDATE ────────────────────────────────────────────
+const colMap = { name:2, company:3, role:4, status:5, lastContact:6, notes:7, priority:9, tags:10, linkedin:11, notesHistory:12 };
+async function updateField(id, field, value) {
+  const c = contacts.find(c => c.id === id);
+  if (!c) return;
+  c[field] = value;
+  const col = colMap[field];
+  if (!col) return;
+  try {
+    await gas({ action: 'update', row: sheetRow(id), col, value });
+    if (['status','priority'].includes(field)) { renderStats(); renderAlerts(); renderGoals(); renderTable(); }
+  } catch(e) { showToast('Save error: ' + e.message); }
+}
+
+// ── DELETE ────────────────────────────────────────────
+async function deleteContact(id) {
+  if (!confirm('Remove this contact?')) return;
+  try {
+    await gas({ action: 'clear', row: sheetRow(id) });
+    contacts = contacts.filter(c => c.id !== id);
+    renderStats(); renderAlerts(); renderGoals(); renderTagFilter(); renderTable();
+    showToast('Contact removed');
+  } catch(e) { showToast('Error: ' + e.message); }
+}
+
+// ── NOTES HISTORY ─────────────────────────────────────
+function openNotes(id) {
+  currentNotesId = id;
+  const c = contacts.find(c => c.id === id);
+  document.getElementById('notesModalTitle').textContent = 'Notes — ' + (c?.name || '');
+  renderNotesHistory(c);
+  document.getElementById('newNoteText').value = '';
+  document.getElementById('notesModal').classList.add('show');
+}
+
+function renderNotesHistory(c) {
+  let history = [];
+  try { history = c.notesHistory ? JSON.parse(c.notesHistory) : []; } catch(e){}
+  if (c.notes && history.length === 0) history = [{ ts: c.addedAt || '', text: c.notes }];
+  document.getElementById('notesHistory').innerHTML = history.length
+    ? history.slice().reverse().map(n => `<div class="note-entry"><div class="note-ts"><i class="ti ti-clock" style="font-size:10px;"></i> ${n.ts || 'No date'}</div><div>${esc(n.text)}</div></div>`).join('')
+    : '<div style="color:var(--text-3);font-size:13px;">No notes yet.</div>';
+}
+
+async function saveNote() {
+  const text = document.getElementById('newNoteText').value.trim();
+  if (!text) return;
+  const c = contacts.find(c => c.id === currentNotesId);
+  if (!c) return;
+  let history = [];
+  try { history = c.notesHistory ? JSON.parse(c.notesHistory) : []; } catch(e){}
+  const ts = new Date().toLocaleString();
+  history.push({ ts, text });
+  const newHistory = JSON.stringify(history);
+  c.notesHistory = newHistory;
+  c.notes = text;
+  try {
+    await gas({ action: 'update', row: sheetRow(currentNotesId), col: colMap.notesHistory, value: newHistory });
+    await gas({ action: 'update', row: sheetRow(currentNotesId), col: colMap.notes, value: text });
+    renderNotesHistory(c);
+    document.getElementById('newNoteText').value = '';
+    showToast('Note saved');
+    renderTable();
+  } catch(e) { showToast('Error: ' + e.message); }
+}
+
+function closeModal(id) { document.getElementById(id).classList.remove('show'); }
+
+// ── AI SUGGESTION ──────────────────────────────────────
+async function getAISuggestion(id) {
+  const box = document.getElementById('ai-box-' + id);
+  box.style.display = 'block';
+  if (!anthropicKey) { box.textContent = 'Add your Anthropic API key in Settings to enable this.'; return; }
+  if (aiCache[id]) { box.textContent = aiCache[id]; return; }
+  const c = contacts.find(c => c.id === id);
+  if (!c) return;
+  box.textContent = 'Thinking...';
+  const days = c.lastContact ? Math.floor((Date.now() - new Date(c.lastContact)) / 86400000) : null;
+  const prompt = `You are a job search coach. Give one specific, actionable next step (1-2 sentences, plain text) for this contact:\nName: ${c.name}\nCompany: ${c.company}\nRole: ${c.role}\nStatus: ${c.status}\nLast contact: ${c.lastContact||'unknown'}${days!==null?' ('+days+' days ago)':''}\nNotes: ${c.notes||'none'}\nBe direct. No preamble.`;
+  try {
+    const resp = await fetch('https://api.anthropic.com/v1/messages', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json', 'x-api-key': anthropicKey, 'anthropic-version': '2023-06-01' },
+      body: JSON.stringify({ model: 'claude-sonnet-4-20250514', max_tokens: 1000, messages: [{ role:'user', content: prompt }] })
+    });
+    const data = await resp.json();
+    const text = data.content?.find(b => b.type==='text')?.text || 'No suggestion available.';
+    aiCache[id] = text; box.textContent = text;
+  } catch(e) { box.textContent = 'Could not load suggestion.'; }
+}
+
+// ── SORT ──────────────────────────────────────────────
+function sortBy(field) {
+  if (sortField === field) sortAsc = !sortAsc; else { sortField = field; sortAsc = true; }
+  renderTable();
+}
+
+// ── RENDER HELPERS ────────────────────────────────────
+const statusClass = { 'Not contacted':'s-Not-contacted','Contacted':'s-Contacted','Replied':'s-Replied','Meeting scheduled':'s-Meeting-scheduled','Follow-up needed':'s-Follow-up-needed','Closed':'s-Closed' };
+const statusOptions = ['Not contacted','Contacted','Replied','Meeting scheduled','Follow-up needed','Closed'];
+const priorityOptions = ['High','Medium','Low'];
+const kanbanColors = { 'Not contacted':'#e0f2fe','Contacted':'#cffafe','Replied':'#d1fae5','Meeting scheduled':'#e0e7ff','Follow-up needed':'#fef3c7','Closed':'#fee2e2' };
+const kanbanText   = { 'Not contacted':'#0369a1','Contacted':'#0e7490','Replied':'#065f46','Meeting scheduled':'#3730a3','Follow-up needed':'#92400e','Closed':'#991b1b' };
+
+function isOverdue(c) {
+  if (!c.lastContact || c.status === 'Closed') return false;
+  return Math.floor((Date.now() - new Date(c.lastContact)) / 86400000) >= OVERDUE_DAYS;
+}
+
+function isWarm(c) {
+  if (!c.lastContact) return false;
+  return Math.floor((Date.now() - new Date(c.lastContact)) / 86400000) <= 14;
+}
+
+function renderStats() {
+  const counts = {}; contacts.forEach(c => counts[c.status] = (counts[c.status]||0)+1);
+  const overdue = contacts.filter(isOverdue).length;
+  document.getElementById('stats').innerHTML = [
+    ['Total', contacts.length, 'ti-users'],
+    ['Follow-up', counts['Follow-up needed']||0, 'ti-bell'],
+    ['Meetings', counts['Meeting scheduled']||0, 'ti-calendar'],
+    ['Overdue', overdue, 'ti-clock-exclamation'],
+    ['Replied', counts['Replied']||0, 'ti-message-check'],
+  ].map(([l,n,i]) => `<div class="stat"><strong><i class="ti ${i}" style="font-size:14px;margin-right:3px;"></i>${n}</strong>${l}</div>`).join('');
+}
+
+function renderGoals() {
+  const now  = new Date();
+  const weekStart = new Date(now); weekStart.setDate(now.getDate() - now.getDay());
+  const thisWeek = contacts.filter(c => c.addedAt && new Date(c.addedAt) >= weekStart).length;
+  const pct = Math.min(100, Math.round((thisWeek / weeklyGoal) * 100));
+  document.getElementById('goalsBar').innerHTML = `
+    <div class="goals-bar">
+      <div class="goals-bar-inner">
+        <span class="goal-label"><i class="ti ti-target" style="margin-right:5px;color:var(--ocean);"></i>Weekly goal: <strong>${thisWeek}/${weeklyGoal}</strong> new contacts</span>
+        <div class="goal-track"><div class="goal-fill" style="width:${pct}%"></div></div>
+        <span class="goal-pct">${pct}%</span>
+        <span class="goal-edit" onclick="showSetup()">Edit goal</span>
+      </div>
+    </div>`;
+}
+
+function renderAlerts() {
+  document.getElementById('alerts').innerHTML = contacts.filter(isOverdue).map(c => {
+    const d = Math.floor((Date.now() - new Date(c.lastContact)) / 86400000);
+    return `<div class="alert-item"><i class="ti ti-alarm" style="color:#f97316;flex-shrink:0;"></i><strong>${esc(c.name)}</strong> at ${esc(c.company)} — no contact in ${d} days. <button class="ai-chip" style="margin-left:8px;" onclick="getAISuggestionInline('${c.id}')"><i class="ti ti-sparkles"></i> Suggest action</button></div>`;
+  }).join('');
+}
+
+async function getAISuggestionInline(id) {
+  const c = contacts.find(c => c.id === id);
+  if (!c || !anthropicKey) { showToast('Add Anthropic API key in Settings first.'); return; }
+  showToast('Thinking...');
+  const days = c.lastContact ? Math.floor((Date.now() - new Date(c.lastContact)) / 86400000) : null;
+  const prompt = `Job search coach: one specific next step (1 sentence) for ${c.name} at ${c.company}, status: ${c.status}, last contact: ${days ? days+' days ago' : 'unknown'}. Notes: ${c.notes||'none'}. No preamble.`;
+  try {
+    const resp = await fetch('https://api.anthropic.com/v1/messages', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json', 'x-api-key': anthropicKey, 'anthropic-version': '2023-06-01' },
+      body: JSON.stringify({ model: 'claude-sonnet-4-20250514', max_tokens: 1000, messages: [{ role:'user', content: prompt }] })
+    });
+    const data = await resp.json();
+    const text = data.content?.find(b => b.type==='text')?.text || '';
+    showToast(text, 6000);
+  } catch(e) { showToast('Could not load suggestion.'); }
+}
+
+function renderTagFilter() {
+  const allTags = new Set();
+  contacts.forEach(c => { if (c.tags) c.tags.split(',').forEach(t => { const tt = t.trim(); if (tt) allTags.add(tt); }); });
+  const tags = [...allTags];
+  document.getElementById('tagFilter').innerHTML = tags.length
+    ? tags.map(t => `<span class="tag-chip ${activeTag===t?'active':''}" onclick="filterByTag('${esc(t)}')">${esc(t)}</span>`).join('')
+    : '';
+}
+
+function filterByTag(tag) {
+  activeTag = activeTag === tag ? '' : tag;
+  renderTagFilter(); renderTable();
+}
+
+function renderTable() {
+  const fs = document.getElementById('filter-status').value;
+  const fp = document.getElementById('filter-priority').value;
+  const q  = document.getElementById('filter-search').value.toLowerCase();
+  let filtered = contacts.filter(c =>
+    (fs==='all'||c.status===fs) &&
+    (fp==='all'||c.priority===fp) &&
+    (!activeTag || (c.tags && c.tags.split(',').map(t=>t.trim()).includes(activeTag))) &&
+    (!q || c.name.toLowerCase().includes(q) || c.company.toLowerCase().includes(q) || (c.tags||'').toLowerCase().includes(q))
+  );
+  filtered.sort((a,b) => {
+    const av = a[sortField]||'', bv = b[sortField]||'';
+    return sortAsc ? av.localeCompare(bv) : bv.localeCompare(av);
+  });
+
+  const tbody = document.getElementById('tbody');
+  if (!filtered.length) { tbody.innerHTML = `<tr><td colspan="8" class="empty"><i class="ti ti-user-search"></i><br>No contacts yet.</td></tr>`; return; }
+
+  tbody.innerHTML = filtered.map(c => {
+    const ov = isOverdue(c);
+    const sc = statusClass[c.status] || '';
+    const tags = c.tags ? c.tags.split(',').filter(t=>t.trim()).map(t=>`<span class="tag-pill">${esc(t.trim())}</span>`).join('') : '';
+    return `<tr class="${ov?'overdue-row':''}">
+      <td>
+        <input class="edit-input" value="${esc(c.name)}" onchange="updateField('${c.id}','name',this.value)"/>
+        ${ov?'<span class="overdue-badge">Overdue</span>':''}
+        ${c.linkedin?`<br><a class="linkedin-btn" href="${esc(c.linkedin)}" target="_blank"><i class="ti ti-brand-linkedin"></i> LinkedIn</a>`:''}
+      </td>
+      <td><input class="edit-input" value="${esc(c.company)}" onchange="updateField('${c.id}','company',this.value)"/></td>
+      <td><input class="edit-input" value="${esc(c.role)}" onchange="updateField('${c.id}','role',this.value)"/></td>
+      <td>
+        <select class="edit-select" style="font-size:12px;" onchange="updateField('${c.id}','priority',this.value)">
+          ${priorityOptions.map(p=>`<option value="${p}"${c.priority===p?' selected':''}>${p}</option>`).join('')}
+        </select>
+        <span class="priority-dot p-${c.priority||'Medium'}"></span>
+        <span class="warm-cold ${isWarm(c)?'warm':'cold'}" style="font-size:10px;">${isWarm(c)?'Warm':'Cold'}</span>
+      </td>
+      <td>
+        <select class="edit-select ${sc}" onchange="updateField('${c.id}','status',this.value)">
+          ${statusOptions.map(s=>`<option value="${s}"${c.status===s?' selected':''}>${s}</option>`).join('')}
+        </select>
+      </td>
+      <td><input class="edit-input" type="date" value="${esc(c.lastContact)}" onchange="updateField('${c.id}','lastContact',this.value)"/></td>
+      <td>
+        <div style="display:flex;align-items:center;gap:6px;margin-bottom:3px;">
+          <span style="font-size:13px;color:var(--text-2);">${esc(c.notes||'')}</span>
+          <button class="icon-btn" onclick="openNotes('${c.id}')" title="Notes history"><i class="ti ti-notes"></i></button>
+        </div>
+        ${tags ? `<div>${tags}</div>` : ''}
+        <button class="ai-chip" onclick="getAISuggestion('${c.id}')"><i class="ti ti-sparkles"></i> Suggest next action</button>
+        <div class="ai-suggestion-box" id="ai-box-${c.id}"></div>
+      </td>
+      <td><button class="del-btn" onclick="deleteContact('${c.id}')"><i class="ti ti-trash"></i></button></td>
+    </tr>`;
+  }).join('');
+}
+
+// ── KANBAN ────────────────────────────────────────────
+function renderKanban() {
+  const groups = {};
+  statusOptions.forEach(s => groups[s] = []);
+  contacts.forEach(c => { if (groups[c.status]) groups[c.status].push(c); });
+  document.getElementById('kanban').innerHTML = statusOptions.map(s => `
+    <div class="kanban-col">
+      <div class="kanban-header" style="background:${kanbanColors[s]};color:${kanbanText[s]};">
+        <span>${s}</span>
+        <span class="kanban-count" style="background:rgba(0,0,0,0.1);">${groups[s].length}</span>
+      </div>
+      <div class="kanban-body">
+        ${groups[s].length ? groups[s].map(c => `
+          <div class="kanban-card" onclick="switchTab('list')">
+            <div class="kanban-card-name">${esc(c.name)}</div>
+            <div class="kanban-card-co">${esc(c.company)}</div>
+            <div class="kanban-card-meta">
+              <span class="priority-dot p-${c.priority||'Medium'}"></span>
+              <span style="font-size:11px;color:var(--text-3);">${c.priority||'Medium'}</span>
+              ${isOverdue(c)?'<span class="overdue-badge">Overdue</span>':''}
+              ${isWarm(c)?'<span class="warm-cold warm" style="font-size:10px;">Warm</span>':''}
+            </div>
+          </div>`).join('') : `<div style="font-size:13px;color:var(--text-3);padding:8px;text-align:center;">Empty</div>`}
+      </div>
+    </div>`).join('');
+}
+
+// ── WEEKLY PLAN ───────────────────────────────────────
+function renderWeekly() {
+  const now = new Date();
+  const weekStart = new Date(now); weekStart.setDate(now.getDate() - now.getDay());
+  const weekEnd   = new Date(weekStart); weekEnd.setDate(weekStart.getDate() + 6);
+  const thisWeek  = contacts.filter(c => c.addedAt && new Date(c.addedAt) >= weekStart).length;
+  const overdue   = contacts.filter(isOverdue);
+  const followUp  = contacts.filter(c => c.status === 'Follow-up needed');
+  const meetings  = contacts.filter(c => c.status === 'Meeting scheduled');
+  const notContacted = contacts.filter(c => c.status === 'Not contacted').slice(0,3);
+  const remaining = Math.max(0, weeklyGoal - thisWeek);
+
+  document.getElementById('weeklySummary').innerHTML = `
+    <div class="summary-card">
+      <h3><i class="ti ti-calendar-week" style="color:var(--ocean);"></i> Week of ${weekStart.toLocaleDateString()} — ${weekEnd.toLocaleDateString()}</h3>
+      <div class="summary-list">
+        <div class="summary-item"><i class="ti ti-target"></i><div><strong>${thisWeek} of ${weeklyGoal}</strong> new contacts added this week. ${remaining > 0 ? `Reach out to <strong>${remaining} more</strong> to hit your goal.` : 'Goal reached!'}</div></div>
+        ${overdue.length ? `<div class="summary-item"><i class="ti ti-alarm" style="color:#f97316;"></i><div><strong>${overdue.length} overdue</strong> contact${overdue.length>1?'s':''}: ${overdue.map(c=>esc(c.name)).join(', ')}. Follow up now.</div></div>` : ''}
+        ${followUp.length ? `<div class="summary-item"><i class="ti ti-bell" style="color:#f59e0b;"></i><div><strong>${followUp.length} contact${followUp.length>1?'s':''}</strong> waiting for follow-up: ${followUp.slice(0,3).map(c=>esc(c.name)).join(', ')}${followUp.length>3?'...':''}.</div></div>` : ''}
+        ${meetings.length ? `<div class="summary-item"><i class="ti ti-calendar" style="color:#6366f1;"></i><div><strong>${meetings.length} meeting${meetings.length>1?'s':''}</strong> scheduled: ${meetings.map(c=>esc(c.name)+' at '+esc(c.company)).join(', ')}.</div></div>` : ''}
+        ${notContacted.length && remaining > 0 ? `<div class="summary-item"><i class="ti ti-send" style="color:var(--ocean);"></i><div>Suggested first outreach: ${notContacted.map(c=>`<strong>${esc(c.name)}</strong> at ${esc(c.company)}`).join(', ')}.</div></div>` : ''}
+        ${overdue.length === 0 && followUp.length === 0 ? `<div class="summary-item"><i class="ti ti-circle-check" style="color:#10b981;"></i><div>You're all caught up! No overdue contacts.</div></div>` : ''}
+      </div>
+    </div>`;
+}
+
+// ── TEMPLATES ─────────────────────────────────────────
+const EMAIL_TEMPLATES = {
+  'First outreach': {
+    icon: 'ti-mail',
+    color: '#0e7490',
+    body: (c) => `Hi ${c?.name?.split(' ')[0] || '[Name]'},\n\nI came across your profile and was really impressed by your work at ${c?.company || '[Company]'}. I'm currently exploring new opportunities in [your field] and would love to connect.\n\nWould you be open to a brief 15-minute call to share your experience?\n\nBest,\n[Your name]`
+  },
+  'Follow-up': {
+    icon: 'ti-refresh',
+    color: '#92400e',
+    body: (c) => `Hi ${c?.name?.split(' ')[0] || '[Name]'},\n\nI wanted to follow up on my previous message. I know you're busy, but I'd still love to connect and learn more about your work at ${c?.company || '[Company]'}.\n\nEven 10 minutes would be incredibly helpful.\n\nThanks,\n[Your name]`
+  },
+  'After meeting': {
+    icon: 'ti-check',
+    color: '#065f46',
+    body: (c) => `Hi ${c?.name?.split(' ')[0] || '[Name]'},\n\nThank you so much for taking the time to chat today. I really appreciated your insights about ${c?.company || '[Company]'} and the advice you shared.\n\nI'll definitely follow up on [specific advice]. Please let me know if there's anything I can do to help you in return.\n\nBest,\n[Your name]`
+  },
+  'Referral ask': {
+    icon: 'ti-users',
+    color: '#3730a3',
+    body: (c) => `Hi ${c?.name?.split(' ')[0] || '[Name]'},\n\nI hope you're doing well. I'm actively looking for opportunities in [field/industry] and wondering if you might know anyone at ${c?.company || '[Company]'} or elsewhere who'd be open to a conversation.\n\nAny introduction would mean a lot to me.\n\nThank you,\n[Your name]`
+  }
+};
+
+function renderTemplates() {
+  document.getElementById('templateGrid').innerHTML = Object.entries(EMAIL_TEMPLATES).map(([key, t]) => `
+    <div class="template-card">
+      <h4><i class="ti ${t.icon}" style="color:${t.color};"></i> ${key}</h4>
+      <div class="template-body">${esc(t.body(null))}</div>
+      <div class="template-actions">
+        <button class="btn btn-outline" style="font-size:13px;padding:6px 12px;" onclick="openTemplate('${key}')"><i class="ti ti-user"></i> Personalize</button>
+        <button class="btn" style="font-size:13px;padding:6px 12px;" onclick="copyTemplateRaw('${key}')"><i class="ti ti-copy"></i> Copy</button>
+      </div>
+    </div>`).join('');
+}
+
+function openTemplate(key) {
+  currentTemplateKey = key;
+  document.getElementById('templateModalTitle').textContent = key;
+  const sel = document.getElementById('templateContactSelect');
+  sel.innerHTML = '<option value="">— No contact selected —</option>' +
+    contacts.map(c => `<option value="${c.id}">${esc(c.name)} — ${esc(c.company)}</option>`).join('');
+  renderTemplatePreview();
+  document.getElementById('templateModal').classList.add('show');
+}
+
+function renderTemplatePreview() {
+  const id = document.getElementById('templateContactSelect').value;
+  const c  = contacts.find(c => c.id === id) || null;
+  const t  = EMAIL_TEMPLATES[currentTemplateKey];
+  if (t) document.getElementById('templatePreview').textContent = t.body(c);
+}
+
+function copyTemplate() {
+  const text = document.getElementById('templatePreview').textContent;
+  navigator.clipboard.writeText(text).then(()=>showToast('Copied!')).catch(()=>showToast('Select and copy manually'));
+}
+
+function copyTemplateRaw(key) {
+  const t = EMAIL_TEMPLATES[key];
+  if (!t) return;
+  navigator.clipboard.writeText(t.body(null)).then(()=>showToast('Copied!')).catch(()=>showToast('Select and copy manually'));
+}
+
+// ── EXPORT ────────────────────────────────────────────
+function exportCSV() {
+  const headers = ['Name','Company','Role','Status','Priority','Last Contact','Notes','Tags','LinkedIn','Added'];
+  const rows = contacts.map(c => [c.name, c.company, c.role, c.status, c.priority||'', c.lastContact, c.notes, c.tags||'', c.linkedin||'', c.addedAt].map(v => `"${(v||'').replace(/"/g,'""')}"`));
+  const csv = [headers, ...rows].map(r => r.join(',')).join('\n');
+  const blob = new Blob([csv], { type: 'text/csv' });
+  const a = document.createElement('a');
+  a.href = URL.createObjectURL(blob);
+  a.download = 'psc-contacts.csv';
+  a.click();
+  showToast('CSV exported');
+}
+
+// ── UTILS ─────────────────────────────────────────────
+function esc(s) { if(!s)return''; return String(s).replace(/&/g,'&amp;').replace(/"/g,'&quot;').replace(/</g,'&lt;').replace(/>/g,'&gt;'); }
+function showToast(msg, dur=2500) { const t=document.getElementById('toast'); t.textContent=msg; t.classList.add('show'); setTimeout(()=>t.classList.remove('show'),dur); }
+
+// ── INIT ──────────────────────────────────────────────
+loadCfg();
+if (scriptUrl) { launchApp(); } else { document.getElementById('setupScreen').style.display = 'block'; }
+</script>
+</body>
+</html>
