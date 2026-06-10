@@ -503,7 +503,7 @@ async function connectSheet() {
   err.classList.remove("show");
   const url = document.getElementById("inputScriptUrl").value.trim();
   if (!url || !url.includes("script.google.com")) { showError(err, "Please paste a valid Google Apps Script Web App URL."); return; }
-  btn.disabled = true; btn.innerHTML = "<span class="spinner"></span> Connecting...";
+  btn.disabled = true; btn.innerHTML = '<span class="spinner"></span> Connecting...';
   try {
     scriptUrl    = url;
     anthropicKey = document.getElementById("inputAnthropicKey").value.trim();
@@ -523,7 +523,7 @@ async function connectSheet() {
     else if (e.message.includes("Failed to fetch")) msg += "Could not reach the script. Check the URL.";
     else msg += e.message;
     showError(err, msg);
-    btn.disabled = false; btn.innerHTML = "<i class="ti ti-plug-connected"></i> Connect my sheet";
+    btn.disabled = false; btn.innerHTML = '<i class="ti ti-plug-connected"></i> Connect my sheet';
   }
 }
 
