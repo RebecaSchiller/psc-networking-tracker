@@ -681,6 +681,7 @@ async function getAISuggestion(id) {
   const c = contacts.find(c => c.id === id);
   if (!c) return;
   box.textContent = 'Thinking...';
+  console.log('API key length:', anthropicKey ? anthropicKey.length : 0);
   const days = c.lastContact ? Math.floor((Date.now() - new Date(c.lastContact)) / 86400000) : null;
   const prompt = `You are a job search coach. Give one specific, actionable next step (1-2 sentences, plain text) for this contact:\nName: ${c.name}\nCompany: ${c.company}\nRole: ${c.role}\nStatus: ${c.status}\nLast contact: ${c.lastContact||'unknown'}${days!==null?' ('+days+' days ago)':''}\nNotes: ${c.notes||'none'}\nBe direct. No preamble.`;
   try {
