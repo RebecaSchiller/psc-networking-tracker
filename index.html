@@ -764,7 +764,7 @@ function isOverdue(c) {
 function isWarm(c) {
   if (!c.lastContact) return false;
   const d = c.lastContact.includes('T') ? c.lastContact.split('T')[0] : c.lastContact;
-  return Math.floor((Date.now() - new Date(d)) / 86400000) <= 14;
+  return Math.floor((Date.now() - new Date(d)) / 86400000) <= 30;
 }
 
 function cleanDate(d) {
@@ -881,13 +881,13 @@ function renderTable() {
       <td><input class="edit-input" value="${esc(c.company)}" onchange="updateField('${c.id}','company',this.value)" /></td>
       <td><input class="edit-input" value="${esc(c.role)}" onchange="updateField('${c.id}','role',this.value)" /></td>
       <td>
-        <div style="display:flex;align-items:center;gap:4px;">
+        <div style="display:flex;align-items:center;gap:4px;flex-wrap:wrap;">
           <span class="priority-dot p-${c.priority||'Medium'}"></span>
           <select class="edit-select" style="font-size:12px;" onchange="updateField('${c.id}','priority',this.value)">
             ${priorityOptions.map(p=>`<option value="${p}"${c.priority===p?' selected':''}>${p}</option>`).join('')}
           </select>
+          <span class="warm-cold ${isWarm(c)?'warm':'cold'}">${isWarm(c)?'Warm':'Cold'}</span>
         </div>
-        <span class="warm-cold ${isWarm(c)?'warm':'cold'}">${isWarm(c)?'Warm':'Cold'}</span>
       </td>
       <td>
         <select class="edit-select ${sc}" onchange="updateField('${c.id}','status',this.value)">
