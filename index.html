@@ -804,7 +804,7 @@ function renderGoals() {
 function renderAlerts() {
   document.getElementById('alerts').innerHTML = contacts.filter(isOverdue).map(c => {
     const d = Math.floor((Date.now() - new Date(cleanDate(c.lastContact))) / 86400000);
-    return `<div class="alert-item"><i class="ti ti-alarm" style="color:#f97316;flex-shrink:0;"></i><strong>${esc(c.name)}</strong> at ${esc(c.company)} — no contact in ${d} days. <button class="ai-chip" style="margin-left:8px;" onclick="getAISuggestionInline('${c.id}')"><i class="ti ti-sparkles"></i> Suggest action</button></div>`;
+    return `<div class="alert-item"><i class="ti ti-alarm" style="color:#f97316;flex-shrink:0;"></i><strong>${esc(c.name)}</strong> at ${esc(c.company)} — no contact in ${d} days. <button class="ai-chip" style="margin-left:8px;" onclick="getAISuggestion('${c.id}')"><i class="ti ti-sparkles"></i> Suggest action</button></div>`;
   }).join('');
 }
 
