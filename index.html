@@ -804,8 +804,37 @@ function renderGoals() {
 function renderAlerts() {
   document.getElementById('alerts').innerHTML = contacts.filter(isOverdue).map(c => {
     const d = Math.floor((Date.now() - new Date(cleanDate(c.lastContact))) / 86400000);
-    return `<div class="alert-item"><i class="ti ti-alarm" style="color:#f97316;flex-shrink:0;"></i><strong>${esc(c.name)}</strong> at ${esc(c.company)} — no contact in ${d} days. <button class="ai-chip" style="margin-left:8px;" onclick="getAISuggestion('${c.id}')"><i class="ti ti-sparkles"></i> Suggest action</button></div>`;
+    return `<div class="alert-item" style="flex-direction:column;align-items:flex-start;gap:6px;">
+      <div style="display:flex;align-items:center;gap:8px;">
+        <i class="ti ti-alarm" style="color:#f97316;flex-shrink:0;"></i>
+        <strong>${esc(c.name)}</strong> at ${esc(c.company)} — no contact in ${d} days.
+        <button class="ai-chip" onclick="getAlertSuggestion('${c.id}')"><i class="ti ti-sparkles"></i> Suggest action</button>
+      </div>
+      <div class="ai-suggestion-box" id="alert-ai-box-${c.id}" style="width:100%;margin:0;"></div>
+    </div>`;
   }).join('');
+}
+
+async function getAlertSuggestion(id) {
+  const box = document.getElementById('alert-ai-box-' + id);
+  if (!box) return;
+  box.style.display = 'block';
+  if (!anthropicKey) { box.textContent = 'Add your Anthropic API key in Settings to enable AI suggestions.'; return; }
+  if (aiCache['alert_' + id]) { box.textContent = aiCache['alert_' + id]; return; }
+  const c = contacts.find(c => c.id === id);
+  if (!c) return;
+  box.textContent = 'Thinking...';
+  const days = c.lastContact ? Math.floor((Date.now() - new Date(cleanDate(c.lastContact))) / 86400000) : null;
+  const prompt = 'You are a job search coach. Give one specific, actionable next step (1-2 sentences, plain text) for this contact. Name: ' + c.name + ', Company: ' + c.company + ', Role: ' + c.role + ', Status: ' + c.status + ', Last contact: ' + (c.lastContact||'unknown') + (days!==null?' ('+days+' days ago)':'') + ', Notes: ' + (c.notes||'none') + '. Be direct. No preamble.';
+  try {
+    const aiUrl = scriptUrl + '?' + new URLSearchParams({ action: 'ai_suggest', apiKey: anthropicKey, prompt: prompt }).toString();
+    const resp = await fetch(aiUrl);
+    const data = await resp.json();
+    if (data.error) throw new Error(data.error);
+    const text = data.suggestion || 'No suggestion available.';
+    aiCache['alert_' + id] = text;
+    box.textContent = text;
+  } catch(e) { box.textContent = 'Could not load suggestion: ' + e.message; }
 }
 
 function renderTagFilter() {
