@@ -123,17 +123,22 @@
     .tag-chip { font-size: 12px; padding: 3px 10px; border-radius: 99px; background: var(--sky); color: var(--text-2); border: 0.5px solid var(--border); cursor: pointer; transition: background 0.1s; }
     .tag-chip.active { background: var(--navy); color: #fff; border-color: var(--navy); }
 
-    /* TABLE */
-    .table-wrap { background: var(--card); border: 0.5px solid var(--border); border-radius: var(--radius-lg); overflow: hidden; overflow-x: auto; box-shadow: var(--shadow); }
-    table { width: 100%; border-collapse: collapse; font-size: 14px; min-width: 700px; }
-    th { text-align: left; font-weight: 500; font-size: 11px; text-transform: uppercase; letter-spacing: 0.05em; color: #fff; background: var(--navy-mid); padding: 10px 14px; white-space: nowrap; cursor: pointer; user-select: none; }
-    th:hover { background: var(--navy-light); }
-    td { padding: 10px 14px; border-bottom: 0.5px solid var(--border); vertical-align: middle; word-break: break-word; }
-    tr:last-child td { border-bottom: none; }
-    tbody tr:hover td { background: var(--sky); }
+    /* CONTACT CARDS */
+    .cards-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 14px; }
+    .contact-card { background: var(--card); border: 0.5px solid var(--border); border-radius: var(--radius-lg); box-shadow: var(--shadow); overflow: hidden; transition: box-shadow 0.15s; }
+    .contact-card:hover { box-shadow: 0 4px 16px rgba(10,31,60,0.12); }
+    .contact-card-top { padding: 10px 14px 8px; border-bottom: 0.5px solid var(--border); }
+    .contact-card-name { font-size: 14px; font-weight: 600; color: var(--text-1); display: flex; align-items: center; gap: 6px; margin-bottom: 1px; }
+    .contact-card-role { font-size: 12px; color: var(--text-3); margin-bottom: 4px; }
+    .contact-card-company { font-size: 13px; font-weight: 500; color: var(--ocean); display: flex; align-items: center; gap: 5px; }
+    .contact-card-row { display: flex; align-items: center; gap: 6px; padding: 5px 14px; border-bottom: 0.5px solid var(--border); flex-wrap: nowrap; }
+    .contact-card-row:last-child { border-bottom: none; }
+    .contact-card-notes { padding: 5px 14px 8px; font-size: 13px; color: var(--text-2); }
+    .contact-card-actions { display: flex; align-items: center; gap: 6px; padding: 6px 14px; border-top: 0.5px solid var(--border); background: var(--sky); flex-wrap: wrap; }
 
     /* BADGES */
     .s-Not-contacted { background: #e0f2fe; color: #0369a1; }
+    .edit-select option { white-space: normal; }
     .s-Contacted { background: #cffafe; color: #0e7490; }
     .s-Replied { background: #d1fae5; color: #065f46; }
     .s-Meeting-scheduled { background: #e0e7ff; color: #3730a3; }
@@ -153,7 +158,7 @@
     .edit-input:hover, .edit-input:focus { border-bottom-color: var(--ocean); }
     .edit-div { font-size: 14px; font-family: inherit; color: var(--text-1); width: 100%; padding: 2px 0; border-bottom: 1px solid transparent; outline: none; white-space: normal; word-break: break-word; line-height: 1.4; cursor: text; }
     .edit-div:hover, .edit-div:focus { border-bottom-color: var(--ocean); }
-    .edit-select { background: transparent; border: 0.5px solid transparent; border-radius: 99px; font-size: 12px; font-weight: 500; font-family: inherit; cursor: pointer; padding: 3px 8px; }
+    .edit-select { background: transparent; border: 0.5px solid transparent; border-radius: 99px; font-size: 12px; font-weight: 500; font-family: inherit; cursor: pointer; padding: 3px 8px; max-width: 100%; }
     .edit-select:hover { border-color: var(--border-mid); }
 
     .del-btn { background: none; border: none; cursor: pointer; color: var(--text-3); font-size: 16px; padding: 2px 4px; border-radius: 4px; display: flex; align-items: center; transition: color 0.1s, background 0.1s; }
@@ -169,6 +174,7 @@
     .linkedin-btn:hover { text-decoration: underline; }
 
     .overdue-row td { background: #fffbeb !important; }
+    .overdue-card { border-left: 3px solid #f97316 !important; }
     .overdue-badge { font-size: 11px; color: #92400e; background: #fef3c7; border-radius: 4px; padding: 1px 6px; margin-left: 5px; }
     .tag-pill { font-size: 11px; background: var(--sky); color: var(--ocean); border-radius: 99px; padding: 2px 8px; display: inline-block; margin: 1px 2px; }
 
@@ -375,29 +381,12 @@
           <option value="Medium">Medium</option>
           <option value="Low">Low</option>
         </select>
-        <input id="filter-search" placeholder="Search name, company, tag..." oninput="renderTable()" style="min-width:180px;" />
-        <div id="tagFilter" style="display:flex;gap:6px;flex-wrap:wrap;align-items:center;"></div>
-        <button class="btn btn-outline" onclick="loadContacts()" style="margin-left:auto;"><i class="ti ti-refresh"></i> Refresh</button>
+        <input id="filter-search" placeholder="Search name, company, tag..." oninput="renderTable()" style="min-width:180px;max-width:280px;flex:1;" />
+        <button class="btn btn-outline" onclick="loadContacts()"><i class="ti ti-refresh"></i> Refresh</button>
         <button class="btn btn-outline" onclick="exportCSV()"><i class="ti ti-download"></i> Export CSV</button>
       </div>
 
-      <div class="table-wrap">
-        <table>
-          <thead>
-            <tr>
-              <th onclick="sortBy('name')">Name <i class="ti ti-selector" style="font-size:10px;"></i></th>
-              <th onclick="sortBy('company')">Company</th>
-              <th onclick="sortBy('role')">Role</th>
-              <th>Priority</th>
-              <th onclick="sortBy('status')">Status</th>
-              <th onclick="sortBy('lastContact')">Last contact</th>
-              <th>Notes / Actions</th>
-              <th></th>
-            </tr>
-          </thead>
-          <tbody id="tbody"></tbody>
-        </table>
-      </div>
+      <div class="cards-grid" id="tbody"></div>
       <footer>Your data lives in your own Google Sheet. Nothing is stored on this server.</footer>
     </div>
   </div>
@@ -774,6 +763,15 @@ function cleanDate(d) {
   return d.includes('T') ? d.split('T')[0] : d;
 }
 
+function shortDate(d) {
+  if (!d) return '';
+  const clean = d.includes('T') ? d.split('T')[0] : d;
+  if (!clean) return '';
+  const parts = clean.split('-');
+  if (parts.length !== 3) return clean;
+  return parts[1].replace(/^0/,'') + '/' + parts[2].replace(/^0/,'') + '/' + parts[0].slice(2);
+}
+
 function renderStats() {
   const counts = {};
   contacts.forEach(c => counts[c.status] = (counts[c.status]||0)+1);
@@ -840,10 +838,12 @@ async function getAlertSuggestion(id) {
 }
 
 function renderTagFilter() {
+  const el = document.getElementById('tagFilter');
+  if (!el) return;
   const allTags = new Set();
   contacts.forEach(c => { if (c.tags) c.tags.split(',').forEach(t => { const tt = t.trim(); if (tt) allTags.add(tt); }); });
   const tags = [...allTags];
-  document.getElementById('tagFilter').innerHTML = tags.map(t => `<span class="tag-chip ${activeTag===t?'active':''}" onclick="filterByTag('${esc(t)}')">${esc(t)}</span>`).join('');
+  el.innerHTML = tags.map(t => `<span class="tag-chip ${activeTag===t?'active':''}" onclick="filterByTag('${esc(t)}')">${esc(t)}</span>`).join('');
 }
 
 function filterByTag(tag) {
@@ -866,48 +866,59 @@ function renderTable() {
     return sortAsc ? av.localeCompare(bv) : bv.localeCompare(av);
   });
 
-  const tbody = document.getElementById('tbody');
-  if (!filtered.length) { tbody.innerHTML = `<tr><td colspan="8" class="empty"><i class="ti ti-user-search"></i><br>No contacts yet. Add one above.</td></tr>`; return; }
+  const container = document.getElementById('tbody');
+  if (!filtered.length) {
+    container.innerHTML = `<div class="empty" style="grid-column:1/-1;"><i class="ti ti-user-search" style="font-size:32px;display:block;margin-bottom:8px;"></i>No contacts yet. Add one above.</div>`;
+    return;
+  }
 
-  tbody.innerHTML = filtered.map(c => {
+  document.getElementById('contactCount') && (document.getElementById('contactCount').textContent = filtered.length + ' contact' + (filtered.length !== 1 ? 's' : ''));
+  container.innerHTML = filtered.map(c => {
     const ov   = isOverdue(c);
     const sc   = statusClass[c.status] || '';
     const tags = c.tags ? c.tags.split(',').filter(t=>t.trim()).map(t=>`<span class="tag-pill">${esc(t.trim())}</span>`).join('') : '';
     const cd   = cleanDate(c.lastContact);
-    return `<tr class="${ov?'overdue-row':''}">
-      <td>
-        <input class="edit-input" value="${esc(c.name)}" onchange="updateField('${c.id}','name',this.value)" />
-        ${ov ? '<span class="overdue-badge">Overdue</span>' : ''}
-        ${c.linkedin ? `<br><a class="linkedin-btn" href="${esc(c.linkedin)}" target="_blank"><i class="ti ti-brand-linkedin"></i> LinkedIn</a>` : ''}
-      </td>
-      <td><div class="edit-div" contenteditable="true" onblur="updateField('${c.id}','company',this.innerText.trim())">${esc(c.company)}</div></td>
-      <td><div class="edit-div" contenteditable="true" onblur="updateField('${c.id}','role',this.innerText.trim())">${esc(c.role)}</div></td>
-      <td>
-        <div style="display:flex;align-items:center;gap:4px;flex-wrap:wrap;">
-          <span class="priority-dot p-${c.priority||'Medium'}"></span>
-          <select class="edit-select" style="font-size:12px;" onchange="updateField('${c.id}','priority',this.value)">
-            ${priorityOptions.map(p=>`<option value="${p}"${c.priority===p?' selected':''}>${p}</option>`).join('')}
-          </select>
-          <span class="warm-cold ${isWarm(c)?'warm':'cold'}">${isWarm(c)?'Warm':'Cold'}</span>
+    return `
+    <div class="contact-card${ov?' overdue-card':''}">
+      <div class="contact-card-top">
+        <div class="contact-card-name" style="gap:6px;">
+          <span contenteditable="true" class="edit-div" style="font-size:15px;font-weight:600;width:auto;" onblur="updateField('${c.id}','name',this.innerText.trim())">${esc(c.name)}</span>${c.linkedin ? `<a href="${esc(c.linkedin)}" target="_blank" style="display:inline-flex;align-items:center;justify-content:center;width:18px;height:18px;background:#0a66c2;border-radius:3px;color:#fff;font-size:10px;font-weight:700;text-decoration:none;flex-shrink:0;">in</a>` : ''}
         </div>
-      </td>
-      <td>
+        <div class="contact-card-role">
+          <span contenteditable="true" class="edit-div" style="font-size:12px;" onblur="updateField('${c.id}','role',this.innerText.trim())">${esc(c.role)||'Add role...'}</span>
+        </div>
+        <div class="contact-card-company">
+          <i class="ti ti-building" style="font-size:13px;flex-shrink:0;"></i>
+          <a href="https://www.google.com/search?q=${encodeURIComponent(c.company)}" target="_blank" style="font-size:13px;font-weight:500;color:var(--ocean);text-decoration:none;" onmouseover="this.style.textDecoration='underline'" onmouseout="this.style.textDecoration='none'">${esc(c.company)||'Add company...'}</a>
+          ${c.linkedin ? `` : ''}
+        </div>
+      </div>
+      <div class="contact-card-row">
         <select class="edit-select ${sc}" onchange="updateField('${c.id}','status',this.value)">
           ${statusOptions.map(s=>`<option value="${s}"${c.status===s?' selected':''}>${s}</option>`).join('')}
         </select>
-      </td>
-      <td><input class="edit-input" type="date" value="${cd}" onchange="updateField('${c.id}','lastContact',this.value)" /></td>
-      <td>
-        <div style="display:flex;align-items:center;gap:6px;margin-bottom:3px;">
-          <span style="font-size:13px;color:var(--text-2);">${esc(c.notes||'')}</span>
-          <button class="icon-btn" onclick="openNotes('${c.id}')" title="Notes history"><i class="ti ti-notes"></i></button>
+        ${ov ? '<span class="overdue-badge">Overdue</span>' : ''}
+      </div>
+      <div class="contact-card-row">
+        <i class="ti ti-calendar" style="font-size:12px;color:var(--text-3);"></i>
+        <span style="font-size:12px;color:var(--text-2);cursor:pointer;" onclick="this.style.display='none';this.nextElementSibling.style.display='inline';">${shortDate(c.lastContact)||'Set date'}</span>
+        <input type="date" value="${cd}" onchange="updateField('${c.id}','lastContact',this.value)" style="display:none;border:none;background:transparent;font-size:12px;color:var(--text-2);font-family:inherit;outline:none;padding:0;width:130px;" onblur="this.style.display='none';this.previousElementSibling.style.display='inline';" />
+        <span class="warm-cold ${isWarm(c)?'warm':'cold'}">${isWarm(c)?'Warm':'Cold'}</span>
+        <span class="priority-dot p-${c.priority||'Medium'}"></span><span style="font-size:11px;color:var(--text-3);">${c.priority||'Medium'}</span>
+      </div>
+      <div class="contact-card-notes">
+        <div style="display:flex;align-items:center;gap:6px;">
+          <span contenteditable="true" class="edit-div" style="font-size:13px;flex:1;" onblur="updateField('${c.id}','notes',this.innerText.trim())">${esc(c.notes||'Add a note...')}</span>
+          <button class="icon-btn" onclick="openNotes('${c.id}')" title="Notes history"><i class="ti ti-notes" style="font-size:15px;"></i></button>
+          <button class="del-btn" onclick="deleteContact('${c.id}')" style="font-size:15px;"><i class="ti ti-trash"></i></button>
         </div>
-        ${tags ? `<div style="margin-bottom:3px;">${tags}</div>` : ''}
+        ${tags ? `<div style="margin-top:4px;">${tags}</div>` : ''}
+      </div>
+      <div class="contact-card-actions">
         <button class="ai-chip" onclick="getAISuggestion('${c.id}')"><i class="ti ti-sparkles"></i> Suggest next action</button>
-        <div class="ai-suggestion-box" id="ai-box-${c.id}"></div>
-      </td>
-      <td><button class="del-btn" onclick="deleteContact('${c.id}')"><i class="ti ti-trash"></i></button></td>
-    </tr>`;
+        <div class="ai-suggestion-box" id="ai-box-${c.id}" style="width:100%;margin:4px 0 0;"></div>
+      </div>
+    </div>`;
   }).join('');
 }
 
