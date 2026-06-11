@@ -125,7 +125,7 @@
 
     /* TABLE */
     .table-wrap { background: var(--card); border: 0.5px solid var(--border); border-radius: var(--radius-lg); overflow: hidden; overflow-x: auto; box-shadow: var(--shadow); }
-    table { width: 100%; border-collapse: collapse; font-size: 14px; min-width: 700px; table-layout: fixed; }
+    table { width: 100%; border-collapse: collapse; font-size: 14px; min-width: 700px; }
     th { text-align: left; font-weight: 500; font-size: 11px; text-transform: uppercase; letter-spacing: 0.05em; color: #fff; background: var(--navy-mid); padding: 10px 14px; white-space: nowrap; cursor: pointer; user-select: none; }
     th:hover { background: var(--navy-light); }
     td { padding: 10px 14px; border-bottom: 0.5px solid var(--border); vertical-align: middle; word-break: break-word; }
@@ -383,14 +383,14 @@
         <table>
           <thead>
             <tr>
-              <th style="width:14%" onclick="sortBy('name')">Name <i class="ti ti-selector" style="font-size:10px;"></i></th>
-              <th style="width:13%" onclick="sortBy('company')">Company</th>
-              <th style="width:12%" onclick="sortBy('role')">Role</th>
-              <th style="width:7%">Priority</th>
-              <th style="width:13%" onclick="sortBy('status')">Status</th>
-              <th style="width:10%" onclick="sortBy('lastContact')">Last contact</th>
+              <th onclick="sortBy('name')">Name <i class="ti ti-selector" style="font-size:10px;"></i></th>
+              <th onclick="sortBy('company')">Company</th>
+              <th onclick="sortBy('role')">Role</th>
+              <th>Priority</th>
+              <th onclick="sortBy('status')">Status</th>
+              <th onclick="sortBy('lastContact')">Last contact</th>
               <th>Notes / Actions</th>
-              <th style="width:44px"></th>
+              <th></th>
             </tr>
           </thead>
           <tbody id="tbody"></tbody>
