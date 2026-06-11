@@ -3,26 +3,38 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>PSC Networking Tracker</title>
+  <title>Network Momentum</title>
   <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@tabler/icons-webfont@3.19.0/dist/tabler-icons.min.css" />
   <style>
     *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
     :root {
-      --navy: #0a1f3c; --navy-mid: #0d2b52; --navy-light: #153a6b;
-      --ocean: #0e7490; --ocean-mid: #0891b2; --ocean-light: #22d3ee;
-      --seafoam: #cffafe; --sky: #e0f2fe; --white: #f8fbff;
-      --bg: #e8f4f8; --card: #ffffff;
-      --text-1: #0a1f3c; --text-2: #1e4976; --text-3: #5b8db8;
-      --border: rgba(14,116,144,0.15); --border-mid: rgba(14,116,144,0.35);
-      --radius: 10px; --radius-lg: 14px;
+      --navy: #0a1f3c;
+      --navy-mid: #0d2b52;
+      --navy-light: #153a6b;
+      --ocean: #0e7490;
+      --ocean-mid: #0891b2;
+      --ocean-light: #22d3ee;
+      --seafoam: #cffafe;
+      --sky: #e0f2fe;
+      --white: #f8fbff;
+      --bg: #e8f4f8;
+      --card: #ffffff;
+      --text-1: #0a1f3c;
+      --text-2: #1e4976;
+      --text-3: #5b8db8;
+      --border: rgba(14,116,144,0.15);
+      --border-mid: rgba(14,116,144,0.35);
+      --radius: 10px;
+      --radius-lg: 14px;
       --shadow: 0 1px 4px rgba(10,31,60,0.08);
     }
     body { font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif; background: var(--bg); color: var(--text-1); min-height: 100vh; font-size: 15px; line-height: 1.6; }
 
     /* TOP BAR */
     .topbar { background: var(--navy); height: 54px; display: flex; align-items: center; justify-content: space-between; padding: 0 1.5rem; border-bottom: 2px solid var(--ocean); position: sticky; top: 0; z-index: 200; }
-    .topbar-brand { display: flex; align-items: center; gap: 9px; color: #fff; font-size: 15px; font-weight: 500; }
-    .topbar-brand i { color: var(--ocean-light); font-size: 20px; }
+    .topbar-brand { display: flex; align-items: center; gap: 10px; color: #fff; font-size: 16px; font-weight: 600; letter-spacing: -0.01em; }
+    .topbar-brand .brand-icon { width: 28px; height: 28px; background: linear-gradient(135deg, var(--ocean), var(--ocean-light)); border-radius: 7px; display: flex; align-items: center; justify-content: center; font-size: 15px; }
+    .topbar-brand .brand-sub { font-size: 11px; font-weight: 400; color: var(--ocean-light); letter-spacing: 0.08em; text-transform: uppercase; display: block; line-height: 1; }
     .topbar-right { display: flex; align-items: center; gap: 8px; }
     .sheet-indicator { font-size: 12px; color: #f87171; display: flex; align-items: center; gap: 5px; }
     .sheet-indicator.connected { color: var(--ocean-light); }
@@ -31,15 +43,16 @@
 
     /* NAV TABS */
     .nav-tabs { background: var(--navy-mid); display: flex; gap: 0; padding: 0 1.5rem; border-bottom: 1px solid rgba(255,255,255,0.08); }
-    .nav-tab { font-size: 13px; color: rgba(255,255,255,0.5); padding: 10px 16px; cursor: pointer; border-bottom: 2px solid transparent; display: flex; align-items: center; gap: 6px; transition: color 0.15s; }
+    .nav-tab { font-size: 13px; color: rgba(255,255,255,0.5); padding: 10px 16px; cursor: pointer; border-bottom: 2px solid transparent; display: flex; align-items: center; gap: 6px; transition: color 0.15s; white-space: nowrap; }
     .nav-tab:hover { color: rgba(255,255,255,0.8); }
     .nav-tab.active { color: var(--ocean-light); border-bottom-color: var(--ocean-light); }
 
     /* SETUP */
     .setup-screen { max-width: 600px; margin: 3rem auto; padding: 0 1rem; }
     .setup-card { background: var(--card); border-radius: var(--radius-lg); border: 0.5px solid var(--border); box-shadow: var(--shadow); overflow: hidden; }
-    .setup-header { background: var(--navy); padding: 1.5rem; color: #fff; }
-    .setup-header h2 { font-size: 18px; font-weight: 500; margin-bottom: 4px; }
+    .setup-header { background: var(--navy); padding: 2rem 1.5rem; color: #fff; text-align: center; }
+    .setup-logo { width: 48px; height: 48px; background: linear-gradient(135deg, var(--ocean), var(--ocean-light)); border-radius: 12px; display: flex; align-items: center; justify-content: center; font-size: 24px; margin: 0 auto 12px; }
+    .setup-header h2 { font-size: 20px; font-weight: 600; margin-bottom: 4px; }
     .setup-header p { font-size: 13px; color: #93c5fd; }
     .setup-body { padding: 1.5rem; }
     .steps { display: flex; flex-direction: column; gap: 0; margin-bottom: 1.5rem; }
@@ -60,6 +73,8 @@
     .btn-primary { width: 100%; background: var(--navy); border: none; border-radius: var(--radius); padding: 11px 20px; font-size: 14px; font-family: inherit; color: #fff; cursor: pointer; display: flex; align-items: center; justify-content: center; gap: 7px; transition: background 0.15s; }
     .btn-primary:hover { background: var(--navy-light); }
     .btn-primary:disabled { opacity: 0.5; cursor: not-allowed; }
+    .btn-secondary { width: 100%; background: var(--ocean); border: none; border-radius: var(--radius); padding: 11px 20px; font-size: 14px; font-family: inherit; color: #fff; cursor: pointer; display: flex; align-items: center; justify-content: center; gap: 7px; transition: background 0.15s; margin-top: 8px; }
+    .btn-secondary:hover { background: var(--ocean-mid); }
     .error-msg { font-size: 13px; color: #b91c1c; background: #fee2e2; border-radius: 6px; padding: 8px 12px; margin-top: 10px; display: none; }
     .error-msg.show { display: block; }
 
@@ -72,10 +87,8 @@
 
     /* STATS */
     .stats { display: flex; gap: 10px; flex-wrap: wrap; margin-bottom: 1.5rem; }
-    .stat { background: var(--navy); border: 0.5px solid rgba(14,116,144,0.3); border-radius: var(--radius); padding: 10px 18px; font-size: 13px; color: #7ec8dc; box-shadow: var(--shadow); cursor: default; }
+    .stat { background: var(--navy); border: 0.5px solid rgba(14,116,144,0.3); border-radius: var(--radius); padding: 10px 18px; font-size: 13px; color: #7ec8dc; box-shadow: var(--shadow); }
     .stat strong { font-size: 22px; font-weight: 500; color: #fff; display: block; line-height: 1.1; }
-    .stat.clickable { cursor: pointer; transition: background 0.15s; }
-    .stat.clickable:hover { background: var(--navy-light); }
 
     /* ALERTS */
     .alerts { margin-bottom: 1.25rem; }
@@ -86,11 +99,11 @@
     .goals-bar-inner { display: flex; align-items: center; gap: 16px; flex-wrap: wrap; }
     .goal-label { font-size: 13px; color: var(--text-2); white-space: nowrap; }
     .goal-track { flex: 1; min-width: 120px; height: 8px; background: var(--sky); border-radius: 99px; overflow: hidden; }
-    .goal-fill { height: 100%; background: var(--ocean); border-radius: 99px; transition: width 0.4s; }
+    .goal-fill { height: 100%; background: linear-gradient(90deg, var(--ocean), var(--ocean-light)); border-radius: 99px; transition: width 0.4s; }
     .goal-pct { font-size: 13px; font-weight: 500; color: var(--navy); white-space: nowrap; }
     .goal-edit { font-size: 12px; color: var(--text-3); cursor: pointer; text-decoration: underline; }
 
-    /* CARD / FORM */
+    /* CARD */
     .card { background: var(--card); border: 0.5px solid var(--border); border-radius: var(--radius-lg); padding: 1.25rem; margin-bottom: 1.25rem; box-shadow: var(--shadow); border-top: 3px solid var(--ocean); }
     .card-label { font-size: 11px; font-weight: 600; text-transform: uppercase; letter-spacing: 0.06em; color: var(--ocean); margin-bottom: 12px; }
     .form-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(150px, 1fr)); gap: 10px; margin-bottom: 10px; }
@@ -107,7 +120,6 @@
     .filter-bar { display: flex; gap: 10px; flex-wrap: wrap; align-items: center; margin-bottom: 1rem; }
     .filter-bar label { font-size: 13px; color: var(--text-2); }
     .filter-bar select, .filter-bar input { width: auto; font-size: 13px; padding: 6px 10px; }
-    .tag-filter { display: flex; gap: 6px; flex-wrap: wrap; align-items: center; }
     .tag-chip { font-size: 12px; padding: 3px 10px; border-radius: 99px; background: var(--sky); color: var(--text-2); border: 0.5px solid var(--border); cursor: pointer; transition: background 0.1s; }
     .tag-chip.active { background: var(--navy); color: #fff; border-color: var(--navy); }
 
@@ -121,7 +133,6 @@
     tbody tr:hover td { background: var(--sky); }
 
     /* BADGES */
-    .badge { display: inline-block; font-size: 12px; font-weight: 500; padding: 3px 10px; border-radius: 99px; white-space: nowrap; }
     .s-Not-contacted { background: #e0f2fe; color: #0369a1; }
     .s-Contacted { background: #cffafe; color: #0e7490; }
     .s-Replied { background: #d1fae5; color: #065f46; }
@@ -129,12 +140,12 @@
     .s-Follow-up-needed { background: #fef3c7; color: #92400e; }
     .s-Closed { background: #fee2e2; color: #991b1b; }
 
-    .priority-dot { width: 8px; height: 8px; border-radius: 50%; display: inline-block; margin-right: 5px; flex-shrink: 0; }
+    .priority-dot { width: 8px; height: 8px; border-radius: 50%; display: inline-block; margin-right: 4px; flex-shrink: 0; }
     .p-High { background: #ef4444; }
     .p-Medium { background: #f59e0b; }
     .p-Low { background: #10b981; }
 
-    .warm-cold { font-size: 11px; padding: 2px 7px; border-radius: 99px; }
+    .warm-cold { font-size: 10px; padding: 2px 6px; border-radius: 99px; }
     .warm { background: #fef3c7; color: #92400e; }
     .cold { background: #e0f2fe; color: #0369a1; }
 
@@ -157,10 +168,9 @@
 
     .overdue-row td { background: #fffbeb !important; }
     .overdue-badge { font-size: 11px; color: #92400e; background: #fef3c7; border-radius: 4px; padding: 1px 6px; margin-left: 5px; }
-
     .tag-pill { font-size: 11px; background: var(--sky); color: var(--ocean); border-radius: 99px; padding: 2px 8px; display: inline-block; margin: 1px 2px; }
 
-    /* NOTES HISTORY */
+    /* NOTES */
     .notes-history { font-size: 13px; color: var(--text-2); }
     .note-entry { padding: 6px 0; border-bottom: 0.5px solid var(--border); }
     .note-entry:last-child { border-bottom: none; }
@@ -176,28 +186,21 @@
     .kanban-card-name { font-weight: 500; color: var(--text-1); margin-bottom: 2px; }
     .kanban-card-co { font-size: 12px; color: var(--text-3); }
     .kanban-card-meta { margin-top: 6px; display: flex; align-items: center; gap: 6px; flex-wrap: wrap; }
-    .kanban-count { background: rgba(255,255,255,0.2); border-radius: 99px; padding: 1px 8px; font-size: 11px; }
+    .kanban-count { background: rgba(0,0,0,0.1); border-radius: 99px; padding: 1px 8px; font-size: 11px; }
 
-    /* EMAIL TEMPLATES */
-    .template-section { margin-bottom: 1.5rem; }
-    .template-section h3 { font-size: 14px; font-weight: 500; margin-bottom: 8px; color: var(--text-1); }
-    .template-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); gap: 12px; }
+    /* TEMPLATES */
+    .template-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); gap: 12px; margin-bottom: 1.5rem; }
     .template-card { background: var(--card); border: 0.5px solid var(--border); border-radius: var(--radius-lg); padding: 1rem; box-shadow: var(--shadow); }
     .template-card h4 { font-size: 13px; font-weight: 600; color: var(--navy); margin-bottom: 6px; display: flex; align-items: center; gap: 6px; }
-    .template-body { font-size: 13px; color: var(--text-2); line-height: 1.7; background: var(--sky); border-radius: 8px; padding: 10px 12px; margin-bottom: 10px; white-space: pre-wrap; }
+    .template-body { font-size: 13px; color: var(--text-2); line-height: 1.7; background: var(--sky); border-radius: 8px; padding: 10px 12px; margin-bottom: 10px; white-space: pre-wrap; max-height: 140px; overflow: hidden; }
     .template-actions { display: flex; gap: 8px; }
 
-    /* WEEKLY SUMMARY */
+    /* WEEKLY */
     .summary-card { background: var(--card); border: 0.5px solid var(--border); border-radius: var(--radius-lg); padding: 1.25rem; box-shadow: var(--shadow); margin-bottom: 1.25rem; }
     .summary-card h3 { font-size: 15px; font-weight: 500; color: var(--navy); margin-bottom: 12px; display: flex; align-items: center; gap: 8px; }
     .summary-list { display: flex; flex-direction: column; gap: 8px; }
     .summary-item { display: flex; align-items: flex-start; gap: 10px; font-size: 14px; padding: 8px 12px; border-radius: 8px; background: var(--sky); }
     .summary-item i { color: var(--ocean); margin-top: 2px; flex-shrink: 0; }
-
-    /* EXPORT */
-    .empty { text-align: center; padding: 3rem; color: var(--text-3); font-size: 14px; }
-    .empty i { font-size: 32px; display: block; margin-bottom: 8px; }
-    .loading-row td { text-align: center; padding: 2rem; color: var(--text-3); }
 
     /* MODAL */
     .modal-overlay { position: fixed; inset: 0; background: rgba(10,31,60,0.5); z-index: 300; display: none; align-items: center; justify-content: center; padding: 1rem; }
@@ -210,6 +213,10 @@
     .modal-body { padding: 1.25rem; }
     .modal-footer { padding: 0 1.25rem 1.25rem; display: flex; gap: 8px; justify-content: flex-end; }
 
+    .empty { text-align: center; padding: 3rem; color: var(--text-3); font-size: 14px; }
+    .empty i { font-size: 32px; display: block; margin-bottom: 8px; }
+    .loading-row td { text-align: center; padding: 2rem; color: var(--text-3); }
+
     footer { text-align: center; margin-top: 2rem; font-size: 12px; color: var(--text-3); }
     .spinner { display: inline-block; width: 14px; height: 14px; border: 2px solid rgba(255,255,255,0.3); border-top-color: #fff; border-radius: 50%; animation: spin 0.6s linear infinite; }
     @keyframes spin { to { transform: rotate(360deg); } }
@@ -219,16 +226,20 @@
 </head>
 <body>
 
-<!-- Top bar -->
 <div class="topbar">
-  <div class="topbar-brand"><i class="ti ti-network"></i> PSC Networking Tracker</div>
+  <div class="topbar-brand">
+    <div class="brand-icon"><i class="ti ti-network" style="color:#fff;font-size:16px;"></i></div>
+    <div>
+      Network Momentum
+      <span class="brand-sub">Relationship Tracker</span>
+    </div>
+  </div>
   <div class="topbar-right">
     <div class="sheet-indicator" id="sheetIndicator"><i class="ti ti-table-off"></i> No sheet</div>
     <button class="btn-sm" onclick="showSetup()" id="changeSheetBtn" style="display:none"><i class="ti ti-settings"></i> Settings</button>
   </div>
 </div>
 
-<!-- Nav tabs (hidden until connected) -->
 <div class="nav-tabs" id="navTabs" style="display:none">
   <div class="nav-tab active" onclick="switchTab('list')" id="tab-list"><i class="ti ti-list"></i> Contacts</div>
   <div class="nav-tab" onclick="switchTab('kanban')" id="tab-kanban"><i class="ti ti-layout-kanban"></i> Pipeline</div>
@@ -236,13 +247,14 @@
   <div class="nav-tab" onclick="switchTab('templates')" id="tab-templates"><i class="ti ti-mail"></i> Templates</div>
 </div>
 
-<!-- SETUP SCREEN -->
+<!-- SETUP -->
 <div id="setupScreen">
   <div class="setup-screen">
     <div class="setup-card">
       <div class="setup-header">
-        <h2><i class="ti ti-table" style="margin-right:8px;"></i>Connect your Google Sheet</h2>
-        <p>Your data stays in a sheet you own. Follow these steps once, then you're set.</p>
+        <div class="setup-logo"><i class="ti ti-network" style="color:#fff;"></i></div>
+        <h2>Network Momentum</h2>
+        <p>Connect your Google Sheet to get started. Your data stays private and in your control.</p>
       </div>
       <div class="setup-body">
         <div class="steps">
@@ -256,22 +268,22 @@
           <div class="step">
             <div class="step-num">2</div>
             <div class="step-content">
-              <div class="step-title">Open Apps Script & paste the script</div>
-              <div class="step-desc">Click <strong>Extensions &gt; Apps Script</strong>, delete everything, paste the script from the <a href="Code.gs" style="color:var(--ocean);">Code.gs file</a> you downloaded earlier.</div>
+              <div class="step-title">Add the Apps Script</div>
+              <div class="step-desc">Click <strong>Extensions &gt; Apps Script</strong>, delete all existing code, paste in the script from your <code>Code.gs</code> file, and save.</div>
             </div>
           </div>
           <div class="step">
             <div class="step-num">3</div>
             <div class="step-content">
               <div class="step-title">Deploy as a Web App</div>
-              <div class="step-desc">Click <strong>Deploy &gt; New deployment</strong>. Set type to <strong>Web app</strong>, Execute as <strong>Me</strong>, Who has access <strong>Anyone</strong>. Click Deploy and authorize.</div>
+              <div class="step-desc">Click <strong>Deploy &gt; New deployment</strong>. Set type to <strong>Web app</strong>, Execute as <strong>Me</strong>, Who has access <strong>Anyone</strong>. Deploy and authorize.</div>
             </div>
           </div>
           <div class="step">
             <div class="step-num">4</div>
             <div class="step-content">
-              <div class="step-title">Paste your URLs below</div>
-              <div class="step-desc">Copy the Web App URL after deploying and paste it below. The Anthropic key is optional but powers AI suggestions.</div>
+              <div class="step-title">Paste your details below</div>
+              <div class="step-desc">Copy the Web App URL after deploying and paste it below along with your Anthropic API key for AI suggestions.</div>
             </div>
           </div>
         </div>
@@ -281,17 +293,20 @@
           <input id="inputScriptUrl" placeholder="https://script.google.com/macros/s/.../exec" />
         </div>
         <div class="input-group">
-          <label class="input-label">Anthropic API Key <span style="font-weight:400;text-transform:none;letter-spacing:0;color:var(--text-3)">(optional)</span></label>
+          <label class="input-label">Anthropic API Key <span style="font-weight:400;text-transform:none;letter-spacing:0;color:var(--text-3)">(optional — powers AI suggestions)</span></label>
           <input id="inputAnthropicKey" type="password" placeholder="sk-ant-..." />
           <div style="font-size:12px;color:var(--text-3);margin-top:5px;"><i class="ti ti-lock" style="font-size:11px;"></i> Stored only in your browser. <a href="https://console.anthropic.com" target="_blank" style="color:var(--ocean);">Get a key →</a></div>
         </div>
         <div class="input-group">
-          <label class="input-label">Weekly Goal <span style="font-weight:400;text-transform:none;letter-spacing:0;color:var(--text-3)">(new contacts per week)</span></label>
+          <label class="input-label">Weekly goal <span style="font-weight:400;text-transform:none;letter-spacing:0;color:var(--text-3)">(new contacts per week)</span></label>
           <input id="inputGoal" type="number" placeholder="5" min="1" max="50" value="5" />
         </div>
 
         <button class="btn-primary" id="connectBtn" onclick="connectSheet()">
           <i class="ti ti-plug-connected"></i> Connect my sheet
+        </button>
+        <button class="btn-secondary" onclick="saveSettingsOnly()">
+          <i class="ti ti-device-floppy"></i> Save settings only
         </button>
         <div class="error-msg" id="setupError"></div>
       </div>
@@ -302,7 +317,6 @@
 <!-- MAIN APP -->
 <div class="app" id="appScreen">
 
-  <!-- LIST TAB -->
   <div class="tab-panel active" id="panel-list">
     <div class="page">
       <div class="stats" id="stats"></div>
@@ -360,7 +374,7 @@
           <option value="Low">Low</option>
         </select>
         <input id="filter-search" placeholder="Search name, company, tag..." oninput="renderTable()" style="min-width:180px;" />
-        <div class="tag-filter" id="tagFilter"></div>
+        <div id="tagFilter" style="display:flex;gap:6px;flex-wrap:wrap;align-items:center;"></div>
         <button class="btn btn-outline" onclick="loadContacts()" style="margin-left:auto;"><i class="ti ti-refresh"></i> Refresh</button>
         <button class="btn btn-outline" onclick="exportCSV()"><i class="ti ti-download"></i> Export CSV</button>
       </div>
@@ -382,31 +396,22 @@
           <tbody id="tbody"></tbody>
         </table>
       </div>
-      <footer>Your data lives in your own Google Sheet.</footer>
+      <footer>Your data lives in your own Google Sheet. Nothing is stored on this server.</footer>
     </div>
   </div>
 
-  <!-- KANBAN TAB -->
   <div class="tab-panel" id="panel-kanban">
-    <div class="page">
-      <div class="kanban" id="kanban"></div>
-    </div>
+    <div class="page"><div class="kanban" id="kanban"></div></div>
   </div>
 
-  <!-- WEEKLY PLAN TAB -->
   <div class="tab-panel" id="panel-weekly">
-    <div class="page">
-      <div id="weeklySummary"></div>
-    </div>
+    <div class="page"><div id="weeklySummary"></div></div>
   </div>
 
-  <!-- TEMPLATES TAB -->
   <div class="tab-panel" id="panel-templates">
     <div class="page">
-      <div class="template-section">
-        <h3>Email templates — click a contact's name in a template to personalize it</h3>
-        <div class="template-grid" id="templateGrid"></div>
-      </div>
+      <div style="margin-bottom:1rem;font-size:14px;color:var(--text-2);">Click <strong>Personalize</strong> to fill in a contact's details before copying.</div>
+      <div class="template-grid" id="templateGrid"></div>
     </div>
   </div>
 
@@ -446,11 +451,11 @@
         <select id="templateContactSelect" onchange="renderTemplatePreview()"></select>
       </div>
       <label class="input-label">Preview</label>
-      <div class="template-body" id="templatePreview" style="min-height:100px;"></div>
+      <div class="template-body" id="templatePreview" style="max-height:none;min-height:120px;"></div>
     </div>
     <div class="modal-footer">
       <button class="btn btn-outline" onclick="closeModal('templateModal')">Close</button>
-      <button class="btn" onclick="copyTemplate()"><i class="ti ti-copy"></i> Copy to clipboard</button>
+      <button class="btn" onclick="copyTemplate()"><i class="ti ti-copy"></i> Copy</button>
     </div>
   </div>
 </div>
@@ -458,7 +463,7 @@
 <div class="toast" id="toast"></div>
 
 <script>
-const STORAGE_KEY  = 'psc_tracker_v3';
+const STORAGE_KEY  = 'nm_tracker_v1';
 const OVERDUE_DAYS = 7;
 let scriptUrl    = '';
 let anthropicKey = '';
@@ -468,23 +473,36 @@ let aiCache      = {};
 let sortField    = 'name';
 let sortAsc      = true;
 let activeTag    = '';
-let currentNotesId   = null;
+let currentNotesId     = null;
 let currentTemplateKey = null;
 
 // ── CFG ──────────────────────────────────────────────
-function saveCfg() { localStorage.setItem(STORAGE_KEY, JSON.stringify({ scriptUrl, anthropicKey, weeklyGoal })); }
+function saveCfg() {
+  localStorage.setItem(STORAGE_KEY, JSON.stringify({ scriptUrl, anthropicKey, weeklyGoal }));
+}
 function loadCfg() {
-  try { const d = localStorage.getItem(STORAGE_KEY); if (d) { const p = JSON.parse(d); scriptUrl = p.scriptUrl||''; anthropicKey = p.anthropicKey||''; weeklyGoal = p.weeklyGoal||5; } } catch(e){}
+  try {
+    const d = localStorage.getItem(STORAGE_KEY);
+    if (d) { const p = JSON.parse(d); scriptUrl = p.scriptUrl||''; anthropicKey = p.anthropicKey||''; weeklyGoal = p.weeklyGoal||5; }
+  } catch(e) {}
 }
 
 // ── GAS ──────────────────────────────────────────────
 async function gas(params) {
   const url = scriptUrl + '?' + new URLSearchParams(params).toString();
-  const r = await fetch(url);
-  if (!r.ok) throw new Error('Request failed');
-  const data = await r.json();
-  if (data.error) throw new Error(data.error);
-  return data;
+  const controller = new AbortController();
+  const timer = setTimeout(() => controller.abort(), 20000);
+  try {
+    const r = await fetch(url, { signal: controller.signal });
+    clearTimeout(timer);
+    if (!r.ok) throw new Error('HTTP ' + r.status);
+    const data = await r.json();
+    if (data.error) throw new Error(data.error);
+    return data;
+  } catch(e) {
+    clearTimeout(timer);
+    throw e;
+  }
 }
 
 // ── SETUP ─────────────────────────────────────────────
@@ -497,33 +515,46 @@ function showSetup() {
   document.getElementById('inputGoal').value         = weeklyGoal   || 5;
 }
 
+function saveSettingsOnly() {
+  const key  = document.getElementById('inputAnthropicKey').value.trim();
+  const goal = parseInt(document.getElementById('inputGoal').value) || 5;
+  const url  = document.getElementById('inputScriptUrl').value.trim();
+  if (url) scriptUrl = url;
+  anthropicKey = key;
+  weeklyGoal   = goal;
+  saveCfg();
+  showToast('Settings saved');
+  if (scriptUrl) {
+    document.getElementById('setupScreen').style.display = 'none';
+    document.getElementById('appScreen').classList.add('show');
+    document.getElementById('navTabs').style.display = 'flex';
+    document.getElementById('changeSheetBtn').style.display = 'flex';
+  }
+}
+
 async function connectSheet() {
-  const btn = document.getElementById("connectBtn");
-  const err = document.getElementById("setupError");
-  err.classList.remove("show");
-  const url = document.getElementById("inputScriptUrl").value.trim();
-  if (!url || !url.includes("script.google.com")) { showError(err, "Please paste a valid Google Apps Script Web App URL."); return; }
-  btn.disabled = true; btn.innerHTML = "<span class="spinner"></span> Connecting...";
+  const btn = document.getElementById('connectBtn');
+  const err = document.getElementById('setupError');
+  err.classList.remove('show');
+  const url = document.getElementById('inputScriptUrl').value.trim();
+  if (!url || !url.includes('script.google.com')) { showError(err, 'Please paste a valid Google Apps Script Web App URL.'); return; }
+  btn.disabled = true;
+  btn.innerHTML = '<span class="spinner"></span> Connecting...';
   try {
     scriptUrl    = url;
-    anthropicKey = document.getElementById("inputAnthropicKey").value.trim();
-    weeklyGoal   = parseInt(document.getElementById("inputGoal").value) || 5;
-    const controller = new AbortController();
-    const timer = setTimeout(() => controller.abort(), 15000);
-    const testUrl = scriptUrl + "?" + new URLSearchParams({ action: "headers" }).toString();
-    const r = await fetch(testUrl, { signal: controller.signal });
-    clearTimeout(timer);
-    if (!r.ok) throw new Error("HTTP " + r.status);
-    const data = await r.json();
-    if (data.error) throw new Error(data.error);
-    saveCfg(); await launchApp();
+    anthropicKey = document.getElementById('inputAnthropicKey').value.trim();
+    weeklyGoal   = parseInt(document.getElementById('inputGoal').value) || 5;
+    await gas({ action: 'headers' });
+    saveCfg();
+    await launchApp();
   } catch(e) {
-    let msg = "Could not connect. ";
-    if (e.name === "AbortError") msg += "Request timed out — check the URL and make sure Who has access is set to Anyone.";
-    else if (e.message.includes("Failed to fetch")) msg += "Could not reach the script. Check the URL.";
+    let msg = 'Could not connect. ';
+    if (e.name === 'AbortError') msg += 'Request timed out. Check your URL and make sure Who has access is set to Anyone.';
+    else if (e.message.includes('Failed to fetch')) msg += 'Could not reach the script. Check the URL.';
     else msg += e.message;
     showError(err, msg);
-    btn.disabled = false; btn.innerHTML = "<i class="ti ti-plug-connected"></i> Connect my sheet";
+    btn.disabled = false;
+    btn.innerHTML = '<i class="ti ti-plug-connected"></i> Connect my sheet';
   }
 }
 
@@ -596,7 +627,7 @@ async function addContact() {
     await gas({ action: 'append', row: JSON.stringify(row) });
     contacts.push({ id, name, company:row[2], role:row[3], status:row[4], lastContact:row[5], notes:row[6], addedAt:row[7], priority:row[8], tags:row[9], linkedin:row[10], notesHistory:'' });
     ['f-name','f-co','f-role','f-notes','f-date','f-tags','f-linkedin'].forEach(i => document.getElementById(i).value = '');
-    document.getElementById('f-status').value = 'Not contacted';
+    document.getElementById('f-status').value   = 'Not contacted';
     document.getElementById('f-priority').value = 'Medium';
     renderStats(); renderAlerts(); renderGoals(); renderTagFilter(); renderTable();
     showToast('Contact added');
@@ -606,6 +637,7 @@ async function addContact() {
 
 // ── UPDATE ────────────────────────────────────────────
 const colMap = { name:2, company:3, role:4, status:5, lastContact:6, notes:7, priority:9, tags:10, linkedin:11, notesHistory:12 };
+
 async function updateField(id, field, value) {
   const c = contacts.find(c => c.id === id);
   if (!c) return;
@@ -614,7 +646,7 @@ async function updateField(id, field, value) {
   if (!col) return;
   try {
     await gas({ action: 'update', row: sheetRow(id), col, value });
-    if (['status','priority'].includes(field)) { renderStats(); renderAlerts(); renderGoals(); renderTable(); }
+    if (['status','priority'].includes(field)) { renderStats(); renderAlerts(); renderTable(); }
   } catch(e) { showToast('Save error: ' + e.message); }
 }
 
@@ -629,7 +661,7 @@ async function deleteContact(id) {
   } catch(e) { showToast('Error: ' + e.message); }
 }
 
-// ── NOTES HISTORY ─────────────────────────────────────
+// ── NOTES ─────────────────────────────────────────────
 function openNotes(id) {
   currentNotesId = id;
   const c = contacts.find(c => c.id === id);
@@ -641,7 +673,7 @@ function openNotes(id) {
 
 function renderNotesHistory(c) {
   let history = [];
-  try { history = c.notesHistory ? JSON.parse(c.notesHistory) : []; } catch(e){}
+  try { history = c.notesHistory ? JSON.parse(c.notesHistory) : []; } catch(e) {}
   if (c.notes && history.length === 0) history = [{ ts: c.addedAt || '', text: c.notes }];
   document.getElementById('notesHistory').innerHTML = history.length
     ? history.slice().reverse().map(n => `<div class="note-entry"><div class="note-ts"><i class="ti ti-clock" style="font-size:10px;"></i> ${n.ts || 'No date'}</div><div>${esc(n.text)}</div></div>`).join('')
@@ -654,7 +686,7 @@ async function saveNote() {
   const c = contacts.find(c => c.id === currentNotesId);
   if (!c) return;
   let history = [];
-  try { history = c.notesHistory ? JSON.parse(c.notesHistory) : []; } catch(e){}
+  try { history = c.notesHistory ? JSON.parse(c.notesHistory) : []; } catch(e) {}
   const ts = new Date().toLocaleString();
   history.push({ ts, text });
   const newHistory = JSON.stringify(history);
@@ -672,27 +704,42 @@ async function saveNote() {
 
 function closeModal(id) { document.getElementById(id).classList.remove('show'); }
 
-// ── AI SUGGESTION ──────────────────────────────────────
+// ── AI ────────────────────────────────────────────────
 async function getAISuggestion(id) {
   const box = document.getElementById('ai-box-' + id);
   box.style.display = 'block';
-  if (!anthropicKey) { box.textContent = 'Add your Anthropic API key in Settings to enable this.'; return; }
+  if (!anthropicKey) { box.textContent = 'Add your Anthropic API key in Settings to enable AI suggestions.'; return; }
   if (aiCache[id]) { box.textContent = aiCache[id]; return; }
   const c = contacts.find(c => c.id === id);
   if (!c) return;
   box.textContent = 'Thinking...';
   const days = c.lastContact ? Math.floor((Date.now() - new Date(c.lastContact)) / 86400000) : null;
-  const prompt = `You are a job search coach. Give one specific, actionable next step (1-2 sentences, plain text) for this contact:\nName: ${c.name}\nCompany: ${c.company}\nRole: ${c.role}\nStatus: ${c.status}\nLast contact: ${c.lastContact||'unknown'}${days!==null?' ('+days+' days ago)':''}\nNotes: ${c.notes||'none'}\nBe direct. No preamble.`;
+  const prompt = 'You are a job search coach. Give one specific, actionable next step (1-2 sentences, plain text) for this contact. Name: ' + c.name + ', Company: ' + c.company + ', Role: ' + c.role + ', Status: ' + c.status + ', Last contact: ' + (c.lastContact||'unknown') + (days!==null?' ('+days+' days ago)':'') + ', Notes: ' + (c.notes||'none') + '. Be direct. No preamble.';
   try {
-    const resp = await fetch('https://api.anthropic.com/v1/messages', {
-      method: 'POST',
-      headers: { 'Content-Type': 'application/json', 'x-api-key': anthropicKey, 'anthropic-version': '2023-06-01' },
-      body: JSON.stringify({ model: 'claude-sonnet-4-20250514', max_tokens: 1000, messages: [{ role:'user', content: prompt }] })
-    });
+    const aiUrl = scriptUrl + '?' + new URLSearchParams({ action: 'ai_suggest', apiKey: anthropicKey, prompt: prompt }).toString();
+    const resp = await fetch(aiUrl);
     const data = await resp.json();
-    const text = data.content?.find(b => b.type==='text')?.text || 'No suggestion available.';
-    aiCache[id] = text; box.textContent = text;
-  } catch(e) { box.textContent = 'Could not load suggestion.'; }
+    if (data.error) throw new Error(data.error);
+    const text = data.suggestion || 'No suggestion available.';
+    aiCache[id] = text;
+    box.textContent = text;
+  } catch(e) { box.textContent = 'Could not load suggestion: ' + e.message; }
+}
+
+async function getAISuggestionInline(id) {
+  const c = contacts.find(c => c.id === id);
+  if (!c) return;
+  if (!anthropicKey) { showToast('Add Anthropic API key in Settings first.'); return; }
+  showToast('Thinking...');
+  const days = c.lastContact ? Math.floor((Date.now() - new Date(c.lastContact)) / 86400000) : null;
+  const prompt = 'Job search coach: one specific next step (1 sentence) for ' + c.name + ' at ' + c.company + ', status: ' + c.status + ', last contact: ' + (days ? days+' days ago' : 'unknown') + '. Notes: ' + (c.notes||'none') + '. No preamble.';
+  try {
+    const aiUrl = scriptUrl + '?' + new URLSearchParams({ action: 'ai_suggest', apiKey: anthropicKey, prompt: prompt }).toString();
+    const resp = await fetch(aiUrl);
+    const data = await resp.json();
+    if (data.error) throw new Error(data.error);
+    showToast(data.suggestion || 'No suggestion.', 6000);
+  } catch(e) { showToast('Error: ' + e.message); }
 }
 
 // ── SORT ──────────────────────────────────────────────
@@ -701,25 +748,33 @@ function sortBy(field) {
   renderTable();
 }
 
-// ── RENDER HELPERS ────────────────────────────────────
-const statusClass = { 'Not contacted':'s-Not-contacted','Contacted':'s-Contacted','Replied':'s-Replied','Meeting scheduled':'s-Meeting-scheduled','Follow-up needed':'s-Follow-up-needed','Closed':'s-Closed' };
+// ── RENDER ────────────────────────────────────────────
+const statusClass   = { 'Not contacted':'s-Not-contacted','Contacted':'s-Contacted','Replied':'s-Replied','Meeting scheduled':'s-Meeting-scheduled','Follow-up needed':'s-Follow-up-needed','Closed':'s-Closed' };
 const statusOptions = ['Not contacted','Contacted','Replied','Meeting scheduled','Follow-up needed','Closed'];
 const priorityOptions = ['High','Medium','Low'];
-const kanbanColors = { 'Not contacted':'#e0f2fe','Contacted':'#cffafe','Replied':'#d1fae5','Meeting scheduled':'#e0e7ff','Follow-up needed':'#fef3c7','Closed':'#fee2e2' };
-const kanbanText   = { 'Not contacted':'#0369a1','Contacted':'#0e7490','Replied':'#065f46','Meeting scheduled':'#3730a3','Follow-up needed':'#92400e','Closed':'#991b1b' };
+const kanbanColors  = { 'Not contacted':'#e0f2fe','Contacted':'#cffafe','Replied':'#d1fae5','Meeting scheduled':'#e0e7ff','Follow-up needed':'#fef3c7','Closed':'#fee2e2' };
+const kanbanText    = { 'Not contacted':'#0369a1','Contacted':'#0e7490','Replied':'#065f46','Meeting scheduled':'#3730a3','Follow-up needed':'#92400e','Closed':'#991b1b' };
 
 function isOverdue(c) {
   if (!c.lastContact || c.status === 'Closed') return false;
-  return Math.floor((Date.now() - new Date(c.lastContact)) / 86400000) >= OVERDUE_DAYS;
+  const d = c.lastContact.includes('T') ? c.lastContact.split('T')[0] : c.lastContact;
+  return Math.floor((Date.now() - new Date(d)) / 86400000) >= OVERDUE_DAYS;
 }
 
 function isWarm(c) {
   if (!c.lastContact) return false;
-  return Math.floor((Date.now() - new Date(c.lastContact)) / 86400000) <= 14;
+  const d = c.lastContact.includes('T') ? c.lastContact.split('T')[0] : c.lastContact;
+  return Math.floor((Date.now() - new Date(d)) / 86400000) <= 14;
+}
+
+function cleanDate(d) {
+  if (!d) return '';
+  return d.includes('T') ? d.split('T')[0] : d;
 }
 
 function renderStats() {
-  const counts = {}; contacts.forEach(c => counts[c.status] = (counts[c.status]||0)+1);
+  const counts = {};
+  contacts.forEach(c => counts[c.status] = (counts[c.status]||0)+1);
   const overdue = contacts.filter(isOverdue).length;
   document.getElementById('stats').innerHTML = [
     ['Total', contacts.length, 'ti-users'],
@@ -733,7 +788,7 @@ function renderStats() {
 function renderGoals() {
   const now  = new Date();
   const weekStart = new Date(now); weekStart.setDate(now.getDate() - now.getDay());
-  const thisWeek = contacts.filter(c => c.addedAt && new Date(c.addedAt) >= weekStart).length;
+  const thisWeek  = contacts.filter(c => c.addedAt && new Date(cleanDate(c.addedAt)) >= weekStart).length;
   const pct = Math.min(100, Math.round((thisWeek / weeklyGoal) * 100));
   document.getElementById('goalsBar').innerHTML = `
     <div class="goals-bar">
@@ -748,36 +803,16 @@ function renderGoals() {
 
 function renderAlerts() {
   document.getElementById('alerts').innerHTML = contacts.filter(isOverdue).map(c => {
-    const d = Math.floor((Date.now() - new Date(c.lastContact)) / 86400000);
+    const d = Math.floor((Date.now() - new Date(cleanDate(c.lastContact))) / 86400000);
     return `<div class="alert-item"><i class="ti ti-alarm" style="color:#f97316;flex-shrink:0;"></i><strong>${esc(c.name)}</strong> at ${esc(c.company)} — no contact in ${d} days. <button class="ai-chip" style="margin-left:8px;" onclick="getAISuggestionInline('${c.id}')"><i class="ti ti-sparkles"></i> Suggest action</button></div>`;
   }).join('');
-}
-
-async function getAISuggestionInline(id) {
-  const c = contacts.find(c => c.id === id);
-  if (!c || !anthropicKey) { showToast('Add Anthropic API key in Settings first.'); return; }
-  showToast('Thinking...');
-  const days = c.lastContact ? Math.floor((Date.now() - new Date(c.lastContact)) / 86400000) : null;
-  const prompt = `Job search coach: one specific next step (1 sentence) for ${c.name} at ${c.company}, status: ${c.status}, last contact: ${days ? days+' days ago' : 'unknown'}. Notes: ${c.notes||'none'}. No preamble.`;
-  try {
-    const resp = await fetch('https://api.anthropic.com/v1/messages', {
-      method: 'POST',
-      headers: { 'Content-Type': 'application/json', 'x-api-key': anthropicKey, 'anthropic-version': '2023-06-01' },
-      body: JSON.stringify({ model: 'claude-sonnet-4-20250514', max_tokens: 1000, messages: [{ role:'user', content: prompt }] })
-    });
-    const data = await resp.json();
-    const text = data.content?.find(b => b.type==='text')?.text || '';
-    showToast(text, 6000);
-  } catch(e) { showToast('Could not load suggestion.'); }
 }
 
 function renderTagFilter() {
   const allTags = new Set();
   contacts.forEach(c => { if (c.tags) c.tags.split(',').forEach(t => { const tt = t.trim(); if (tt) allTags.add(tt); }); });
   const tags = [...allTags];
-  document.getElementById('tagFilter').innerHTML = tags.length
-    ? tags.map(t => `<span class="tag-chip ${activeTag===t?'active':''}" onclick="filterByTag('${esc(t)}')">${esc(t)}</span>`).join('')
-    : '';
+  document.getElementById('tagFilter').innerHTML = tags.map(t => `<span class="tag-chip ${activeTag===t?'active':''}" onclick="filterByTag('${esc(t)}')">${esc(t)}</span>`).join('');
 }
 
 function filterByTag(tag) {
@@ -790,8 +825,8 @@ function renderTable() {
   const fp = document.getElementById('filter-priority').value;
   const q  = document.getElementById('filter-search').value.toLowerCase();
   let filtered = contacts.filter(c =>
-    (fs==='all'||c.status===fs) &&
-    (fp==='all'||c.priority===fp) &&
+    (fs === 'all' || c.status === fs) &&
+    (fp === 'all' || c.priority === fp) &&
     (!activeTag || (c.tags && c.tags.split(',').map(t=>t.trim()).includes(activeTag))) &&
     (!q || c.name.toLowerCase().includes(q) || c.company.toLowerCase().includes(q) || (c.tags||'').toLowerCase().includes(q))
   );
@@ -801,39 +836,42 @@ function renderTable() {
   });
 
   const tbody = document.getElementById('tbody');
-  if (!filtered.length) { tbody.innerHTML = `<tr><td colspan="8" class="empty"><i class="ti ti-user-search"></i><br>No contacts yet.</td></tr>`; return; }
+  if (!filtered.length) { tbody.innerHTML = `<tr><td colspan="8" class="empty"><i class="ti ti-user-search"></i><br>No contacts yet. Add one above.</td></tr>`; return; }
 
   tbody.innerHTML = filtered.map(c => {
-    const ov = isOverdue(c);
-    const sc = statusClass[c.status] || '';
+    const ov   = isOverdue(c);
+    const sc   = statusClass[c.status] || '';
     const tags = c.tags ? c.tags.split(',').filter(t=>t.trim()).map(t=>`<span class="tag-pill">${esc(t.trim())}</span>`).join('') : '';
+    const cd   = cleanDate(c.lastContact);
     return `<tr class="${ov?'overdue-row':''}">
       <td>
-        <input class="edit-input" value="${esc(c.name)}" onchange="updateField('${c.id}','name',this.value)"/>
-        ${ov?'<span class="overdue-badge">Overdue</span>':''}
-        ${c.linkedin?`<br><a class="linkedin-btn" href="${esc(c.linkedin)}" target="_blank"><i class="ti ti-brand-linkedin"></i> LinkedIn</a>`:''}
+        <input class="edit-input" value="${esc(c.name)}" onchange="updateField('${c.id}','name',this.value)" />
+        ${ov ? '<span class="overdue-badge">Overdue</span>' : ''}
+        ${c.linkedin ? `<br><a class="linkedin-btn" href="${esc(c.linkedin)}" target="_blank"><i class="ti ti-brand-linkedin"></i> LinkedIn</a>` : ''}
       </td>
-      <td><input class="edit-input" value="${esc(c.company)}" onchange="updateField('${c.id}','company',this.value)"/></td>
-      <td><input class="edit-input" value="${esc(c.role)}" onchange="updateField('${c.id}','role',this.value)"/></td>
+      <td><input class="edit-input" value="${esc(c.company)}" onchange="updateField('${c.id}','company',this.value)" /></td>
+      <td><input class="edit-input" value="${esc(c.role)}" onchange="updateField('${c.id}','role',this.value)" /></td>
       <td>
-        <select class="edit-select" style="font-size:12px;" onchange="updateField('${c.id}','priority',this.value)">
-          ${priorityOptions.map(p=>`<option value="${p}"${c.priority===p?' selected':''}>${p}</option>`).join('')}
-        </select>
-        <span class="priority-dot p-${c.priority||'Medium'}"></span>
-        <span class="warm-cold ${isWarm(c)?'warm':'cold'}" style="font-size:10px;">${isWarm(c)?'Warm':'Cold'}</span>
+        <div style="display:flex;align-items:center;gap:4px;">
+          <span class="priority-dot p-${c.priority||'Medium'}"></span>
+          <select class="edit-select" style="font-size:12px;" onchange="updateField('${c.id}','priority',this.value)">
+            ${priorityOptions.map(p=>`<option value="${p}"${c.priority===p?' selected':''}>${p}</option>`).join('')}
+          </select>
+        </div>
+        <span class="warm-cold ${isWarm(c)?'warm':'cold'}">${isWarm(c)?'Warm':'Cold'}</span>
       </td>
       <td>
         <select class="edit-select ${sc}" onchange="updateField('${c.id}','status',this.value)">
           ${statusOptions.map(s=>`<option value="${s}"${c.status===s?' selected':''}>${s}</option>`).join('')}
         </select>
       </td>
-      <td><input class="edit-input" type="date" value="${esc(c.lastContact)}" onchange="updateField('${c.id}','lastContact',this.value)"/></td>
+      <td><input class="edit-input" type="date" value="${cd}" onchange="updateField('${c.id}','lastContact',this.value)" /></td>
       <td>
         <div style="display:flex;align-items:center;gap:6px;margin-bottom:3px;">
           <span style="font-size:13px;color:var(--text-2);">${esc(c.notes||'')}</span>
           <button class="icon-btn" onclick="openNotes('${c.id}')" title="Notes history"><i class="ti ti-notes"></i></button>
         </div>
-        ${tags ? `<div>${tags}</div>` : ''}
+        ${tags ? `<div style="margin-bottom:3px;">${tags}</div>` : ''}
         <button class="ai-chip" onclick="getAISuggestion('${c.id}')"><i class="ti ti-sparkles"></i> Suggest next action</button>
         <div class="ai-suggestion-box" id="ai-box-${c.id}"></div>
       </td>
@@ -851,7 +889,7 @@ function renderKanban() {
     <div class="kanban-col">
       <div class="kanban-header" style="background:${kanbanColors[s]};color:${kanbanText[s]};">
         <span>${s}</span>
-        <span class="kanban-count" style="background:rgba(0,0,0,0.1);">${groups[s].length}</span>
+        <span class="kanban-count">${groups[s].length}</span>
       </div>
       <div class="kanban-body">
         ${groups[s].length ? groups[s].map(c => `
@@ -862,19 +900,19 @@ function renderKanban() {
               <span class="priority-dot p-${c.priority||'Medium'}"></span>
               <span style="font-size:11px;color:var(--text-3);">${c.priority||'Medium'}</span>
               ${isOverdue(c)?'<span class="overdue-badge">Overdue</span>':''}
-              ${isWarm(c)?'<span class="warm-cold warm" style="font-size:10px;">Warm</span>':''}
+              ${isWarm(c)?'<span class="warm-cold warm">Warm</span>':''}
             </div>
           </div>`).join('') : `<div style="font-size:13px;color:var(--text-3);padding:8px;text-align:center;">Empty</div>`}
       </div>
     </div>`).join('');
 }
 
-// ── WEEKLY PLAN ───────────────────────────────────────
+// ── WEEKLY ────────────────────────────────────────────
 function renderWeekly() {
   const now = new Date();
   const weekStart = new Date(now); weekStart.setDate(now.getDate() - now.getDay());
   const weekEnd   = new Date(weekStart); weekEnd.setDate(weekStart.getDate() + 6);
-  const thisWeek  = contacts.filter(c => c.addedAt && new Date(c.addedAt) >= weekStart).length;
+  const thisWeek  = contacts.filter(c => c.addedAt && new Date(cleanDate(c.addedAt)) >= weekStart).length;
   const overdue   = contacts.filter(isOverdue);
   const followUp  = contacts.filter(c => c.status === 'Follow-up needed');
   const meetings  = contacts.filter(c => c.status === 'Meeting scheduled');
@@ -885,12 +923,12 @@ function renderWeekly() {
     <div class="summary-card">
       <h3><i class="ti ti-calendar-week" style="color:var(--ocean);"></i> Week of ${weekStart.toLocaleDateString()} — ${weekEnd.toLocaleDateString()}</h3>
       <div class="summary-list">
-        <div class="summary-item"><i class="ti ti-target"></i><div><strong>${thisWeek} of ${weeklyGoal}</strong> new contacts added this week. ${remaining > 0 ? `Reach out to <strong>${remaining} more</strong> to hit your goal.` : 'Goal reached!'}</div></div>
-        ${overdue.length ? `<div class="summary-item"><i class="ti ti-alarm" style="color:#f97316;"></i><div><strong>${overdue.length} overdue</strong> contact${overdue.length>1?'s':''}: ${overdue.map(c=>esc(c.name)).join(', ')}. Follow up now.</div></div>` : ''}
-        ${followUp.length ? `<div class="summary-item"><i class="ti ti-bell" style="color:#f59e0b;"></i><div><strong>${followUp.length} contact${followUp.length>1?'s':''}</strong> waiting for follow-up: ${followUp.slice(0,3).map(c=>esc(c.name)).join(', ')}${followUp.length>3?'...':''}.</div></div>` : ''}
-        ${meetings.length ? `<div class="summary-item"><i class="ti ti-calendar" style="color:#6366f1;"></i><div><strong>${meetings.length} meeting${meetings.length>1?'s':''}</strong> scheduled: ${meetings.map(c=>esc(c.name)+' at '+esc(c.company)).join(', ')}.</div></div>` : ''}
-        ${notContacted.length && remaining > 0 ? `<div class="summary-item"><i class="ti ti-send" style="color:var(--ocean);"></i><div>Suggested first outreach: ${notContacted.map(c=>`<strong>${esc(c.name)}</strong> at ${esc(c.company)}`).join(', ')}.</div></div>` : ''}
-        ${overdue.length === 0 && followUp.length === 0 ? `<div class="summary-item"><i class="ti ti-circle-check" style="color:#10b981;"></i><div>You're all caught up! No overdue contacts.</div></div>` : ''}
+        <div class="summary-item"><i class="ti ti-target"></i><div><strong>${thisWeek} of ${weeklyGoal}</strong> new contacts added this week. ${remaining > 0 ? `Reach out to <strong>${remaining} more</strong> to hit your goal.` : '🎉 Goal reached!'}</div></div>
+        ${overdue.length ? `<div class="summary-item"><i class="ti ti-alarm" style="color:#f97316;"></i><div><strong>${overdue.length} overdue</strong>: ${overdue.map(c=>esc(c.name)).join(', ')}. Follow up now.</div></div>` : ''}
+        ${followUp.length ? `<div class="summary-item"><i class="ti ti-bell" style="color:#f59e0b;"></i><div><strong>${followUp.length} awaiting follow-up</strong>: ${followUp.slice(0,3).map(c=>esc(c.name)).join(', ')}${followUp.length>3?'...':''}.</div></div>` : ''}
+        ${meetings.length ? `<div class="summary-item"><i class="ti ti-calendar" style="color:#6366f1;"></i><div><strong>${meetings.length} meeting${meetings.length>1?'s':''} scheduled</strong>: ${meetings.map(c=>esc(c.name)+' at '+esc(c.company)).join(', ')}.</div></div>` : ''}
+        ${notContacted.length && remaining > 0 ? `<div class="summary-item"><i class="ti ti-send" style="color:var(--ocean);"></i><div>Suggested outreach: ${notContacted.map(c=>`<strong>${esc(c.name)}</strong> at ${esc(c.company)}`).join(', ')}.</div></div>` : ''}
+        ${overdue.length === 0 && followUp.length === 0 ? `<div class="summary-item"><i class="ti ti-circle-check" style="color:#10b981;"></i><div>You're all caught up — no overdue contacts.</div></div>` : ''}
       </div>
     </div>`;
 }
@@ -898,24 +936,20 @@ function renderWeekly() {
 // ── TEMPLATES ─────────────────────────────────────────
 const EMAIL_TEMPLATES = {
   'First outreach': {
-    icon: 'ti-mail',
-    color: '#0e7490',
+    icon: 'ti-mail', color: '#0e7490',
     body: (c) => `Hi ${c?.name?.split(' ')[0] || '[Name]'},\n\nI came across your profile and was really impressed by your work at ${c?.company || '[Company]'}. I'm currently exploring new opportunities in [your field] and would love to connect.\n\nWould you be open to a brief 15-minute call to share your experience?\n\nBest,\n[Your name]`
   },
   'Follow-up': {
-    icon: 'ti-refresh',
-    color: '#92400e',
+    icon: 'ti-refresh', color: '#92400e',
     body: (c) => `Hi ${c?.name?.split(' ')[0] || '[Name]'},\n\nI wanted to follow up on my previous message. I know you're busy, but I'd still love to connect and learn more about your work at ${c?.company || '[Company]'}.\n\nEven 10 minutes would be incredibly helpful.\n\nThanks,\n[Your name]`
   },
   'After meeting': {
-    icon: 'ti-check',
-    color: '#065f46',
-    body: (c) => `Hi ${c?.name?.split(' ')[0] || '[Name]'},\n\nThank you so much for taking the time to chat today. I really appreciated your insights about ${c?.company || '[Company]'} and the advice you shared.\n\nI'll definitely follow up on [specific advice]. Please let me know if there's anything I can do to help you in return.\n\nBest,\n[Your name]`
+    icon: 'ti-check', color: '#065f46',
+    body: (c) => `Hi ${c?.name?.split(' ')[0] || '[Name]'},\n\nThank you so much for taking the time to chat. I really appreciated your insights about ${c?.company || '[Company]'} and the advice you shared.\n\nI'll follow up on [specific advice]. Please let me know if there's anything I can do in return.\n\nBest,\n[Your name]`
   },
   'Referral ask': {
-    icon: 'ti-users',
-    color: '#3730a3',
-    body: (c) => `Hi ${c?.name?.split(' ')[0] || '[Name]'},\n\nI hope you're doing well. I'm actively looking for opportunities in [field/industry] and wondering if you might know anyone at ${c?.company || '[Company]'} or elsewhere who'd be open to a conversation.\n\nAny introduction would mean a lot to me.\n\nThank you,\n[Your name]`
+    icon: 'ti-users', color: '#3730a3',
+    body: (c) => `Hi ${c?.name?.split(' ')[0] || '[Name]'},\n\nI hope you're doing well. I'm actively looking for opportunities in [field] and wondering if you might know anyone at ${c?.company || '[Company]'} or elsewhere who'd be open to a conversation.\n\nAny introduction would mean a lot to me.\n\nThank you,\n[Your name]`
   }
 };
 
@@ -950,31 +984,31 @@ function renderTemplatePreview() {
 
 function copyTemplate() {
   const text = document.getElementById('templatePreview').textContent;
-  navigator.clipboard.writeText(text).then(()=>showToast('Copied!')).catch(()=>showToast('Select and copy manually'));
+  navigator.clipboard.writeText(text).then(() => showToast('Copied!')).catch(() => showToast('Select and copy manually'));
 }
 
 function copyTemplateRaw(key) {
   const t = EMAIL_TEMPLATES[key];
   if (!t) return;
-  navigator.clipboard.writeText(t.body(null)).then(()=>showToast('Copied!')).catch(()=>showToast('Select and copy manually'));
+  navigator.clipboard.writeText(t.body(null)).then(() => showToast('Copied!')).catch(() => showToast('Select and copy manually'));
 }
 
 // ── EXPORT ────────────────────────────────────────────
 function exportCSV() {
   const headers = ['Name','Company','Role','Status','Priority','Last Contact','Notes','Tags','LinkedIn','Added'];
-  const rows = contacts.map(c => [c.name, c.company, c.role, c.status, c.priority||'', c.lastContact, c.notes, c.tags||'', c.linkedin||'', c.addedAt].map(v => `"${(v||'').replace(/"/g,'""')}"`));
+  const rows = contacts.map(c => [c.name, c.company, c.role, c.status, c.priority||'', cleanDate(c.lastContact), c.notes, c.tags||'', c.linkedin||'', cleanDate(c.addedAt)].map(v => `"${(v||'').replace(/"/g,'""')}"`));
   const csv = [headers, ...rows].map(r => r.join(',')).join('\n');
   const blob = new Blob([csv], { type: 'text/csv' });
   const a = document.createElement('a');
   a.href = URL.createObjectURL(blob);
-  a.download = 'psc-contacts.csv';
+  a.download = 'network-momentum-contacts.csv';
   a.click();
   showToast('CSV exported');
 }
 
 // ── UTILS ─────────────────────────────────────────────
-function esc(s) { if(!s)return''; return String(s).replace(/&/g,'&amp;').replace(/"/g,'&quot;').replace(/</g,'&lt;').replace(/>/g,'&gt;'); }
-function showToast(msg, dur=2500) { const t=document.getElementById('toast'); t.textContent=msg; t.classList.add('show'); setTimeout(()=>t.classList.remove('show'),dur); }
+function esc(s) { if(!s) return ''; return String(s).replace(/&/g,'&amp;').replace(/"/g,'&quot;').replace(/</g,'&lt;').replace(/>/g,'&gt;'); }
+function showToast(msg, dur=2500) { const t = document.getElementById('toast'); t.textContent = msg; t.classList.add('show'); setTimeout(() => t.classList.remove('show'), dur); }
 
 // ── INIT ──────────────────────────────────────────────
 loadCfg();
