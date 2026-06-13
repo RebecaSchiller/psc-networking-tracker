@@ -382,6 +382,15 @@
           <option value="Low">Low</option>
         </select>
         <input id="filter-search" placeholder="Search name, company, tag..." oninput="renderTable()" style="min-width:180px;max-width:280px;flex:1;" />
+        <select id="sort-field" onchange="setSortField(this.value)" style="font-size:13px;padding:6px 10px;width:auto;">
+          <option value="name">Sort: Name</option>
+          <option value="company">Sort: Company</option>
+          <option value="status">Sort: Status</option>
+          <option value="priority">Sort: Priority</option>
+          <option value="lastContact">Sort: Last Contact</option>
+          <option value="addedAt">Sort: Date Added</option>
+        </select>
+        <button class="btn btn-outline" id="sort-dir-btn" onclick="toggleSortDir()" title="Toggle sort direction" style="padding:6px 10px;"><i class="ti ti-sort-ascending"></i></button>
         <button class="btn btn-outline" onclick="loadContacts()"><i class="ti ti-refresh"></i> Refresh</button>
         <button class="btn btn-outline" onclick="exportCSV()"><i class="ti ti-download"></i> Export CSV</button>
       </div>
@@ -739,6 +748,21 @@ function sortBy(field) {
   renderTable();
 }
 
+function setSortField(field) {
+  sortField = field;
+  sortAsc = true;
+  document.getElementById('sort-dir-btn').innerHTML = '<i class="ti ti-sort-ascending"></i>';
+  renderTable();
+}
+
+function toggleSortDir() {
+  sortAsc = !sortAsc;
+  document.getElementById('sort-dir-btn').innerHTML = sortAsc
+    ? '<i class="ti ti-sort-ascending"></i>'
+    : '<i class="ti ti-sort-descending"></i>';
+  renderTable();
+}
+
 // ── RENDER ────────────────────────────────────────────
 const statusClass   = { 'Not contacted':'s-Not-contacted','Contacted':'s-Contacted','Replied':'s-Replied','Meeting scheduled':'s-Meeting-scheduled','Follow-up needed':'s-Follow-up-needed','Closed':'s-Closed' };
 const statusOptions = ['Not contacted','Contacted','Replied','Meeting scheduled','Follow-up needed','Closed'];
@@ -890,7 +914,6 @@ function renderTable() {
         <div class="contact-card-company">
           <i class="ti ti-building" style="font-size:13px;flex-shrink:0;"></i>
           <a href="https://www.google.com/search?q=${encodeURIComponent(c.company)}" target="_blank" style="font-size:13px;font-weight:500;color:var(--ocean);text-decoration:none;" onmouseover="this.style.textDecoration='underline'" onmouseout="this.style.textDecoration='none'">${esc(c.company)||'Add company...'}</a>
-          ${c.linkedin ? `` : ''}
         </div>
       </div>
       <div class="contact-card-row">
@@ -992,6 +1015,38 @@ const EMAIL_TEMPLATES = {
   'Referral ask': {
     icon: 'ti-users', color: '#3730a3',
     body: (c) => `Hi ${c?.name?.split(' ')[0] || '[Name]'},\n\nI hope you're doing well. I'm actively looking for opportunities in [field] and wondering if you might know anyone at ${c?.company || '[Company]'} or elsewhere who'd be open to a conversation.\n\nAny introduction would mean a lot to me.\n\nThank you,\n[Your name]`
+  },
+  '15-Minute Coffee Chat': {
+    icon: 'ti-coffee', color: '#b45309',
+    body: (c) => `Hi ${c?.name?.split(' ')[0] || '[Name]'},\n\nI've been following your work at ${c?.company || '[Company]'} and would love to learn more about your experience in [their field/role].\n\nWould you be open to a quick 15-minute virtual coffee chat? I'm flexible and happy to work around your schedule.\n\nThanks so much,\n[Your name]`
+  },
+  'Recruiter Outreach': {
+    icon: 'ti-briefcase', color: '#0369a1',
+    body: (c) => `Hi ${c?.name?.split(' ')[0] || '[Name]'},\n\nI came across your profile and saw that you specialize in [their area] recruiting. I'm currently exploring new opportunities in [your field/industry] and thought it would be great to connect.\n\nI have [X years] of experience in [key skills] and am open to roles in [location/remote]. Would you have a few minutes to connect?\n\nBest,\n[Your name]`
+  },
+  'Referral for a Role': {
+    icon: 'ti-star', color: '#7c3aed',
+    body: (c) => `Hi ${c?.name?.split(' ')[0] || '[Name]'},\n\nI hope you're doing well! I noticed that ${c?.company || '[Company]'} is hiring for [role] and I'm very interested in applying.\n\nGiven your experience there, I'd be grateful if you'd be willing to refer me or share any insights about the team. I've attached my resume for your reference.\n\nNo pressure at all — I really appreciate any help you can offer.\n\nThank you,\n[Your name]`
+  },
+  'Requesting an Introduction': {
+    icon: 'ti-arrow-right', color: '#0891b2',
+    body: (c) => `Hi ${c?.name?.split(' ')[0] || '[Name]'},\n\nI hope things are going well! I'm trying to connect with [target person] at [their company] and thought you might be able to introduce us.\n\nI'm exploring opportunities in [field] and believe [target person]'s perspective would be really valuable.\n\nWould you be comfortable making an introduction? Happy to draft a short note you could forward if that's easier.\n\nThanks so much,\n[Your name]`
+  },
+  'Alumni Outreach': {
+    icon: 'ti-school', color: '#065f46',
+    body: (c) => `Hi ${c?.name?.split(' ')[0] || '[Name]'},\n\nI'm a fellow [University] alum and came across your profile while researching [their field/company]. I'd love to connect with someone who has made a career in [their area].\n\nWould you be open to a brief chat? I'm especially curious about [specific aspect of their work or career path].\n\nGo [mascot/team]!\n\n[Your name], [Graduation Year]`
+  },
+  'Conference Follow-Up': {
+    icon: 'ti-calendar-event', color: '#9333ea',
+    body: (c) => `Hi ${c?.name?.split(' ')[0] || '[Name]'},\n\nIt was great meeting you at [event name] last [week/month]. I really enjoyed our conversation about [topic you discussed].\n\nI'd love to stay in touch and continue the conversation. Would you be open to connecting here on LinkedIn or grabbing a virtual coffee sometime?\n\nBest,\n[Your name]`
+  },
+  'Thank You — Informational Interview': {
+    icon: 'ti-heart', color: '#be185d',
+    body: (c) => `Hi ${c?.name?.split(' ')[0] || '[Name]'},\n\nThank you so much for taking the time to speak with me about your experience at ${c?.company || '[Company]'}. Our conversation was genuinely helpful and gave me a much clearer picture of [specific insight].\n\nI'll be taking your advice about [specific advice] to heart. I'll keep you posted on how things develop, and please don't hesitate to reach out if I can ever return the favor.\n\nWith appreciation,\n[Your name]`
+  },
+  'Applied to Their Company': {
+    icon: 'ti-send', color: '#0e7490',
+    body: (c) => `Hi ${c?.name?.split(' ')[0] || '[Name]'},\n\nI wanted to let you know that I recently applied for the [role] position at ${c?.company || '[Company]'}. Given your experience there, I thought I'd reach out directly.\n\nI'm really excited about the opportunity and believe my background in [relevant skills] would be a strong fit. If you're open to it, I'd love to hear your perspective on the team or role.\n\nThank you for your time,\n[Your name]`
   }
 };
 
