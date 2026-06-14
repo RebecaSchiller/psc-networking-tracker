@@ -447,28 +447,108 @@
       <div class="card" style="margin-bottom:1.25rem;">
         <div class="card-label"><i class="ti ti-bulb" style="margin-right:4px;"></i>20 Networking Tips</div>
         <div style="display:grid;grid-template-columns:1fr 1fr;gap:10px;">
-          ${[
-            ["Don't burn bridges.", "The professional world is smaller than it looks. The person you dismiss today may be hiring tomorrow."],
-            ["Start before you need to.", "The best time to build your network is when you don't need anything. The second best time is now."],
-            ["Give before you ask.", "Share an article, make an introduction, offer a referral. Generosity opens more doors than any pitch."],
-            ["Be specific in your ask.", ""Can I pick your brain?" is not a request. "Can I ask you two questions about breaking into nonprofit communications?" is."],
-            ["Follow up within 24 hours.", "A quick note after a meeting cements the connection. Wait too long and the moment passes."],
-            ["Keep it short.", "People are busy. A three-sentence email gets more responses than a three-paragraph one."],
-            ["Research before you reach out.", "Know what they do, what they've worked on, and why you're reaching out to them specifically."],
-            ["Connect on LinkedIn immediately.", "Don't let a good conversation disappear into a business card pile. Connect while the interaction is fresh."],
-            ["Have a clear one-liner.", "Know how to describe what you do and what you're looking for in one confident sentence."],
-            ["Ask for introductions, not jobs.", ""Do you know anyone I should talk to?" is far easier to say yes to than "Do you know of any openings?""],
-            ["Send value, not just updates.", "When you check back in, bring something — a relevant article, a congrats on their news, a shared contact."],
-            ["Warm up cold contacts.", "Comment on their posts, share their content, or reference their work before you reach out directly."],
-            ["Don't neglect weak ties.", "Acquaintances — not close friends — are often where the best opportunities come from. Stay in touch with the periphery."],
-            ["Personalize every message.", "Never send the same message twice. Even one specific detail shows you paid attention."],
-            ["Accept help gracefully.", "When someone offers to help, say yes. Letting people contribute builds the relationship."],
-            ["Be honest about where you are.", "You don't have to have it all figured out. People respond to honesty and clarity about what you're working toward."],
-            ["Follow through on what you say.", "If you say you'll send something, send it. Reliability is memorable."],
-            ["Stay in touch even when nothing's happening.", "A quick "thinking of you" or "saw this and thought of you" keeps the relationship alive without an agenda."],
-            ["Treat every conversation as practice.", "Not every contact leads somewhere. That's fine. Each one makes the next one easier."],
-            ["Say thank you. Always.", "A genuine thank you — specific, timely, and brief — is one of the most underused tools in networking."]
-          ].map(([tip, body], i) => `<div style="background:var(--fog);border-radius:8px;padding:12px 14px;"><div style="font-size:10px;font-weight:700;letter-spacing:0.08em;color:var(--horizon);margin-bottom:4px;">TIP ${i+1}</div><div style="font-size:13px;font-weight:700;color:var(--ocean);margin-bottom:4px;">${tip}</div><div style="font-size:13px;color:var(--text-2);line-height:1.6;">${body}</div></div>`).join('')}
+          <div style="display:grid;grid-template-columns:1fr 1fr;gap:10px;">
+          <div style="background:var(--fog);border-radius:8px;padding:12px 14px;">
+            <div style="font-size:10px;font-weight:700;letter-spacing:0.08em;color:var(--horizon);margin-bottom:4px;">TIP 1</div>
+            <div style="font-size:13px;font-weight:700;color:var(--ocean);margin-bottom:4px;">Don't burn bridges.</div>
+            <div style="font-size:13px;color:var(--text-2);line-height:1.6;">The professional world is smaller than it looks. The person you dismiss today may be hiring tomorrow.</div>
+          </div>
+          <div style="background:var(--fog);border-radius:8px;padding:12px 14px;">
+            <div style="font-size:10px;font-weight:700;letter-spacing:0.08em;color:var(--horizon);margin-bottom:4px;">TIP 2</div>
+            <div style="font-size:13px;font-weight:700;color:var(--ocean);margin-bottom:4px;">Start before you need to.</div>
+            <div style="font-size:13px;color:var(--text-2);line-height:1.6;">The best time to build your network is when you don't need anything. The second best time is now.</div>
+          </div>
+          <div style="background:var(--fog);border-radius:8px;padding:12px 14px;">
+            <div style="font-size:10px;font-weight:700;letter-spacing:0.08em;color:var(--horizon);margin-bottom:4px;">TIP 3</div>
+            <div style="font-size:13px;font-weight:700;color:var(--ocean);margin-bottom:4px;">Give before you ask.</div>
+            <div style="font-size:13px;color:var(--text-2);line-height:1.6;">Share an article, make an introduction, offer a referral. Generosity opens more doors than any pitch.</div>
+          </div>
+          <div style="background:var(--fog);border-radius:8px;padding:12px 14px;">
+            <div style="font-size:10px;font-weight:700;letter-spacing:0.08em;color:var(--horizon);margin-bottom:4px;">TIP 4</div>
+            <div style="font-size:13px;font-weight:700;color:var(--ocean);margin-bottom:4px;">Be specific in your ask.</div>
+            <div style="font-size:13px;color:var(--text-2);line-height:1.6;">"Can I pick your brain?" is not a request. "Can I ask you two questions about breaking into nonprofit communications?" is.</div>
+          </div>
+          <div style="background:var(--fog);border-radius:8px;padding:12px 14px;">
+            <div style="font-size:10px;font-weight:700;letter-spacing:0.08em;color:var(--horizon);margin-bottom:4px;">TIP 5</div>
+            <div style="font-size:13px;font-weight:700;color:var(--ocean);margin-bottom:4px;">Follow up within 24 hours.</div>
+            <div style="font-size:13px;color:var(--text-2);line-height:1.6;">A quick note after a meeting cements the connection. Wait too long and the moment passes.</div>
+          </div>
+          <div style="background:var(--fog);border-radius:8px;padding:12px 14px;">
+            <div style="font-size:10px;font-weight:700;letter-spacing:0.08em;color:var(--horizon);margin-bottom:4px;">TIP 6</div>
+            <div style="font-size:13px;font-weight:700;color:var(--ocean);margin-bottom:4px;">Keep it short.</div>
+            <div style="font-size:13px;color:var(--text-2);line-height:1.6;">People are busy. A three-sentence email gets more responses than a three-paragraph one.</div>
+          </div>
+          <div style="background:var(--fog);border-radius:8px;padding:12px 14px;">
+            <div style="font-size:10px;font-weight:700;letter-spacing:0.08em;color:var(--horizon);margin-bottom:4px;">TIP 7</div>
+            <div style="font-size:13px;font-weight:700;color:var(--ocean);margin-bottom:4px;">Research before you reach out.</div>
+            <div style="font-size:13px;color:var(--text-2);line-height:1.6;">Know what they do, what they've worked on, and why you're reaching out to them specifically.</div>
+          </div>
+          <div style="background:var(--fog);border-radius:8px;padding:12px 14px;">
+            <div style="font-size:10px;font-weight:700;letter-spacing:0.08em;color:var(--horizon);margin-bottom:4px;">TIP 8</div>
+            <div style="font-size:13px;font-weight:700;color:var(--ocean);margin-bottom:4px;">Connect on LinkedIn immediately.</div>
+            <div style="font-size:13px;color:var(--text-2);line-height:1.6;">Don't let a good conversation disappear into a business card pile. Connect while the interaction is fresh.</div>
+          </div>
+          <div style="background:var(--fog);border-radius:8px;padding:12px 14px;">
+            <div style="font-size:10px;font-weight:700;letter-spacing:0.08em;color:var(--horizon);margin-bottom:4px;">TIP 9</div>
+            <div style="font-size:13px;font-weight:700;color:var(--ocean);margin-bottom:4px;">Have a clear one-liner.</div>
+            <div style="font-size:13px;color:var(--text-2);line-height:1.6;">Know how to describe what you do and what you're looking for in one confident sentence.</div>
+          </div>
+          <div style="background:var(--fog);border-radius:8px;padding:12px 14px;">
+            <div style="font-size:10px;font-weight:700;letter-spacing:0.08em;color:var(--horizon);margin-bottom:4px;">TIP 10</div>
+            <div style="font-size:13px;font-weight:700;color:var(--ocean);margin-bottom:4px;">Ask for introductions, not jobs.</div>
+            <div style="font-size:13px;color:var(--text-2);line-height:1.6;">"Do you know anyone I should talk to?" is far easier to say yes to than "Do you know of any openings?"</div>
+          </div>
+          <div style="background:var(--fog);border-radius:8px;padding:12px 14px;">
+            <div style="font-size:10px;font-weight:700;letter-spacing:0.08em;color:var(--horizon);margin-bottom:4px;">TIP 11</div>
+            <div style="font-size:13px;font-weight:700;color:var(--ocean);margin-bottom:4px;">Send value, not just updates.</div>
+            <div style="font-size:13px;color:var(--text-2);line-height:1.6;">When you check back in, bring something — a relevant article, a congrats on their news, a shared contact.</div>
+          </div>
+          <div style="background:var(--fog);border-radius:8px;padding:12px 14px;">
+            <div style="font-size:10px;font-weight:700;letter-spacing:0.08em;color:var(--horizon);margin-bottom:4px;">TIP 12</div>
+            <div style="font-size:13px;font-weight:700;color:var(--ocean);margin-bottom:4px;">Warm up cold contacts.</div>
+            <div style="font-size:13px;color:var(--text-2);line-height:1.6;">Comment on their posts, share their content, or reference their work before you reach out directly.</div>
+          </div>
+          <div style="background:var(--fog);border-radius:8px;padding:12px 14px;">
+            <div style="font-size:10px;font-weight:700;letter-spacing:0.08em;color:var(--horizon);margin-bottom:4px;">TIP 13</div>
+            <div style="font-size:13px;font-weight:700;color:var(--ocean);margin-bottom:4px;">Don't neglect weak ties.</div>
+            <div style="font-size:13px;color:var(--text-2);line-height:1.6;">Acquaintances — not close friends — are often where the best opportunities come from. Stay in touch with the periphery.</div>
+          </div>
+          <div style="background:var(--fog);border-radius:8px;padding:12px 14px;">
+            <div style="font-size:10px;font-weight:700;letter-spacing:0.08em;color:var(--horizon);margin-bottom:4px;">TIP 14</div>
+            <div style="font-size:13px;font-weight:700;color:var(--ocean);margin-bottom:4px;">Personalize every message.</div>
+            <div style="font-size:13px;color:var(--text-2);line-height:1.6;">Never send the same message twice. Even one specific detail shows you paid attention.</div>
+          </div>
+          <div style="background:var(--fog);border-radius:8px;padding:12px 14px;">
+            <div style="font-size:10px;font-weight:700;letter-spacing:0.08em;color:var(--horizon);margin-bottom:4px;">TIP 15</div>
+            <div style="font-size:13px;font-weight:700;color:var(--ocean);margin-bottom:4px;">Accept help gracefully.</div>
+            <div style="font-size:13px;color:var(--text-2);line-height:1.6;">When someone offers to help, say yes. Letting people contribute builds the relationship.</div>
+          </div>
+          <div style="background:var(--fog);border-radius:8px;padding:12px 14px;">
+            <div style="font-size:10px;font-weight:700;letter-spacing:0.08em;color:var(--horizon);margin-bottom:4px;">TIP 16</div>
+            <div style="font-size:13px;font-weight:700;color:var(--ocean);margin-bottom:4px;">Be honest about where you are.</div>
+            <div style="font-size:13px;color:var(--text-2);line-height:1.6;">You don't have to have it all figured out. People respond to honesty and clarity about what you're working toward.</div>
+          </div>
+          <div style="background:var(--fog);border-radius:8px;padding:12px 14px;">
+            <div style="font-size:10px;font-weight:700;letter-spacing:0.08em;color:var(--horizon);margin-bottom:4px;">TIP 17</div>
+            <div style="font-size:13px;font-weight:700;color:var(--ocean);margin-bottom:4px;">Follow through on what you say.</div>
+            <div style="font-size:13px;color:var(--text-2);line-height:1.6;">If you say you'll send something, send it. Reliability is memorable.</div>
+          </div>
+          <div style="background:var(--fog);border-radius:8px;padding:12px 14px;">
+            <div style="font-size:10px;font-weight:700;letter-spacing:0.08em;color:var(--horizon);margin-bottom:4px;">TIP 18</div>
+            <div style="font-size:13px;font-weight:700;color:var(--ocean);margin-bottom:4px;">Stay in touch even when nothing's happening.</div>
+            <div style="font-size:13px;color:var(--text-2);line-height:1.6;">A quick "thinking of you" or "saw this and thought of you" keeps the relationship alive without an agenda.</div>
+          </div>
+          <div style="background:var(--fog);border-radius:8px;padding:12px 14px;">
+            <div style="font-size:10px;font-weight:700;letter-spacing:0.08em;color:var(--horizon);margin-bottom:4px;">TIP 19</div>
+            <div style="font-size:13px;font-weight:700;color:var(--ocean);margin-bottom:4px;">Treat every conversation as practice.</div>
+            <div style="font-size:13px;color:var(--text-2);line-height:1.6;">Not every contact leads somewhere. That's fine. Each one makes the next one easier.</div>
+          </div>
+          <div style="background:var(--fog);border-radius:8px;padding:12px 14px;">
+            <div style="font-size:10px;font-weight:700;letter-spacing:0.08em;color:var(--horizon);margin-bottom:4px;">TIP 20</div>
+            <div style="font-size:13px;font-weight:700;color:var(--ocean);margin-bottom:4px;">Say thank you. Always.</div>
+            <div style="font-size:13px;color:var(--text-2);line-height:1.6;">A genuine thank you — specific, timely, and brief — is one of the most underused tools in networking.</div>
+          </div>
+        </div>
         </div>
       </div>
 
