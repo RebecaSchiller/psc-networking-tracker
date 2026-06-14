@@ -495,9 +495,12 @@ function openDossierReport(c, content) {
     var result = [];
     var found = false;
     for (var i = 0; i < lines.length; i++) {
-      if (lines[i].trim() === heading) { found = true; continue; }
+      var trimmed = lines[i].trim();
+      if (trimmed === heading || trimmed === heading + ':' || trimmed.indexOf(heading) === 0) {
+        found = true; continue;
+      }
       if (found) {
-        if (/^[A-Z][A-Z ]{2,}$/.test(lines[i].trim()) && lines[i].trim().length > 3) break;
+        if (trimmed.length > 3 && trimmed === trimmed.toUpperCase() && /^[A-Z]/.test(trimmed)) break;
         result.push(lines[i]);
       }
     }
