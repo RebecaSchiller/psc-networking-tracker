@@ -446,6 +446,8 @@ function renderAlerts(){document.getElementById('alerts').innerHTML=contacts.fil
 function renderTagFilter(){const el=document.getElementById('tagFilter');if(!el)return;const allTags=new Set();contacts.forEach(c=>{if(c.tags)c.tags.split(',').forEach(t=>{const tt=t.trim();if(tt)allTags.add(tt);});});el.innerHTML=[...allTags].map(t=>`<span class="tag-chip ${activeTag===t?'active':''}" onclick="filterByTag('${esc(t)}')">${esc(t)}</span>`).join('');}
 function filterByTag(tag){activeTag=activeTag===tag?'':tag;renderTagFilter();renderTable();}
 function renderTable(){const fs=document.getElementById('filter-status').value;const fp=document.getElementById('filter-priority').value;const q=document.getElementById('filter-search').value.toLowerCase();let filtered=contacts.filter(c=>(fs==='all'||c.status===fs)&&(fp==='all'||c.priority===fp)&&(!activeTag||(c.tags&&c.tags.split(',').map(t=>t.trim()).includes(activeTag)))&&(!q||c.name.toLowerCase().includes(q)||c.company.toLowerCase().includes(q)||(c.tags||'').toLowerCase().includes(q)));filtered.sort((a,b)=>{const av=a[sortField]||'',bv=b[sortField]||'';return sortAsc?av.localeCompare(bv):bv.localeCompare(av);});const container=document.getElementById('tbody');if(!filtered.length){container.innerHTML=`<div class="empty" style="grid-column:1/-1;"><i class="ti ti-user-search" style="font-size:32px;display:block;margin-bottom:8px;"></i>No contacts yet. Add one above.</div>`;return;}container.innerHTML=filtered.map(c=>{const ov=isOverdue(c);const sc=statusClass[c.status]||'';const tags=c.tags?c.tags.split(',').filter(t=>t.trim()).map(t=>`<span class="tag-pill">${esc(t.trim())}</span>`).join(''):'';const cd=cleanDate(c.lastContact);return `<div class="contact-card${ov?' overdue-card':''}"><div class="contact-card-top"><div class="contact-card-name"><span contenteditable="true" class="edit-div" style="font-size:15px;font-weight:700;width:auto;" onblur="updateField('${c.id}','name',this.innerText.trim())">${esc(c.name)}</span>${c.linkedin?`<a href="${esc(c.linkedin)}" target="_blank" style="display:inline-flex;align-items:center;justify-content:center;width:18px;height:18px;background:#0a66c2;border-radius:3px;color:#fff;font-size:10px;font-weight:700;text-decoration:none;flex-shrink:0;">in</a>`:''}</div><div class="contact-card-role"><span contenteditable="true" class="edit-div" style="font-size:12px;" onblur="updateField('${c.id}','role',this.innerText.trim())" style="font-size:13px;">${esc(c.role)||'Add role...'}</span></div><div class="contact-card-company"><i class="ti ti-building" style="font-size:13px;flex-shrink:0;"></i><a href="https://www.google.com/search?q=${encodeURIComponent(c.company)}" target="_blank" style="font-size:13px;font-weight:600;color:var(--horizon);text-decoration:none;" onmouseover="this.style.textDecoration='underline'" onmouseout="this.style.textDecoration='none'">${esc(c.company)||'Add company...'}</a></div></div><div class="contact-card-row"><select class="edit-select ${sc}" onchange="updateField('${c.id}','status',this.value)">${statusOptions.map(s=>`<option value="${s}"${c.status===s?' selected':''}>${s}</option>`).join('')}</select>${ov?'<span class="overdue-badge">Overdue</span>':''}</div><div class="contact-card-row"><i class="ti ti-calendar" style="font-size:12px;color:var(--text-3);"></i><span style="font-size:13px;color:var(--text-2);cursor:pointer;" onclick="this.style.display='none';this.nextElementSibling.style.display='inline';">${shortDate(c.lastContact)||'Set date'}</span><input type="date" value="${cd}" onchange="updateField('${c.id}','lastContact',this.value)" style="display:none;border:none;background:transparent;font-size:13px;color:var(--text-2);font-family:inherit;outline:none;padding:0;width:130px;" onblur="this.style.display='none';this.previousElementSibling.style.display='inline';"/><span class="warm-cold ${isWarm(c)?'warm':'cold'}">${isWarm(c)?'Warm':'Cold'}</span><span class="priority-dot p-${c.priority||'Medium'}"></span><span style="font-size:13px;color:var(--text-3);">${c.priority||'Medium'}</span></div><div class="contact-card-notes"><div style="display:flex;align-items:center;gap:6px;"><span contenteditable="true" class="edit-div" style="font-size:13px;flex:1;" onblur="updateField('${c.id}','notes',this.innerText.trim())">${esc(c.notes||'Add a note...')}</span><button class="icon-btn" onclick="openNotes('${c.id}')" title="Notes history"><i class="ti ti-notes" style="font-size:15px;"></i></button><button class="del-btn" onclick="deleteContact('${c.id}')" style="font-size:15px;"><i class="ti ti-trash"></i></button></div>${tags?`<div style="margin-top:4px;">${tags}</div>`:''}</div><div class="contact-card-actions"><button class="ai-chip" onclick="getAISuggestion('${c.id}')"><i class="ti ti-sparkles"></i> Suggest next action</button>
+        <button class="dossier-btn" onclick="generateDossier('${c.id}')">📋 Company dossier</button>
+        <div class="dossier-loading" id="dossier-loading-${c.id}">Generating dossier...</div>
         <div class="ai-suggestion-box" id="ai-box-${c.id}" style="width:100%;margin:4px 0 0;"></div></div></div>`;}).join('');}
 function renderKanban(){const groups={};statusOptions.forEach(s=>groups[s]=[]);contacts.forEach(c=>{if(groups[c.status])groups[c.status].push(c);});document.getElementById('kanban').innerHTML=statusOptions.map(s=>`<div class="kanban-col"><div class="kanban-header" style="background:${kanbanColors[s]};color:${kanbanText[s]};"><span>${s}</span><span class="kanban-count">${groups[s].length}</span></div><div class="kanban-body">${groups[s].length?groups[s].map(c=>`<div class="kanban-card" onclick="switchTab('list')"><div class="kanban-card-name">${esc(c.name)}</div><div class="kanban-card-co">${esc(c.company)}</div><div class="kanban-card-meta"><span class="priority-dot p-${c.priority||'Medium'}"></span><span style="font-size:13px;color:var(--text-3);">${c.priority||'Medium'}</span>${isOverdue(c)?'<span class="overdue-badge">Overdue</span>':''}${isWarm(c)?'<span class="warm-cold warm">Warm</span>':''}</div></div>`).join(''):`<div style="font-size:13px;color:var(--text-3);padding:8px;text-align:center;">Empty</div>`}</div></div>`).join('');}
 function renderWeekly(){const now=new Date();const weekStart=new Date(now);weekStart.setDate(now.getDate()-now.getDay());const weekEnd=new Date(weekStart);weekEnd.setDate(weekStart.getDate()+6);const thisWeek=contacts.filter(c=>c.addedAt&&new Date(cleanDate(c.addedAt))>=weekStart).length;const overdue=contacts.filter(isOverdue);const followUp=contacts.filter(c=>c.status==='Follow-up needed');const meetings=contacts.filter(c=>c.status==='Meeting scheduled');const notContacted=contacts.filter(c=>c.status==='Not contacted').slice(0,3);const remaining=Math.max(0,weeklyGoal-thisWeek);document.getElementById('weeklySummary').innerHTML=`<div class="summary-card"><h3><i class="ti ti-calendar-week" style="color:var(--horizon);"></i> Week of ${weekStart.toLocaleDateString()}  -  ${weekEnd.toLocaleDateString()}</h3><div class="summary-list"><div class="summary-item"><i class="ti ti-target"></i><div><strong>${thisWeek} of ${weeklyGoal}</strong> new contacts added this week. ${remaining>0?`Reach out to <strong>${remaining} more</strong> to hit your goal.`:'🎉 Goal reached!'}</div></div>${overdue.length?`<div class="summary-item"><i class="ti ti-alarm" style="color:#f97316;"></i><div><strong>${overdue.length} overdue</strong>: ${overdue.map(c=>esc(c.name)).join(', ')}. Follow up now.</div></div>`:''}${followUp.length?`<div class="summary-item"><i class="ti ti-bell" style="color:#f59e0b;"></i><div><strong>${followUp.length} awaiting follow-up</strong>: ${followUp.slice(0,3).map(c=>esc(c.name)).join(', ')}${followUp.length>3?'...':''}.</div></div>`:''}${meetings.length?`<div class="summary-item"><i class="ti ti-calendar" style="color:#6366f1;"></i><div><strong>${meetings.length} meeting${meetings.length>1?'s':''} scheduled</strong>: ${meetings.map(c=>esc(c.name)+' at '+esc(c.company)).join(', ')}.</div></div>`:''}${notContacted.length&&remaining>0?`<div class="summary-item"><i class="ti ti-send" style="color:var(--horizon);"></i><div>Suggested outreach: ${notContacted.map(c=>`<strong>${esc(c.name)}</strong> at ${esc(c.company)}`).join(', ')}.</div></div>`:''}${overdue.length===0&&followUp.length===0?`<div class="summary-item"><i class="ti ti-circle-check" style="color:#10b981;"></i><div>You're all caught up  -  no overdue contacts.</div></div>`:''}</div></div>`;}
@@ -461,6 +463,114 @@ function esc(s){if(!s)return '';return String(s).replace(/&/g,'&amp;').replace(/
 function showToast(msg,dur=2500){const t=document.getElementById('toast');t.textContent=msg;t.classList.add('show');setTimeout(()=>t.classList.remove('show'),dur);}
 loadCfg();
 if(scriptUrl){launchApp();}else{document.getElementById('setupScreen').style.display='block';}
+
+async function generateDossier(id) {
+  const c = contacts.find(c => c.id === id);
+  if (!c || !c.company) { showToast('Add a company name first.'); return; }
+  if (!anthropicKey) { showToast('Add your Anthropic API key in Settings first.'); return; }
+
+  const loadingEl = document.getElementById('dossier-loading-' + id);
+  loadingEl.style.display = 'block';
+
+  const prompt = 'You are a senior marketing and communications strategist. Generate a detailed pre-outreach company dossier for a job seeker in marketing and communications. Be specific and direct. No filler.\n\nCompany: ' + c.company + '\nContact name: ' + c.name + '\nContact role: ' + c.role + '\n\nStructure your response in exactly these sections using these exact headings:\n\nCOMPANY OVERVIEW\n2-3 sentences on what they do, who they serve, and their mission.\n\nMARKETING AND COMMUNICATIONS ASSESSMENT\nAssess their public-facing communications: website quality, messaging clarity and consistency, tone of voice, content strategy, social media presence. Be honest about strengths and weaknesses.\n\nCOMMUNICATIONS GAPS\nIdentify 2-3 specific gaps or weaknesses in their marketing and communications that a senior communications professional could address.\n\nLIKELY HIRING CONTACTS\nList 3-4 typical titles at this type of organization that would be relevant for a marketing/communications professional to target. Include why each role matters.\n\nYOUR OUTREACH ANGLE\nBased on the gaps identified, suggest a specific, confident angle for the job seeker to use in their outreach. What problem can they position themselves as solving?\n\nBe direct. Be specific. No generic advice.';
+
+  try {
+    const aiUrl = scriptUrl + '?' + new URLSearchParams({ action: 'ai_suggest', apiKey: anthropicKey, prompt }).toString();
+    const resp = await fetch(aiUrl);
+    const data = await resp.json();
+    if (data.error) throw new Error(data.error);
+    loadingEl.style.display = 'none';
+    openDossierReport(c, data.suggestion);
+  } catch(e) {
+    loadingEl.style.display = 'none';
+    showToast('Error generating dossier: ' + e.message);
+  }
+}
+
+function openDossierReport(c, content) {
+  var today = new Date().toLocaleDateString('en-US', { year: 'numeric', month: 'long', day: 'numeric' });
+
+  function extractSection(text, heading) {
+    var lines = text.split('\n');
+    var result = [];
+    var found = false;
+    for (var i = 0; i < lines.length; i++) {
+      if (lines[i].trim() === heading) { found = true; continue; }
+      if (found) {
+        if (/^[A-Z][A-Z ]{2,}$/.test(lines[i].trim()) && lines[i].trim().length > 3) break;
+        result.push(lines[i]);
+      }
+    }
+    return result.join('\n').trim();
+  }
+
+  function formatBody(text) {
+    var lines = text.split('\n');
+    var html = '';
+    var inList = false;
+    for (var i = 0; i < lines.length; i++) {
+      var l = lines[i].trim();
+      if (!l) continue;
+      if (l.match(/^[-*]\s/) || l.match(/^\d+\.\s/)) {
+        var item = l.replace(/^[-*]\s/,'').replace(/^\d+\.\s/,'');
+        if (!inList) { html += '<ul style="padding-left:1.25rem;margin-bottom:8px;">'; inList = true; }
+        html += '<li style="font-size:14px;color:#4A5568;line-height:1.65;margin-bottom:4px;">' + item + '</li>';
+      } else {
+        if (inList) { html += '</ul>'; inList = false; }
+        html += '<p style="font-size:14px;color:#4A5568;line-height:1.65;margin-bottom:8px;">' + l + '</p>';
+      }
+    }
+    if (inList) html += '</ul>';
+    return html;
+  }
+
+  var overview     = extractSection(content, 'COMPANY OVERVIEW');
+  var assessment   = extractSection(content, 'MARKETING AND COMMUNICATIONS ASSESSMENT');
+  var gaps         = extractSection(content, 'COMMUNICATIONS GAPS');
+  var contacts_sec = extractSection(content, 'LIKELY HIRING CONTACTS');
+  var angle        = extractSection(content, 'YOUR OUTREACH ANGLE');
+
+  var html = '<!DOCTYPE html><html lang="en"><head><meta charset="UTF-8">' +
+    '<title>Company Dossier: ' + c.company + '</title>' +
+    '<style>' +
+    'body{font-family:Helvetica,Arial,sans-serif;color:#1A1F2E;font-size:14px;line-height:1.6;margin:0;padding:0;}' +
+    '.print-bar{background:#002366;padding:12px 2rem;display:flex;align-items:center;justify-content:space-between;}' +
+    '.print-bar span{color:#D6E4F5;font-size:12px;}' +
+    '.print-btn{background:#3A6DB5;color:#fff;border:none;border-radius:6px;padding:8px 20px;font-size:12px;font-weight:700;cursor:pointer;}' +
+    '.header{background:#002366;padding:1.5rem 2rem;}' +
+    '.header h1{color:#fff;font-size:22px;font-weight:700;margin:0 0 4px;}' +
+    '.header p{color:#D6E4F5;font-size:12px;margin:0;}' +
+    '.body{padding:2rem;}' +
+    '.section{margin-bottom:1.5rem;padding-bottom:1.5rem;border-bottom:1px solid #e5e7eb;}' +
+    '.section:last-child{border-bottom:none;}' +
+    '.label{font-size:9px;font-weight:700;letter-spacing:0.14em;text-transform:uppercase;color:#3A6DB5;margin-bottom:6px;}' +
+    '.section h2{font-size:16px;font-weight:700;color:#002366;margin:0 0 10px;}' +
+    '.angle-box{background:#F0F4F9;border-left:3px solid #002366;padding:1rem 1.25rem;border-radius:0 6px 6px 0;}' +
+    '.footer{border-top:1px solid #e5e7eb;padding:1rem 2rem;display:flex;justify-content:space-between;font-size:11px;color:#8A9BB0;}' +
+    '@media print{.print-bar{display:none;}}' +
+    '</style></head><body>' +
+    '<div class="print-bar"><span>Network Momentum - Company Dossier</span>' +
+    '<button class="print-btn" onclick="window.print()">Print / Save as PDF</button></div>' +
+    '<div class="header"><h1>Company Dossier: ' + c.company + '</h1>' +
+    '<p>Contact: ' + c.name + (c.role ? ' - ' + c.role : '') + ' &nbsp;|&nbsp; Generated: ' + today + '</p></div>' +
+    '<div class="body">' +
+    '<div class="section"><div class="label">Company overview</div><h2>Who they are</h2>' + formatBody(overview) + '</div>' +
+    '<div class="section"><div class="label">Marketing and communications assessment</div><h2>How they communicate</h2>' + formatBody(assessment) + '</div>' +
+    '<div class="section"><div class="label">Communications gaps</div><h2>Where the opportunities are</h2>' + formatBody(gaps) + '</div>' +
+    '<div class="section"><div class="label">Likely hiring contacts</div><h2>Who to reach out to</h2>' + formatBody(contacts_sec) + '</div>' +
+    '<div class="section"><div class="label">Your outreach angle</div><h2>How to position yourself</h2><div class="angle-box">' + formatBody(angle) + '</div></div>' +
+    '</div>' +
+    '<div class="footer"><span>Generated by Network Momentum - networkmomentum.app</span><span>Built by Plain Speaking Communications - plainspeakingcomms.com</span></div>' +
+    '</body></html>';
+
+  var blob = new Blob([html], {type: 'text/html'});
+  var url = URL.createObjectURL(blob);
+  var a = document.createElement('a');
+  a.href = url;
+  a.download = 'dossier-' + c.company.replace(/[^a-z0-9]/gi, '-').toLowerCase() + '.html';
+  a.click();
+  setTimeout(function(){ URL.revokeObjectURL(url); }, 1000);
+}
 </script>
 
 <!-- ONBOARDING OVERLAY -->
