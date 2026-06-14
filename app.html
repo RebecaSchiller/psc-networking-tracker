@@ -296,6 +296,7 @@
   <div class="nav-tab" onclick="switchTab('kanban')" id="tab-kanban"><i class="ti ti-layout-kanban"></i> Pipeline</div>
   <div class="nav-tab" onclick="switchTab('weekly')" id="tab-weekly"><i class="ti ti-calendar-week"></i> Weekly Plan</div>
   <div class="nav-tab" onclick="switchTab('templates')" id="tab-templates"><i class="ti ti-mail"></i> Templates</div>
+  <div class="nav-tab" onclick="switchTab('resources')" id="tab-resources"><i class="ti ti-book"></i> Resources</div>
 </div>
 
 <div id="setupScreen">
@@ -384,6 +385,116 @@
   </div>
 </div>
 
+  <div class="tab-panel" id="panel-resources">
+    <div class="page" style="max-width:800px;">
+
+      <!-- HEADER -->
+      <div style="margin-bottom:2rem;">
+        <div style="font-size:10px;font-weight:700;letter-spacing:0.1em;text-transform:uppercase;color:var(--horizon);margin-bottom:6px;">Network Momentum</div>
+        <h2 style="font-size:24px;font-weight:700;color:var(--ocean);margin-bottom:8px;">Networking Resources</h2>
+        <p style="font-size:14px;color:var(--text-2);line-height:1.7;">Curated tools, questions, and reading to help you network with confidence. Plain. Practical. No filler.</p>
+      </div>
+
+      <!-- QUESTIONS BY SITUATION -->
+      <div class="card" style="margin-bottom:1.25rem;">
+        <div class="card-label"><i class="ti ti-message-circle" style="margin-right:4px;"></i>Questions to Ask</div>
+
+        <div style="margin-bottom:1.25rem;">
+          <div style="font-size:13px;font-weight:700;color:var(--ocean);text-transform:uppercase;letter-spacing:0.07em;margin-bottom:10px;padding-bottom:6px;border-bottom:1px solid var(--border);">Informational Interview</div>
+          <ul style="list-style:none;display:flex;flex-direction:column;gap:8px;">
+            <li style="font-size:14px;color:var(--text-2);display:flex;gap:10px;"><span style="color:var(--horizon);font-weight:700;flex-shrink:0;">→</span>How did you get into this field, and what does your career path look like in hindsight?</li>
+            <li style="font-size:14px;color:var(--text-2);display:flex;gap:10px;"><span style="color:var(--horizon);font-weight:700;flex-shrink:0;">→</span>What does a typical day or week look like for you?</li>
+            <li style="font-size:14px;color:var(--text-2);display:flex;gap:10px;"><span style="color:var(--horizon);font-weight:700;flex-shrink:0;">→</span>What do you wish you had known before entering this industry?</li>
+            <li style="font-size:14px;color:var(--text-2);display:flex;gap:10px;"><span style="color:var(--horizon);font-weight:700;flex-shrink:0;">→</span>What skills or experiences do you think matter most for someone looking to break in?</li>
+            <li style="font-size:14px;color:var(--text-2);display:flex;gap:10px;"><span style="color:var(--horizon);font-weight:700;flex-shrink:0;">→</span>Is there anyone else you think I should talk to?</li>
+          </ul>
+        </div>
+
+        <div style="margin-bottom:1.25rem;">
+          <div style="font-size:13px;font-weight:700;color:var(--ocean);text-transform:uppercase;letter-spacing:0.07em;margin-bottom:10px;padding-bottom:6px;border-bottom:1px solid var(--border);">Coffee Chat</div>
+          <ul style="list-style:none;display:flex;flex-direction:column;gap:8px;">
+            <li style="font-size:14px;color:var(--text-2);display:flex;gap:10px;"><span style="color:var(--horizon);font-weight:700;flex-shrink:0;">→</span>What's keeping you busy these days?</li>
+            <li style="font-size:14px;color:var(--text-2);display:flex;gap:10px;"><span style="color:var(--horizon);font-weight:700;flex-shrink:0;">→</span>What's the most interesting thing you're working on right now?</li>
+            <li style="font-size:14px;color:var(--text-2);display:flex;gap:10px;"><span style="color:var(--horizon);font-weight:700;flex-shrink:0;">→</span>How has your industry changed in the last few years?</li>
+            <li style="font-size:14px;color:var(--text-2);display:flex;gap:10px;"><span style="color:var(--horizon);font-weight:700;flex-shrink:0;">→</span>What do you look for when you're hiring or recommending someone?</li>
+            <li style="font-size:14px;color:var(--text-2);display:flex;gap:10px;"><span style="color:var(--horizon);font-weight:700;flex-shrink:0;">→</span>Is there anything I can help you with or anyone I can connect you to?</li>
+          </ul>
+        </div>
+
+        <div style="margin-bottom:1.25rem;">
+          <div style="font-size:13px;font-weight:700;color:var(--ocean);text-transform:uppercase;letter-spacing:0.07em;margin-bottom:10px;padding-bottom:6px;border-bottom:1px solid var(--border);">Follow-Up Call</div>
+          <ul style="list-style:none;display:flex;flex-direction:column;gap:8px;">
+            <li style="font-size:14px;color:var(--text-2);display:flex;gap:10px;"><span style="color:var(--horizon);font-weight:700;flex-shrink:0;">→</span>I took your advice on [X] — here's what happened. Does that change anything for you?</li>
+            <li style="font-size:14px;color:var(--text-2);display:flex;gap:10px;"><span style="color:var(--horizon);font-weight:700;flex-shrink:0;">→</span>Since we last spoke, I've been focused on [X]. Am I headed in the right direction?</li>
+            <li style="font-size:14px;color:var(--text-2);display:flex;gap:10px;"><span style="color:var(--horizon);font-weight:700;flex-shrink:0;">→</span>Are there any new developments on your end I should know about?</li>
+            <li style="font-size:14px;color:var(--text-2);display:flex;gap:10px;"><span style="color:var(--horizon);font-weight:700;flex-shrink:0;">→</span>Is there a better time to check back in, or is now a good window?</li>
+            <li style="font-size:14px;color:var(--text-2);display:flex;gap:10px;"><span style="color:var(--horizon);font-weight:700;flex-shrink:0;">→</span>Who else do you think I should be talking to at this stage?</li>
+          </ul>
+        </div>
+
+        <div>
+          <div style="font-size:13px;font-weight:700;color:var(--ocean);text-transform:uppercase;letter-spacing:0.07em;margin-bottom:10px;padding-bottom:6px;border-bottom:1px solid var(--border);">Networking Events</div>
+          <ul style="list-style:none;display:flex;flex-direction:column;gap:8px;">
+            <li style="font-size:14px;color:var(--text-2);display:flex;gap:10px;"><span style="color:var(--horizon);font-weight:700;flex-shrink:0;">→</span>What brought you to this event?</li>
+            <li style="font-size:14px;color:var(--text-2);display:flex;gap:10px;"><span style="color:var(--horizon);font-weight:700;flex-shrink:0;">→</span>What kind of work are you focused on right now?</li>
+            <li style="font-size:14px;color:var(--text-2);display:flex;gap:10px;"><span style="color:var(--horizon);font-weight:700;flex-shrink:0;">→</span>What's been the most useful thing you've gotten from events like this?</li>
+            <li style="font-size:14px;color:var(--text-2);display:flex;gap:10px;"><span style="color:var(--horizon);font-weight:700;flex-shrink:0;">→</span>Would you be open to staying in touch? I'd love to connect on LinkedIn.</li>
+          </ul>
+        </div>
+      </div>
+
+      <!-- NETWORKING TIPS -->
+      <div class="card" style="margin-bottom:1.25rem;">
+        <div class="card-label"><i class="ti ti-bulb" style="margin-right:4px;"></i>20 Networking Tips</div>
+        <div style="display:grid;grid-template-columns:1fr 1fr;gap:10px;">
+          ${[
+            ["Don't burn bridges.", "The professional world is smaller than it looks. The person you dismiss today may be hiring tomorrow."],
+            ["Start before you need to.", "The best time to build your network is when you don't need anything. The second best time is now."],
+            ["Give before you ask.", "Share an article, make an introduction, offer a referral. Generosity opens more doors than any pitch."],
+            ["Be specific in your ask.", ""Can I pick your brain?" is not a request. "Can I ask you two questions about breaking into nonprofit communications?" is."],
+            ["Follow up within 24 hours.", "A quick note after a meeting cements the connection. Wait too long and the moment passes."],
+            ["Keep it short.", "People are busy. A three-sentence email gets more responses than a three-paragraph one."],
+            ["Research before you reach out.", "Know what they do, what they've worked on, and why you're reaching out to them specifically."],
+            ["Connect on LinkedIn immediately.", "Don't let a good conversation disappear into a business card pile. Connect while the interaction is fresh."],
+            ["Have a clear one-liner.", "Know how to describe what you do and what you're looking for in one confident sentence."],
+            ["Ask for introductions, not jobs.", ""Do you know anyone I should talk to?" is far easier to say yes to than "Do you know of any openings?""],
+            ["Send value, not just updates.", "When you check back in, bring something — a relevant article, a congrats on their news, a shared contact."],
+            ["Warm up cold contacts.", "Comment on their posts, share their content, or reference their work before you reach out directly."],
+            ["Don't neglect weak ties.", "Acquaintances — not close friends — are often where the best opportunities come from. Stay in touch with the periphery."],
+            ["Personalize every message.", "Never send the same message twice. Even one specific detail shows you paid attention."],
+            ["Accept help gracefully.", "When someone offers to help, say yes. Letting people contribute builds the relationship."],
+            ["Be honest about where you are.", "You don't have to have it all figured out. People respond to honesty and clarity about what you're working toward."],
+            ["Follow through on what you say.", "If you say you'll send something, send it. Reliability is memorable."],
+            ["Stay in touch even when nothing's happening.", "A quick "thinking of you" or "saw this and thought of you" keeps the relationship alive without an agenda."],
+            ["Treat every conversation as practice.", "Not every contact leads somewhere. That's fine. Each one makes the next one easier."],
+            ["Say thank you. Always.", "A genuine thank you — specific, timely, and brief — is one of the most underused tools in networking."]
+          ].map(([tip, body], i) => `<div style="background:var(--fog);border-radius:8px;padding:12px 14px;"><div style="font-size:10px;font-weight:700;letter-spacing:0.08em;color:var(--horizon);margin-bottom:4px;">TIP ${i+1}</div><div style="font-size:13px;font-weight:700;color:var(--ocean);margin-bottom:4px;">${tip}</div><div style="font-size:13px;color:var(--text-2);line-height:1.6;">${body}</div></div>`).join('')}
+        </div>
+      </div>
+
+      <!-- READING LIST -->
+      <div class="card">
+        <div class="card-label"><i class="ti ti-books" style="margin-right:4px;"></i>Recommended Reading</div>
+        <div style="display:flex;flex-direction:column;gap:12px;">
+          <a href="https://www.amazon.com/2-Hour-Job-Search-Second-Technology/dp/1984857282/" target="_blank" style="display:flex;gap:14px;align-items:flex-start;background:var(--fog);border-radius:8px;padding:14px;text-decoration:none;transition:background 0.15s;" onmouseover="this.style.background='var(--mist)'" onmouseout="this.style.background='var(--fog)'">
+            <div style="width:36px;height:36px;background:var(--ocean);border-radius:8px;display:flex;align-items:center;justify-content:center;flex-shrink:0;"><i class="ti ti-book" style="color:#fff;font-size:18px;"></i></div>
+            <div><div style="font-size:14px;font-weight:700;color:var(--ocean);margin-bottom:2px;">The 2-Hour Job Search</div><div style="font-size:12px;color:var(--horizon);margin-bottom:4px;">Steve Dalton</div><div style="font-size:13px;color:var(--text-2);line-height:1.6;">A systematic, no-nonsense approach to targeting the right employers and getting responses faster using technology and prioritization.</div></div>
+          </a>
+          <a href="https://www.amazon.com/Never-Search-Alone-Seekers-Playbook/dp/B0BJ486SJ1/" target="_blank" style="display:flex;gap:14px;align-items:flex-start;background:var(--fog);border-radius:8px;padding:14px;text-decoration:none;transition:background 0.15s;" onmouseover="this.style.background='var(--mist)'" onmouseout="this.style.background='var(--fog)'">
+            <div style="width:36px;height:36px;background:var(--ocean);border-radius:8px;display:flex;align-items:center;justify-content:center;flex-shrink:0;"><i class="ti ti-book" style="color:#fff;font-size:18px;"></i></div>
+            <div><div style="font-size:14px;font-weight:700;color:var(--ocean);margin-bottom:2px;">Never Search Alone</div><div style="font-size:12px;color:var(--horizon);margin-bottom:4px;">Phyl Terry</div><div style="font-size:13px;color:var(--text-2);line-height:1.6;">The case for building a peer support group during your job search — and a practical playbook for doing it right.</div></div>
+          </a>
+          <a href="https://www.amazon.com/Taking-Work-Out-Networking-Connections/dp/1501199285/" target="_blank" style="display:flex;gap:14px;align-items:flex-start;background:var(--fog);border-radius:8px;padding:14px;text-decoration:none;transition:background 0.15s;" onmouseover="this.style.background='var(--mist)'" onmouseout="this.style.background='var(--fog)'">
+            <div style="width:36px;height:36px;background:var(--ocean);border-radius:8px;display:flex;align-items:center;justify-content:center;flex-shrink:0;"><i class="ti ti-book" style="color:#fff;font-size:18px;"></i></div>
+            <div><div style="font-size:14px;font-weight:700;color:var(--ocean);margin-bottom:2px;">Taking the Work Out of Networking</div><div style="font-size:12px;color:var(--horizon);margin-bottom:4px;">Karen Wickre</div><div style="font-size:13px;color:var(--text-2);line-height:1.6;">A practical, low-pressure guide to staying connected without the awkwardness — especially for introverts and reluctant networkers.</div></div>
+          </a>
+          <div style="font-size:12px;color:var(--text-3);font-style:italic;padding:8px 4px;">More recommendations coming soon.</div>
+        </div>
+      </div>
+
+      <footer>Built by <a href="https://plainspeakingcomms.com" target="_blank" style="color:var(--horizon);">Plain Speaking Communications</a> · Your data lives in your own Google Sheet.</footer>
+    </div>
+  </div>
 <div class="modal-overlay" id="notesModal">
   <div class="modal">
     <div class="modal-header"><h3 id="notesModalTitle">Notes history</h3><button class="modal-close" onclick="closeModal('notesModal')"><i class="ti ti-x"></i></button></div>
