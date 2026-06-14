@@ -525,8 +525,7 @@ function openDossierReport(c, content) {
   const angle        = extractSection(content, 'YOUR OUTREACH ANGLE');
 
   function formatBody(text) {
-    return text.split('
-').filter(l => l.trim()).map(l => {
+    return text.split('\n').filter(l => l.trim()).map(l => {
       if (l.match(/^[-•*]\s/)) return `<li>${l.replace(/^[-•*]\s/, '')}</li>`;
       if (l.match(/^\d+\.\s/)) return `<li>${l.replace(/^\d+\.\s/, '')}</li>`;
       return `<p>${l}</p>`;
