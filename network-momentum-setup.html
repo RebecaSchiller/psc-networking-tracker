@@ -1,0 +1,545 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Network Momentum — Setup Guide</title>
+<link href="https://fonts.googleapis.com/css2?family=Josefin+Sans:wght@300;400;600;700&display=swap" rel="stylesheet">
+<style>
+  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+  :root {
+    --ocean: #002366;
+    --horizon: #3A6DB5;
+    --mist: #D6E4F5;
+    --fog: #F0F4F9;
+    --ink: #1A1F2E;
+    --success: #2E7D55;
+    --warning: #B85C00;
+  }
+
+  body {
+    font-family: 'Josefin Sans', sans-serif;
+    background: var(--fog);
+    color: var(--ink);
+    line-height: 1.7;
+    padding: 0 0 80px;
+  }
+
+  header {
+    background: var(--ocean);
+    padding: 32px 40px;
+    color: white;
+  }
+
+  header h1 {
+    font-size: 1.5rem;
+    font-weight: 700;
+    letter-spacing: 0.06em;
+    text-transform: uppercase;
+  }
+
+  header p {
+    font-size: 0.9rem;
+    font-weight: 300;
+    opacity: 0.8;
+    margin-top: 6px;
+  }
+
+  .container {
+    max-width: 720px;
+    margin: 0 auto;
+    padding: 0 24px;
+  }
+
+  .intro {
+    background: white;
+    border-left: 4px solid var(--horizon);
+    border-radius: 0 8px 8px 0;
+    padding: 20px 24px;
+    margin: 36px 0 32px;
+    font-size: 0.95rem;
+  }
+
+  .intro strong {
+    color: var(--ocean);
+  }
+
+  .overview {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 12px;
+    margin-bottom: 40px;
+  }
+
+  .overview-item {
+    background: var(--mist);
+    border-radius: 8px;
+    padding: 16px;
+    text-align: center;
+  }
+
+  .overview-item .num {
+    font-size: 1.8rem;
+    font-weight: 700;
+    color: var(--ocean);
+    display: block;
+  }
+
+  .overview-item .label {
+    font-size: 0.75rem;
+    font-weight: 600;
+    letter-spacing: 0.06em;
+    text-transform: uppercase;
+    color: var(--horizon);
+  }
+
+  .step {
+    background: white;
+    border-radius: 10px;
+    margin-bottom: 24px;
+    overflow: hidden;
+    box-shadow: 0 1px 4px rgba(0,0,0,0.06);
+  }
+
+  .step-header {
+    background: var(--ocean);
+    padding: 16px 24px;
+    display: flex;
+    align-items: center;
+    gap: 16px;
+  }
+
+  .step-number {
+    width: 36px;
+    height: 36px;
+    border-radius: 50%;
+    background: rgba(255,255,255,0.15);
+    border: 2px solid rgba(255,255,255,0.4);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 0.95rem;
+    font-weight: 700;
+    color: white;
+    flex-shrink: 0;
+  }
+
+  .step-header h2 {
+    font-size: 1rem;
+    font-weight: 600;
+    color: white;
+    letter-spacing: 0.04em;
+    text-transform: uppercase;
+  }
+
+  .step-header .sub {
+    font-size: 0.78rem;
+    font-weight: 300;
+    color: rgba(255,255,255,0.7);
+  }
+
+  .step-body {
+    padding: 24px;
+  }
+
+  .step-body p {
+    font-size: 0.9rem;
+    margin-bottom: 16px;
+    color: #3a3f52;
+  }
+
+  .instruction {
+    display: flex;
+    gap: 14px;
+    margin-bottom: 14px;
+    align-items: flex-start;
+  }
+
+  .i-num {
+    width: 26px;
+    height: 26px;
+    border-radius: 50%;
+    background: var(--horizon);
+    color: white;
+    font-size: 0.75rem;
+    font-weight: 700;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex-shrink: 0;
+    margin-top: 1px;
+  }
+
+  .instruction p {
+    margin: 0;
+    font-size: 0.9rem;
+  }
+
+  code {
+    font-family: 'Courier New', monospace;
+    background: var(--mist);
+    color: var(--ocean);
+    padding: 2px 7px;
+    border-radius: 4px;
+    font-size: 0.85em;
+    font-weight: 600;
+  }
+
+  .callout {
+    border-radius: 8px;
+    padding: 14px 18px;
+    font-size: 0.85rem;
+    margin-top: 16px;
+    display: flex;
+    gap: 10px;
+    align-items: flex-start;
+  }
+
+  .callout.warning {
+    background: #FFF4E8;
+    border: 1px solid #F0C070;
+    color: var(--warning);
+  }
+
+  .callout.tip {
+    background: #EFF7F2;
+    border: 1px solid #A8D5B8;
+    color: var(--success);
+  }
+
+  .callout.info {
+    background: var(--mist);
+    border: 1px solid #A0BEE0;
+    color: var(--ocean);
+  }
+
+  .callout .icon { flex-shrink: 0; font-size: 1rem; }
+
+  .screenshot-note {
+    background: var(--fog);
+    border: 1px dashed #B0BDD0;
+    border-radius: 8px;
+    padding: 14px 18px;
+    font-size: 0.82rem;
+    color: #6a7590;
+    margin-top: 14px;
+    text-align: center;
+  }
+
+  .code-block {
+    background: var(--ink);
+    color: #A8D5B8;
+    font-family: 'Courier New', monospace;
+    font-size: 0.82rem;
+    padding: 16px 20px;
+    border-radius: 8px;
+    margin-top: 14px;
+    overflow-x: auto;
+    line-height: 1.6;
+    white-space: pre;
+  }
+
+  .done-banner {
+    background: var(--ocean);
+    color: white;
+    border-radius: 10px;
+    padding: 28px 32px;
+    text-align: center;
+    margin-top: 32px;
+  }
+
+  .done-banner h2 {
+    font-size: 1.2rem;
+    font-weight: 700;
+    letter-spacing: 0.06em;
+    text-transform: uppercase;
+    margin-bottom: 10px;
+  }
+
+  .done-banner p {
+    font-size: 0.9rem;
+    opacity: 0.85;
+    margin-bottom: 20px;
+  }
+
+  .done-banner a {
+    display: inline-block;
+    background: white;
+    color: var(--ocean);
+    font-weight: 700;
+    font-size: 0.88rem;
+    letter-spacing: 0.06em;
+    text-transform: uppercase;
+    padding: 12px 28px;
+    border-radius: 6px;
+    text-decoration: none;
+  }
+
+  @media (max-width: 600px) {
+    .overview { grid-template-columns: 1fr; }
+    header { padding: 24px 20px; }
+    .step-body { padding: 18px; }
+  }
+</style>
+</head>
+<body>
+
+<header>
+  <div class="container">
+    <h1>Network Momentum</h1>
+    <p>Setup Guide — Getting your Google Sheet connected</p>
+  </div>
+</header>
+
+<div class="container">
+
+  <div class="intro">
+    Network Momentum stores your contacts in <strong>your own Google Sheet</strong> — nothing goes to any server. This guide walks you through the one-time setup in about 10 minutes.
+  </div>
+
+  <div class="overview">
+    <div class="overview-item">
+      <span class="num">3</span>
+      <span class="label">Steps total</span>
+    </div>
+    <div class="overview-item">
+      <span class="num">~10</span>
+      <span class="label">Minutes</span>
+    </div>
+    <div class="overview-item">
+      <span class="num">1×</span>
+      <span class="label">Done once, works forever</span>
+    </div>
+  </div>
+
+  <!-- STEP 1 -->
+  <div class="step">
+    <div class="step-header">
+      <div class="step-number">1</div>
+      <div>
+        <h2>Create your Google Sheet</h2>
+        <div class="sub">This is where your contacts will be stored</div>
+      </div>
+    </div>
+    <div class="step-body">
+      <p>You need a Google account for this step. If you have Gmail, you're already set.</p>
+
+      <div class="instruction">
+        <div class="i-num">1</div>
+        <p>Go to <strong>sheets.google.com</strong> and sign in.</p>
+      </div>
+      <div class="instruction">
+        <div class="i-num">2</div>
+        <p>Click the <strong>+</strong> button (Blank spreadsheet) to create a new sheet.</p>
+      </div>
+      <div class="instruction">
+        <div class="i-num">3</div>
+        <p>At the top of the page, click <strong>Untitled spreadsheet</strong> and rename it to something like <code>Network Momentum Contacts</code>.</p>
+      </div>
+      <div class="instruction">
+        <div class="i-num">4</div>
+        <p>At the bottom of the screen, you'll see a tab named <strong>Sheet1</strong>. Double-click it and rename it exactly: <code>Contacts</code> — capital C, no spaces.</p>
+      </div>
+
+      <div class="callout warning">
+        <span class="icon">⚠️</span>
+        <span>The tab name must be exactly <code>Contacts</code> — if it's spelled differently, the app won't be able to read your data.</span>
+      </div>
+    </div>
+  </div>
+
+  <!-- STEP 2 -->
+  <div class="step">
+    <div class="step-header">
+      <div class="step-number">2</div>
+      <div>
+        <h2>Add the Apps Script</h2>
+        <div class="sub">This is the bridge between the app and your sheet</div>
+      </div>
+    </div>
+    <div class="step-body">
+      <p>Google Apps Script connects Network Momentum to your spreadsheet. You'll paste a script and deploy it as a Web App.</p>
+
+      <div class="instruction">
+        <div class="i-num">1</div>
+        <p>In your Google Sheet, click <strong>Extensions</strong> in the top menu bar, then click <strong>Apps Script</strong>.</p>
+      </div>
+      <div class="instruction">
+        <div class="i-num">2</div>
+        <p>A new browser tab opens with a code editor. You'll see some starter code. <strong>Select all of it and delete it.</strong></p>
+      </div>
+      <div class="instruction">
+        <div class="i-num">3</div>
+        <p>Copy the entire script below and paste it into the editor:</p>
+      </div>
+
+      <div class="code-block">function doGet(e) {
+  var action = e.parameter.action;
+  var ss = SpreadsheetApp.getActiveSpreadsheet();
+  var sheet = ss.getSheetByName("Contacts");
+
+  if (action === "headers") {
+    var headers = sheet.getRange(1, 1, 1, sheet.getLastColumn()).getValues()[0];
+    return ContentService.createTextOutput(JSON.stringify({ headers: headers }))
+      .setMimeType(ContentService.MimeType.JSON);
+  }
+
+  if (action === "read") {
+    var data = sheet.getDataRange().getValues();
+    return ContentService.createTextOutput(JSON.stringify({ rows: data }))
+      .setMimeType(ContentService.MimeType.JSON);
+  }
+
+  if (action === "append") {
+    var row = JSON.parse(e.parameter.row);
+    sheet.appendRow(row);
+    return ContentService.createTextOutput(JSON.stringify({ status: "ok" }))
+      .setMimeType(ContentService.MimeType.JSON);
+  }
+
+  if (action === "update") {
+    var rowIndex = parseInt(e.parameter.rowIndex);
+    var row = JSON.parse(e.parameter.row);
+    sheet.getRange(rowIndex, 1, 1, row.length).setValues([row]);
+    return ContentService.createTextOutput(JSON.stringify({ status: "ok" }))
+      .setMimeType(ContentService.MimeType.JSON);
+  }
+
+  if (action === "clear") {
+    var rowIndex = parseInt(e.parameter.rowIndex);
+    var numCols = sheet.getLastColumn();
+    sheet.getRange(rowIndex, 1, 1, numCols).clearContent();
+    return ContentService.createTextOutput(JSON.stringify({ status: "ok" }))
+      .setMimeType(ContentService.MimeType.JSON);
+  }
+
+  return ContentService.createTextOutput(JSON.stringify({ error: "Unknown action" }))
+    .setMimeType(ContentService.MimeType.JSON);
+}</div>
+
+      <div class="instruction" style="margin-top:18px;">
+        <div class="i-num">4</div>
+        <p>Click the <strong>Save</strong> icon (or press <code>Ctrl+S</code> / <code>Cmd+S</code>) to save the script.</p>
+      </div>
+
+      <div class="callout tip">
+        <span class="icon">✓</span>
+        <span>The script name at the top doesn't matter — you can leave it as "Untitled project" or rename it to "Network Momentum."</span>
+      </div>
+    </div>
+  </div>
+
+  <!-- STEP 3 -->
+  <div class="step">
+    <div class="step-header">
+      <div class="step-number">3</div>
+      <div>
+        <h2>Deploy as a Web App</h2>
+        <div class="sub">This generates the URL you'll paste into Network Momentum</div>
+      </div>
+    </div>
+    <div class="step-body">
+      <p>Deploying the script creates a secure URL that lets Network Momentum talk to your sheet.</p>
+
+      <div class="instruction">
+        <div class="i-num">1</div>
+        <p>In the Apps Script editor, click the blue <strong>Deploy</strong> button in the top right corner, then select <strong>New deployment</strong>.</p>
+      </div>
+      <div class="instruction">
+        <div class="i-num">2</div>
+        <p>In the dialog that opens, click the gear icon next to "Select type" and choose <strong>Web app</strong>.</p>
+      </div>
+      <div class="instruction">
+        <div class="i-num">3</div>
+        <p>Fill in the settings exactly as follows:</p>
+      </div>
+
+      <div style="background: var(--fog); border-radius: 8px; padding: 16px 20px; margin: 4px 0 14px; font-size: 0.88rem;">
+        <div style="display:grid; grid-template-columns: 160px 1fr; gap: 8px 16px;">
+          <span style="color: var(--horizon); font-weight: 600;">Description</span>
+          <span>Network Momentum (or anything you like)</span>
+          <span style="color: var(--horizon); font-weight: 600;">Execute as</span>
+          <span><strong>Me</strong> (your Google account)</span>
+          <span style="color: var(--horizon); font-weight: 600;">Who has access</span>
+          <span><strong>Anyone</strong></span>
+        </div>
+      </div>
+
+      <div class="callout warning">
+        <span class="icon">⚠️</span>
+        <span><strong>"Who has access" must be set to Anyone</strong> — if it's set to "Only myself," the app won't be able to connect to your sheet.</span>
+      </div>
+
+      <div class="instruction" style="margin-top: 18px;">
+        <div class="i-num">4</div>
+        <p>Click <strong>Deploy</strong>. Google will ask you to authorize the script.</p>
+      </div>
+      <div class="instruction">
+        <div class="i-num">5</div>
+        <p>Click <strong>Authorize access</strong>. A browser window opens. Choose your Google account, then click <strong>Advanced</strong> → <strong>Go to [project name] (unsafe)</strong> → <strong>Allow</strong>.</p>
+      </div>
+
+      <div class="callout info">
+        <span class="icon">ℹ️</span>
+        <span>The "unsafe" warning is Google's standard caution for any script you write yourself — it's not actually unsafe. You wrote (or pasted) this script, and it only accesses your own spreadsheet.</span>
+      </div>
+
+      <div class="instruction" style="margin-top: 18px;">
+        <div class="i-num">6</div>
+        <p>After authorizing, you'll see a <strong>Web app URL</strong>. It looks like:<br>
+        <code>https://script.google.com/macros/s/ABC.../exec</code><br>
+        <strong>Copy this URL.</strong> You'll need it in the next step.</p>
+      </div>
+
+      <div class="callout tip">
+        <span class="icon">✓</span>
+        <span>Paste the URL somewhere safe like a notes app — if you lose it, you can always find it again under Deploy → Manage deployments in the Apps Script editor.</span>
+      </div>
+    </div>
+  </div>
+
+  <!-- STEP 4 -->
+  <div class="step">
+    <div class="step-header">
+      <div class="step-number">4</div>
+      <div>
+        <h2>Connect to Network Momentum</h2>
+        <div class="sub">Paste your Web App URL into the app</div>
+      </div>
+    </div>
+    <div class="step-body">
+      <div class="instruction">
+        <div class="i-num">1</div>
+        <p>Go to <strong>networkmomentum.app</strong> and click <strong>Get Started</strong> (or <strong>Open App</strong>).</p>
+      </div>
+      <div class="instruction">
+        <div class="i-num">2</div>
+        <p>On the setup screen, paste the Web App URL you copied in Step 3 into the <strong>Google Apps Script URL</strong> field.</p>
+      </div>
+      <div class="instruction">
+        <div class="i-num">3</div>
+        <p>Click <strong>Connect</strong>. The app will verify the connection to your sheet.</p>
+      </div>
+      <div class="instruction">
+        <div class="i-num">4</div>
+        <p>If the connection succeeds, you'll land on your contacts dashboard. You're ready to go.</p>
+      </div>
+
+      <div class="callout warning">
+        <span class="icon">⚠️</span>
+        <span>If you get a connection error, double-check that "Who has access" is set to <strong>Anyone</strong> in your deployment settings, and that you copied the full URL including the <code>/exec</code> at the end.</span>
+      </div>
+    </div>
+  </div>
+
+  <!-- DONE -->
+  <div class="done-banner">
+    <h2>You're all set</h2>
+    <p>Your contacts are stored privately in your own Google Sheet.<br>Network Momentum never stores your data on any external server.</p>
+    <a href="https://networkmomentum.app" target="_blank">Open Network Momentum →</a>
+  </div>
+
+</div>
+</body>
+</html>
