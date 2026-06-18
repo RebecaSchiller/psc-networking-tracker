@@ -1,0 +1,25 @@
+{
+  "name": "Network Momentum",
+  "short_name": "Net Momentum",
+  "description": "Relationship-first networking tracker for job seekers.",
+  "start_url": "/psc-networking-tracker/app.html",
+  "scope": "/psc-networking-tracker/",
+  "display": "standalone",
+  "orientation": "portrait-primary",
+  "background_color": "#002366",
+  "theme_color": "#002366",
+  "icons": [
+    {
+      "src": "favicon.png",
+      "sizes": "192x192",
+      "type": "image/png",
+      "purpose": "any maskable"
+    },
+    {
+      "src": "favicon.png",
+      "sizes": "512x512",
+      "type": "image/png",
+      "purpose": "any maskable"
+    }
+  ]
+}
