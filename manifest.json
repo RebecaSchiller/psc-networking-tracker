@@ -1,34 +1,33 @@
 {
   "name": "Network Momentum",
-  "short_name": "Net Momentum",
-  "description": "Relationship-first networking tracker for job seekers.",
-  "start_url": "/psc-networking-tracker/app.html",
-  "scope": "/psc-networking-tracker/",
+  "short_name": "Network Momentum",
+  "description": "One contact away. Track your networking contacts, follow up consistently, and get AI-powered next steps.",
+  "start_url": "/app.html",
   "display": "standalone",
-  "orientation": "portrait-primary",
   "background_color": "#002366",
   "theme_color": "#002366",
+  "orientation": "any",
   "icons": [
     {
-      "src": "icon-192.png",
+      "src": "/icon-192.png",
       "sizes": "192x192",
       "type": "image/png",
       "purpose": "any"
     },
     {
-      "src": "icon-192.png",
+      "src": "/icon-192.png",
       "sizes": "192x192",
       "type": "image/png",
       "purpose": "maskable"
     },
     {
-      "src": "icon-512.png",
+      "src": "/icon-512.png",
       "sizes": "512x512",
       "type": "image/png",
       "purpose": "any"
     },
     {
-      "src": "icon-512.png",
+      "src": "/icon-512.png",
       "sizes": "512x512",
       "type": "image/png",
       "purpose": "maskable"
@@ -36,17 +35,17 @@
   ],
   "screenshots": [
     {
-      "src": "icon-512.png",
-      "sizes": "512x512",
-      "type": "image/png",
+      "src": "/contacts.jpg",
+      "sizes": "1080x760",
+      "type": "image/jpeg",
       "form_factor": "wide",
-      "label": "Network Momentum desktop view"
+      "label": "Contact cards view"
     },
     {
-      "src": "icon-512.png",
-      "sizes": "512x512",
-      "type": "image/png",
-      "label": "Network Momentum mobile view"
+      "src": "/contacts.jpg",
+      "sizes": "1080x760",
+      "type": "image/jpeg",
+      "label": "Contact cards view"
     }
   ]
 }

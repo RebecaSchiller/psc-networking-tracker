@@ -5,8 +5,14 @@
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>Network Momentum</title>
-  <link rel="icon" type="image/svg+xml" href="https://rebecaschiller.github.io/psc-networking-tracker/favicon.svg" />
-  <link rel="manifest" href="manifest.json" />
+  <link rel="icon" type="image/png" sizes="32x32" href="https://rebecaschiller.github.io/psc-networking-tracker/favicon.png" />
+  <link rel="manifest" href="/manifest.json" />
+  <meta name="theme-color" content="#002366" />
+  <meta name="apple-mobile-web-app-capable" content="yes" />
+  <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent" />
+  <meta name="apple-mobile-web-app-title" content="Network Momentum" />
+  <link rel="apple-touch-icon" href="https://rebecaschiller.github.io/psc-networking-tracker/icon-192.png" />
+  <link rel="icon" type="image/png" sizes="16x16" href="https://rebecaschiller.github.io/psc-networking-tracker/favicon-16.png" />
   <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@tabler/icons-webfont@3.19.0/dist/tabler-icons.min.css" />
   <link href="https://fonts.googleapis.com/css2?family=Josefin+Sans:wght@400;600;700&display=swap" rel="stylesheet" />
   <style>
@@ -929,10 +935,15 @@ initOnboarding();
 </div>
 
 <script>
-  if ('serviceWorker' in navigator) {
-    navigator.serviceWorker.register('sw.js');
-  }
+if ('serviceWorker' in navigator) {
+  window.addEventListener('load', function() {
+    navigator.serviceWorker.register('/sw.js').then(function(reg) {
+      console.log('Service worker registered:', reg.scope);
+    }).catch(function(err) {
+      console.log('Service worker registration failed:', err);
+    });
+  });
+}
 </script>
-
 </body>
 </html>
