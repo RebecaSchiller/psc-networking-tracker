@@ -691,7 +691,42 @@ function exportCSV(){const headers=['Name','Company','Role','Status','Priority',
 
 function esc(s){if(!s)return '';return String(s).replace(/&/g,'&amp;').replace(/"/g,'&quot;').replace(/</g,'&lt;').replace(/>/g,'&gt;');}
 function showToast(msg,dur=2500){const t=document.getElementById('toast');t.textContent=msg;t.classList.add('show');setTimeout(()=>t.classList.remove('show'),dur);}
+
+function toggleDarkMode(){
+  const isDark = document.documentElement.getAttribute('data-theme') === 'dark';
+  document.documentElement.setAttribute('data-theme', isDark ? 'light' : 'dark');
+  document.getElementById('darkModeBtn').innerHTML = isDark ? '<i class="ti ti-moon"></i>' : '<i class="ti ti-sun"></i>';
+  localStorage.setItem('nm_dark_mode', isDark ? 'light' : 'dark');
+}
+
+function initDarkMode(){
+  const saved = localStorage.getItem('nm_dark_mode');
+  const prefersDark = window.matchMedia('(prefers-color-scheme: dark)').matches;
+  if(saved === 'dark' || (!saved && prefersDark)){
+    document.documentElement.setAttribute('data-theme','dark');
+    const btn = document.getElementById('darkModeBtn');
+    if(btn) btn.innerHTML = '<i class="ti ti-sun"></i>';
+  }
+}
+
+function launchConfetti(){
+  const colors = ['#002366','#3A6DB5','#D6E4F5','#f59e0b','#10b981','#6366f1','#f97316'];
+  for(let i=0;i<80;i++){
+    const el=document.createElement('div');
+    el.className='confetti-piece';
+    el.style.left=Math.random()*100+'vw';
+    el.style.background=colors[Math.floor(Math.random()*colors.length)];
+    el.style.width=(Math.random()*10+6)+'px';
+    el.style.height=(Math.random()*10+6)+'px';
+    el.style.animationDuration=(Math.random()*2+2)+'s';
+    el.style.animationDelay=(Math.random()*1.5)+'s';
+    document.body.appendChild(el);
+    setTimeout(()=>el.remove(), 4000);
+  }
+}
+
 loadCfg();
+initDarkMode();
 if(scriptUrl){launchApp();}else{document.getElementById('setupScreen').style.display='block';}
 
 async function generateDossier(id) {
