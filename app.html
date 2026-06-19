@@ -40,6 +40,29 @@
       --radius-lg:   14px;
       --shadow:      0 1px 4px rgba(0,35,102,0.08);
     }
+    [data-theme="dark"] {
+      --bg:          #0f1624;
+      --card:        #1a2236;
+      --text-1:      #e8edf5;
+      --text-2:      #a0aec0;
+      --text-3:      #6b7a99;
+      --border:      rgba(58,109,181,0.25);
+      --border-mid:  rgba(58,109,181,0.4);
+      --fog:         #1a2236;
+      --mist:        #1e3a6e;
+      --shadow:      0 1px 4px rgba(0,0,0,0.3);
+    }
+    [data-theme="dark"] input, [data-theme="dark"] select, [data-theme="dark"] textarea {
+      background: #0f1624;
+      color: var(--text-1);
+      border-color: var(--border-mid);
+    }
+    [data-theme="dark"] .contact-card { background: var(--card); }
+    [data-theme="dark"] .modal { background: var(--card); }
+    [data-theme="dark"] .kanban-col { background: var(--card); }
+    [data-theme="dark"] .kanban-card { background: #0f1624; }
+    [data-theme="dark"] .template-card { background: var(--card); }
+    [data-theme="dark"] .summary-card { background: var(--card); }
     body { font-family: 'Josefin Sans', sans-serif; background: var(--bg); color: var(--text-1); min-height: 100vh; font-size: 15px; line-height: 1.6; }
 
     .topbar { background: var(--ocean); height: 64px; display: flex; align-items: center; justify-content: space-between; padding: 0 1.5rem; border-bottom: 2px solid var(--horizon); position: sticky; top: 0; z-index: 200; }
@@ -214,6 +237,10 @@
     footer { text-align: center; margin-top: 2rem; font-size: 12px; color: var(--text-3); }
     .spinner { display: inline-block; width: 14px; height: 14px; border: 2px solid rgba(255,255,255,0.3); border-top-color: #fff; border-radius: 50%; animation: spin 0.6s linear infinite; }
     @keyframes spin { to { transform: rotate(360deg); } }
+    /* CONFETTI */
+    .confetti-piece { position: fixed; width: 10px; height: 10px; border-radius: 2px; top: -10px; animation: confetti-fall linear forwards; pointer-events: none; z-index: 9999; }
+    @keyframes confetti-fall { 0% { transform: translateY(0) rotate(0deg); opacity: 1; } 100% { transform: translateY(100vh) rotate(720deg); opacity: 0; } }
+
     .toast { position: fixed; bottom: 1.5rem; right: 1.5rem; background: var(--ocean); color: #fff; padding: 10px 18px; border-radius: var(--radius); font-size: 13px; font-weight: 600; box-shadow: 0 4px 16px rgba(0,0,0,0.2); transform: translateY(80px); opacity: 0; transition: transform 0.25s, opacity 0.25s; z-index: 999; }
     .toast.show { transform: translateY(0); opacity: 1; }
 
@@ -294,6 +321,7 @@
     </div>
   </a>
   <div class="topbar-right">
+    <button class="btn-sm" onclick="toggleDarkMode()" id="darkModeBtn" title="Toggle dark mode"><i class="ti ti-moon"></i></button>
     <div class="sheet-indicator" id="sheetIndicator"><i class="ti ti-table-off"></i> No sheet</div>
     <button class="btn-sm" onclick="showSetup()" id="changeSheetBtn" style="display:none"><i class="ti ti-settings"></i> Settings</button>
   </div>
@@ -641,7 +669,9 @@ function isWarm(c){if(!c.lastContact)return false;const d=c.lastContact.includes
 function cleanDate(d){if(!d)return '';return d.includes('T')?d.split('T')[0]:d;}
 function shortDate(d){if(!d)return '';const clean=d.includes('T')?d.split('T')[0]:d;if(!clean)return '';const parts=clean.split('-');if(parts.length!==3)return clean;return parts[1].replace(/^0/,'')+'/'+parts[2].replace(/^0/,'')+'/'+parts[0].slice(2);}
 function renderStats(){const counts={};contacts.forEach(c=>counts[c.status]=(counts[c.status]||0)+1);const overdue=contacts.filter(isOverdue).length;document.getElementById('stats').innerHTML=[['Total',contacts.length,'ti-users'],['Follow-up',counts['Follow-up needed']||0,'ti-bell'],['Meetings',counts['Meeting scheduled']||0,'ti-calendar'],['Overdue',overdue,'ti-clock-exclamation'],['Replied',counts['Replied']||0,'ti-message-check']].map(([l,n,i])=>`<div class="stat"><strong><i class="ti ${i}" style="font-size:14px;margin-right:3px;"></i>${n}</strong>${l}</div>`).join('');}
-function renderGoals(){const now=new Date();const weekStart=new Date(now);weekStart.setDate(now.getDate()-now.getDay());const thisWeek=contacts.filter(c=>c.addedAt&&new Date(cleanDate(c.addedAt))>=weekStart).length;const pct=Math.min(100,Math.round((thisWeek/weeklyGoal)*100));document.getElementById('goalsBar').innerHTML=`<div class="goals-bar"><div class="goals-bar-inner"><span class="goal-label"><i class="ti ti-target" style="margin-right:5px;color:var(--horizon);"></i>Weekly goal: <strong>${thisWeek}/${weeklyGoal}</strong> new contacts</span><div class="goal-track"><div class="goal-fill" style="width:${pct}%"></div></div><span class="goal-pct">${pct}%</span><span class="goal-edit" onclick="showSetup()">Edit goal</span></div></div>`;}
+function renderGoals(){const now=new Date();const weekStart=new Date(now);weekStart.setDate(now.getDate()-now.getDay());const thisWeek=contacts.filter(c=>c.addedAt&&new Date(cleanDate(c.addedAt))>=weekStart).length;const pct=Math.min(100,Math.round((thisWeek/weeklyGoal)*100));const wasComplete = localStorage.getItem('nm_goal_complete_'+new Date().toISOString().slice(0,10));
+document.getElementById('goalsBar').innerHTML=`<div class="goals-bar"><div class="goals-bar-inner"><span class="goal-label"><i class="ti ti-target" style="margin-right:5px;color:var(--horizon);"></i>Weekly goal: <strong>${thisWeek}/${weeklyGoal}</strong> new contacts</span><div class="goal-track"><div class="goal-fill" style="width:${pct}%"></div></div><span class="goal-pct">${pct}%</span><span class="goal-edit" onclick="showSetup()">Edit goal</span></div></div>`;
+if(thisWeek >= weeklyGoal && !wasComplete){localStorage.setItem('nm_goal_complete_'+new Date().toISOString().slice(0,10),'1');setTimeout(launchConfetti,300);}}
 function renderAlerts(){document.getElementById('alerts').innerHTML=contacts.filter(isOverdue).map(c=>{const d=Math.floor((Date.now()-new Date(cleanDate(c.lastContact)))/86400000);return `<div class="alert-item" style="flex-direction:column;align-items:flex-start;gap:6px;"><div style="display:flex;align-items:center;gap:8px;"><i class="ti ti-alarm" style="color:#f97316;flex-shrink:0;"></i><strong>${esc(c.name)}</strong> at ${esc(c.company)}  -  no contact in ${d} days.<button class="ai-chip" onclick="getAlertSuggestion('${c.id}')"><i class="ti ti-sparkles"></i> Suggest action</button></div><div class="ai-suggestion-box" id="alert-ai-box-${c.id}" style="width:100%;margin:0;"></div></div>`;}).join('');}
 function renderTagFilter(){const el=document.getElementById('tagFilter');if(!el)return;const allTags=new Set();contacts.forEach(c=>{if(c.tags)c.tags.split(',').forEach(t=>{const tt=t.trim();if(tt)allTags.add(tt);});});el.innerHTML=[...allTags].map(t=>`<span class="tag-chip ${activeTag===t?'active':''}" onclick="filterByTag('${esc(t)}')">${esc(t)}</span>`).join('');}
 function filterByTag(tag){activeTag=activeTag===tag?'':tag;renderTagFilter();renderTable();}
