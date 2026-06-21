@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Network Momentum — One contact away.</title>
+  <title>Network Momentum: One contact away.</title>
   <meta name="description" content="Track every professional relationship, follow-up, and next action. Network Momentum keeps your network moving." />
   <link href="https://fonts.googleapis.com/css2?family=Josefin+Sans:wght@400;600;700&display=swap" rel="stylesheet" />
   <style>
@@ -76,6 +76,13 @@
     .step-item-light h3 { color: var(--mist); }
     .step-item-dark  p { font-size: 1.15rem; color: var(--slate); line-height: 1.5; }
     .step-item-light p { font-size: 1.15rem; color: rgba(214,228,245,0.85); line-height: 1.5; }
+
+    /* FAQ */
+    .faq-list { display: flex; flex-direction: column; gap: 2rem; text-align: left; }
+    .faq-item h3 { font-size: 1rem; font-weight: 700; letter-spacing: 0.06em; text-transform: uppercase; color: var(--ocean); margin-bottom: 6px; }
+    .faq-item p { font-size: 1.15rem; color: var(--slate); line-height: 1.5; }
+    .faq-item a { color: var(--horizon); text-decoration: none; }
+    .faq-item a:hover { text-decoration: underline; }
 
     /* CTA */
     .cta-band { background: var(--ocean); padding: 0 10rem; }
@@ -229,12 +236,55 @@
         </div>
         <div class="step-item step-item-light">
           <div class="step-num-light">3</div>
-          <div><h3>Connect and go</h3><p>Paste your Web App URL. Add your Anthropic API key to unlock AI suggestions.</p></div>
+          <div><h3>Connect and go</h3><p>Paste your Web App URL. Then add your AI API key to unlock AI-powered suggestions. Network Momentum works with Anthropic (Claude) by default. Prefer OpenAI? You can use your own OpenAI API key instead. Just create a free account at <a href="https://platform.openai.com" target="_blank" style="color:var(--mist);text-decoration:underline;">platform.openai.com</a>, add billing, and paste your key into the app.</p></div>
         </div>
         <div class="step-item step-item-light">
           <div class="step-num-light">4</div>
           <div><h3>Start tracking</h3><p>Add your first contact, set a weekly goal, and let the app help you stay consistent.</p></div>
         </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- BLOCK 7: Ocean frame, white box - FAQ -->
+<div class="frame-ocean" id="faq">
+  <div class="box-white">
+    <div class="block-content">
+      <div class="block-label-dark">FAQ</div>
+      <h2 class="block-title-dark">Common questions.</h2>
+      <div class="faq-list">
+
+        <div class="faq-item">
+          <h3>Is Network Momentum really free?</h3>
+          <p>Yes. The app itself is completely free to use. There's no account, no subscription, and no data stored on our servers. Your contacts live in your own Google Sheet.</p>
+        </div>
+
+        <div class="faq-item">
+          <h3>Do I need an AI API key?</h3>
+          <p>Only if you want AI-powered features like next-step suggestions and company dossiers. Without a key, the rest of the app (contact tracking, pipeline view, email templates, and weekly planning) works just fine.</p>
+        </div>
+
+        <div class="faq-item">
+          <h3>Which AI providers does Network Momentum support?</h3>
+          <p>Network Momentum is built with Anthropic's Claude as the default AI provider. If you already have an OpenAI account and prefer to use that instead, you can use your own OpenAI API key. Either way, you connect your key directly inside the app.</p>
+        </div>
+
+        <div class="faq-item">
+          <h3>Does my ChatGPT subscription give me API access?</h3>
+          <p>No. A ChatGPT Plus (or any ChatGPT) subscription is a separate product from OpenAI's API and does not include API access. To use OpenAI's API with Network Momentum, you need a separate OpenAI platform account with its own billing. Create one at <a href="https://platform.openai.com" target="_blank">platform.openai.com</a>. You pay OpenAI directly based on usage, with no fixed monthly fee.</p>
+        </div>
+
+        <div class="faq-item">
+          <h3>Who pays for the AI usage?</h3>
+          <p>You do, directly to whichever AI provider you choose. Network Momentum never touches your API key billing. For most users, the cost is minimal, just a few cents per month at typical networking volumes.</p>
+        </div>
+
+        <div class="faq-item">
+          <h3>Is my data private?</h3>
+          <p>Yes. Your contact data never touches our servers. Everything is stored in a Google Sheet you own and control. The only external calls made are to whichever AI provider you've connected, using your own API key.</p>
+        </div>
+
       </div>
     </div>
   </div>
