@@ -1,101 +1,78 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Setup Guide — Network Momentum</title>
-  <link href="https://fonts.googleapis.com/css2?family=Josefin+Sans:wght@400;600;700&display=swap" rel="stylesheet" />
-  <style>
-    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
-    :root {
-      --ocean: #002366; --ocean-mid: #002d7a;
-      --horizon: #3A6DB5; --horizon-mid: #4d7dc0;
-      --mist: #D6E4F5; --fog: #F0F4F9;
-      --ink: #1A1F2E; --slate: #4A5568; --stone: #8A9BB0;
-      --white: #FFFFFF;
-    }
-    html { scroll-behavior: smooth; }
-    body { font-family: 'Josefin Sans', sans-serif; background: var(--fog); color: var(--ink); font-size: 17px; line-height: 1.5; margin: 0; }
-
-    nav { background: var(--ocean); border-bottom: 2px solid var(--horizon); padding: 0 3rem; height: 72px; display: flex; align-items: center; justify-content: space-between; position: sticky; top: 0; z-index: 100; }
-    .nav-brand { display: flex; align-items: center; gap: 12px; color: #fff; font-size: 18px; font-weight: 700; text-decoration: none; letter-spacing: 0.02em; }
-    .nav-brand .brand-sub { font-size: 10px; font-weight: 400; color: var(--mist); letter-spacing: 0.1em; text-transform: uppercase; display: block; line-height: 1; margin-top: 3px; }
-    .nav-cta { background: var(--horizon); color: #fff; border: none; border-radius: 6px; padding: 10px 24px; font-size: 13px; font-family: inherit; font-weight: 700; letter-spacing: 0.08em; text-transform: uppercase; cursor: pointer; text-decoration: none; transition: background 0.15s; }
-    .nav-cta:hover { background: var(--horizon-mid); }
-
-    /* HERO */
-    .hero { background: var(--ocean); padding: 5rem 3rem 4rem; text-align: center; }
-    .hero-eyebrow { display: inline-block; font-size: 11px; font-weight: 700; letter-spacing: 0.14em; text-transform: uppercase; color: var(--mist); background: rgba(214,228,245,0.12); border: 1px solid rgba(214,228,245,0.25); border-radius: 99px; padding: 6px 18px; margin-bottom: 1.5rem; }
-    .hero h1 { font-size: clamp(2rem, 4vw, 3rem); font-weight: 700; color: #fff; margin-bottom: 1rem; line-height: 1.15; }
-    .hero p { font-size: 1.1rem; color: rgba(214,228,245,0.85); max-width: 540px; margin: 0 auto; line-height: 1.5; }
-
-    /* PROGRESS NAV */
-    .progress-nav { background: var(--ocean); padding: 0 10rem; }
-    .progress-inner { background: var(--white); padding: 1.5rem 3rem; display: flex; gap: 0; border-bottom: 2px solid var(--mist); }
-    .progress-step { display: flex; align-items: center; gap: 10px; font-size: 12px; font-weight: 700; letter-spacing: 0.06em; text-transform: uppercase; color: var(--stone); text-decoration: none; padding: 0 1.5rem 0 0; flex-shrink: 0; }
-    .progress-step:first-child { padding-left: 0; }
-    .progress-step .p-num { width: 26px; height: 26px; border-radius: 50%; background: var(--mist); color: var(--ocean); font-size: 12px; font-weight: 700; display: flex; align-items: center; justify-content: center; flex-shrink: 0; }
-    .progress-step:hover { color: var(--horizon); }
-
-    /* MAIN LAYOUT */
-    .page-wrap { background: var(--ocean); padding: 0 10rem; }
-    .page-inner { background: var(--white); padding: 4rem 4rem 5rem; }
-
-    /* STEP SECTIONS */
-    .setup-step { margin-bottom: 4rem; padding-bottom: 4rem; border-bottom: 1px solid var(--mist); }
-    .setup-step:last-child { border-bottom: none; margin-bottom: 0; padding-bottom: 0; }
-
-    .step-header { display: flex; align-items: flex-start; gap: 1.25rem; margin-bottom: 1.5rem; }
-    .step-badge { width: 48px; height: 48px; border-radius: 50%; background: var(--ocean); color: var(--mist); font-size: 18px; font-weight: 700; display: flex; align-items: center; justify-content: center; flex-shrink: 0; }
-    .step-header-text {}
-    .step-eyebrow { font-size: 10px; font-weight: 700; letter-spacing: 0.12em; text-transform: uppercase; color: var(--horizon); margin-bottom: 4px; }
-    .step-header h2 { font-size: 1.6rem; font-weight: 700; color: var(--ocean); line-height: 1.2; }
-
-    .step-body p { font-size: 1.05rem; color: var(--slate); line-height: 1.5; margin-bottom: 1.25rem; }
-    .step-body p:last-child { margin-bottom: 0; }
-
-    /* INSTRUCTION LIST */
-    .instruction-list { list-style: none; display: flex; flex-direction: column; gap: 1rem; margin: 1.5rem 0; }
-    .instruction-list li { display: flex; align-items: flex-start; gap: 12px; font-size: 1.05rem; color: var(--slate); line-height: 1.5; }
-    .instruction-list li .i-num { width: 24px; height: 24px; border-radius: 50%; background: var(--mist); color: var(--ocean); font-size: 11px; font-weight: 700; display: flex; align-items: center; justify-content: center; flex-shrink: 0; margin-top: 2px; }
-
-    /* CODE BLOCK */
-    .code-block { background: var(--ink); border-radius: 8px; padding: 1.5rem; margin: 1.5rem 0; position: relative; }
-    .code-block pre { font-family: 'Courier New', Courier, monospace; font-size: 13px; color: var(--mist); line-height: 1.6; white-space: pre-wrap; word-break: break-all; }
-    .code-label { font-size: 10px; font-weight: 700; letter-spacing: 0.1em; text-transform: uppercase; color: var(--stone); margin-bottom: 10px; }
-    .copy-btn { position: absolute; top: 1rem; right: 1rem; background: rgba(214,228,245,0.12); border: 1px solid rgba(214,228,245,0.2); color: var(--mist); border-radius: 6px; padding: 5px 12px; font-size: 11px; font-weight: 700; letter-spacing: 0.06em; text-transform: uppercase; font-family: inherit; cursor: pointer; transition: background 0.15s; }
-    .copy-btn:hover { background: rgba(214,228,245,0.22); }
-
-    /* CALLOUT */
-    .callout { background: var(--fog); border-left: 3px solid var(--horizon); border-radius: 0 8px 8px 0; padding: 1rem 1.25rem; margin: 1.5rem 0; font-size: 1rem; color: var(--slate); line-height: 1.5; }
-    .callout strong { color: var(--ocean); }
-
-    /* INLINE CODE */
-    code { background: var(--mist); color: var(--ocean); padding: 2px 6px; border-radius: 4px; font-family: 'Courier New', Courier, monospace; font-size: 0.9em; }
-
-    /* CTA BLOCK */
-    .setup-cta { background: var(--ocean); padding: 0 10rem; }
-    .setup-cta-inner { background: var(--white); padding: 3rem 4rem; text-align: center; border-top: 3px solid var(--horizon); }
-    .setup-cta h2 { font-size: 1.8rem; font-weight: 700; color: var(--ocean); margin-bottom: 0.75rem; }
-    .setup-cta p { font-size: 1.05rem; color: var(--slate); margin-bottom: 2rem; }
-    .btn-launch { background: var(--ocean); color: #fff; border: none; border-radius: 6px; padding: 14px 32px; font-size: 14px; font-family: inherit; font-weight: 700; letter-spacing: 0.08em; text-transform: uppercase; cursor: pointer; text-decoration: none; display: inline-flex; align-items: center; gap: 8px; transition: background 0.15s; }
-    .btn-launch:hover { background: var(--ocean-mid); }
-
-    footer { background: var(--ink); padding: 2.5rem 3rem; text-align: center; }
-    .footer-brand { font-size: 16px; font-weight: 700; color: #fff; margin-bottom: 4px; }
-    .footer-tagline { font-size: 13px; color: var(--mist); font-style: italic; margin-bottom: 8px; }
-    .footer-sub { font-size: 13px; color: var(--stone); }
-    .footer-sub a { color: var(--mist); text-decoration: none; }
-    .footer-sub a:hover { text-decoration: underline; }
-
-    @media (max-width: 900px) {
-      .page-wrap, .progress-nav, .setup-cta { padding: 0 1.5rem; }
-      .page-inner, .setup-cta-inner { padding: 2.5rem 1.5rem; }
-      .progress-inner { padding: 1rem 1.5rem; flex-wrap: wrap; gap: 12px; }
-      nav { padding: 0 1.5rem; }
-      .hero { padding: 3.5rem 1.5rem; }
-    }
-  </style>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>Setup Guide: Network Momentum</title>
+<link href="https://fonts.googleapis.com/css2?family=Josefin+Sans:wght@400;600;700&display=swap" rel="stylesheet" />
+<style>
+*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+:root {
+  --ocean: #002366; --ocean-mid: #002d7a;
+  --horizon: #3A6DB5; --horizon-mid: #4d7dc0;
+  --mist: #D6E4F5; --fog: #F0F4F9;
+  --ink: #1A1F2E; --slate: #4A5568; --stone: #8A9BB0;
+  --white: #FFFFFF;
+}
+html { scroll-behavior: smooth; }
+body { font-family: 'Josefin Sans', sans-serif; background: var(--fog); color: var(--ink); font-size: 17px; line-height: 1.5; margin: 0; }
+nav { background: var(--ocean); border-bottom: 2px solid var(--horizon); padding: 0 3rem; height: 72px; display: flex; align-items: center; justify-content: space-between; position: sticky; top: 0; z-index: 100; }
+.nav-brand { display: flex; align-items: center; gap: 12px; color: #fff; font-size: 18px; font-weight: 700; text-decoration: none; letter-spacing: 0.02em; }
+.nav-brand .brand-sub { font-size: 10px; font-weight: 400; color: var(--mist); letter-spacing: 0.1em; text-transform: uppercase; display: block; line-height: 1; margin-top: 3px; }
+.nav-cta { background: var(--horizon); color: #fff; border: none; border-radius: 6px; padding: 10px 24px; font-size: 13px; font-family: inherit; font-weight: 700; letter-spacing: 0.08em; text-transform: uppercase; cursor: pointer; text-decoration: none; transition: background 0.15s; }
+.nav-cta:hover { background: var(--horizon-mid); }
+.hero { background: var(--ocean); padding: 5rem 3rem 4rem; text-align: center; }
+.hero-eyebrow { display: inline-block; font-size: 11px; font-weight: 700; letter-spacing: 0.14em; text-transform: uppercase; color: var(--mist); background: rgba(214,228,245,0.12); border: 1px solid rgba(214,228,245,0.25); border-radius: 99px; padding: 6px 18px; margin-bottom: 1.5rem; }
+.hero h1 { font-size: clamp(2rem, 4vw, 3rem); font-weight: 700; color: #fff; margin-bottom: 1rem; line-height: 1.15; }
+.hero p { font-size: 1.1rem; color: rgba(214,228,245,0.85); max-width: 540px; margin: 0 auto; line-height: 1.5; }
+.progress-nav { background: var(--ocean); padding: 0 10rem; }
+.progress-inner { background: var(--white); padding: 1.5rem 3rem; display: flex; gap: 0; border-bottom: 2px solid var(--mist); }
+.progress-step { display: flex; align-items: center; gap: 10px; font-size: 12px; font-weight: 700; letter-spacing: 0.06em; text-transform: uppercase; color: var(--stone); text-decoration: none; padding: 0 1.5rem 0 0; flex-shrink: 0; }
+.progress-step:first-child { padding-left: 0; }
+.progress-step .p-num { width: 26px; height: 26px; border-radius: 50%; background: var(--mist); color: var(--ocean); font-size: 12px; font-weight: 700; display: flex; align-items: center; justify-content: center; flex-shrink: 0; }
+.progress-step:hover { color: var(--horizon); }
+.page-wrap { background: var(--ocean); padding: 0 10rem; }
+.page-inner { background: var(--white); padding: 4rem 4rem 5rem; }
+.setup-step { margin-bottom: 4rem; padding-bottom: 4rem; border-bottom: 1px solid var(--mist); }
+.setup-step:last-child { border-bottom: none; margin-bottom: 0; padding-bottom: 0; }
+.step-header { display: flex; align-items: flex-start; gap: 1.25rem; margin-bottom: 1.5rem; }
+.step-badge { width: 48px; height: 48px; border-radius: 50%; background: var(--ocean); color: var(--mist); font-size: 18px; font-weight: 700; display: flex; align-items: center; justify-content: center; flex-shrink: 0; }
+.step-header-text {}
+.step-eyebrow { font-size: 10px; font-weight: 700; letter-spacing: 0.12em; text-transform: uppercase; color: var(--horizon); margin-bottom: 4px; }
+.step-header h2 { font-size: 1.6rem; font-weight: 700; color: var(--ocean); line-height: 1.2; }
+.step-body p { font-size: 1.05rem; color: var(--slate); line-height: 1.5; margin-bottom: 1.25rem; }
+.step-body p:last-child { margin-bottom: 0; }
+.instruction-list { list-style: none; display: flex; flex-direction: column; gap: 1rem; margin: 1.5rem 0; }
+.instruction-list li { display: flex; align-items: flex-start; gap: 12px; font-size: 1.05rem; color: var(--slate); line-height: 1.5; }
+.instruction-list li .i-num { width: 24px; height: 24px; border-radius: 50%; background: var(--mist); color: var(--ocean); font-size: 11px; font-weight: 700; display: flex; align-items: center; justify-content: center; flex-shrink: 0; margin-top: 2px; }
+.code-block { background: var(--ink); border-radius: 8px; padding: 1.5rem; margin: 1.5rem 0; position: relative; }
+.code-block pre { font-family: 'Courier New', Courier, monospace; font-size: 13px; color: var(--mist); line-height: 1.6; white-space: pre-wrap; word-break: break-all; }
+.code-label { font-size: 10px; font-weight: 700; letter-spacing: 0.1em; text-transform: uppercase; color: var(--stone); margin-bottom: 10px; }
+.copy-btn { position: absolute; top: 1rem; right: 1rem; background: rgba(214,228,245,0.12); border: 1px solid rgba(214,228,245,0.2); color: var(--mist); border-radius: 6px; padding: 5px 12px; font-size: 11px; font-weight: 700; letter-spacing: 0.06em; text-transform: uppercase; font-family: inherit; cursor: pointer; transition: background 0.15s; }
+.copy-btn:hover { background: rgba(214,228,245,0.22); }
+.callout { background: var(--fog); border-left: 3px solid var(--horizon); border-radius: 0 8px 8px 0; padding: 1rem 1.25rem; margin: 1.5rem 0; font-size: 1rem; color: var(--slate); line-height: 1.5; }
+.callout strong { color: var(--ocean); }
+code { background: var(--mist); color: var(--ocean); padding: 2px 6px; border-radius: 4px; font-family: 'Courier New', Courier, monospace; font-size: 0.9em; }
+.setup-cta { background: var(--ocean); padding: 0 10rem; }
+.setup-cta-inner { background: var(--white); padding: 3rem 4rem; text-align: center; border-top: 3px solid var(--horizon); }
+.setup-cta h2 { font-size: 1.8rem; font-weight: 700; color: var(--ocean); margin-bottom: 0.75rem; }
+.setup-cta p { font-size: 1.05rem; color: var(--slate); margin-bottom: 2rem; }
+.btn-launch { background: var(--ocean); color: #fff; border: none; border-radius: 6px; padding: 14px 32px; font-size: 14px; font-family: inherit; font-weight: 700; letter-spacing: 0.08em; text-transform: uppercase; cursor: pointer; text-decoration: none; display: inline-flex; align-items: center; gap: 8px; transition: background 0.15s; }
+.btn-launch:hover { background: var(--ocean-mid); }
+footer { background: var(--ink); padding: 2.5rem 3rem; text-align: center; }
+.footer-brand { font-size: 16px; font-weight: 700; color: #fff; margin-bottom: 4px; }
+.footer-tagline { font-size: 13px; color: var(--mist); font-style: italic; margin-bottom: 8px; }
+.footer-sub { font-size: 13px; color: var(--stone); }
+.footer-sub a { color: var(--mist); text-decoration: none; }
+.footer-sub a:hover { text-decoration: underline; }
+@media (max-width: 900px) {
+  .page-wrap, .progress-nav, .setup-cta { padding: 0 1.5rem; }
+  .page-inner, .setup-cta-inner { padding: 2.5rem 1.5rem; }
+  .progress-inner { padding: 1rem 1.5rem; flex-wrap: wrap; gap: 12px; }
+  nav { padding: 0 1.5rem; }
+  .hero { padding: 3.5rem 1.5rem; }
+}
+</style>
 </head>
 <body>
 
@@ -122,7 +99,7 @@
       <span class="brand-sub">One contact away.</span>
     </div>
   </a>
-  <a class="nav-cta" href="app.html">Launch the app →</a>
+  <a class="nav-cta" href="app.html">Launch the app &rarr;</a>
 </nav>
 
 <!-- HERO -->
@@ -135,8 +112,8 @@
 <!-- WINDOWS NOTE -->
 <div style="background:#fff7ed;border-top:2px solid #fed7aa;padding:1rem 3rem;text-align:center;">
   <p style="font-size:14px;color:#92400e;font-family:'Josefin Sans',sans-serif;">
-    <strong>Using Windows?</strong> We have a step-by-step Windows setup guide with the full script included. 
-    <a href="setup-windows.html" style="color:#002366;font-weight:700;text-decoration:underline;">Download the Windows guide →</a>
+    <strong>Using Windows?</strong> We have a step-by-step Windows setup guide with the full script included.
+    <a href="setup-windows.html" style="color:#002366;font-weight:700;text-decoration:underline;">View the Windows guide &rarr;</a>
   </p>
 </div>
 
@@ -169,7 +146,7 @@
           <li><div class="i-num">1</div> Go to <strong>sheets.google.com</strong> and sign in with your Google account.</li>
           <li><div class="i-num">2</div> Click the <strong>+</strong> button to create a new blank spreadsheet.</li>
           <li><div class="i-num">3</div> At the bottom of the screen, double-click the tab named <strong>Sheet1</strong> and rename it exactly: <code>Contacts</code> (capital C, no spaces).</li>
-          <li><div class="i-num">4</div> Give your spreadsheet a name at the top — something like <strong>Network Momentum Contacts</strong>.</li>
+          <li><div class="i-num">4</div> Give your spreadsheet a name at the top -- something like <strong>Network Momentum Contacts</strong>.</li>
         </ul>
         <div class="callout"><strong>Important:</strong> The tab must be named exactly <code>Contacts</code> or the app will not be able to read your data.</div>
       </div>
@@ -190,10 +167,10 @@
           <li><div class="i-num">1</div> In your Google Sheet, click <strong>Extensions</strong> in the top menu, then <strong>Apps Script</strong>.</li>
           <li><div class="i-num">2</div> A new tab will open. Delete all the existing code in the editor (select all, then delete).</li>
           <li><div class="i-num">3</div> Copy the full script below and paste it into the editor.</li>
-          <li><div class="i-num">4</div> Click the <strong>Save</strong> icon (or press Cmd+S / Ctrl+S).</li>
+          <li><div class="i-num">4</div> Click the <strong>Save</strong> icon (or press Cmd+S).</li>
         </ul>
         <div class="code-block">
-          <div class="code-label">Code.gs — paste this entire block</div>
+          <div class="code-label">Code.gs -- paste this entire block</div>
           <button class="copy-btn" onclick="copyCode()">Copy</button>
           <pre id="codeBlock">function doGet(e) { return handleRequest(e); }
 
@@ -272,7 +249,6 @@ function handleAction(p) {
         out = { error: err.message };
       }
     }
-
   } else {
     out = { error: "unknown action" };
   }
@@ -303,7 +279,7 @@ function handleAction(p) {
           <li><div class="i-num">4</div> Set <strong>Execute as</strong> to <strong>Me</strong>.</li>
           <li><div class="i-num">5</div> Set <strong>Who has access</strong> to <strong>Anyone</strong>.</li>
           <li><div class="i-num">6</div> Click <strong>Deploy</strong> and authorize the app when prompted.</li>
-          <li><div class="i-num">7</div> Copy the <strong>Web App URL</strong> that appears — you'll need it in the next step.</li>
+          <li><div class="i-num">7</div> Copy the <strong>Web App URL</strong> that appears -- you'll need it in the next step.</li>
         </ul>
         <div class="callout"><strong>Note:</strong> Any time you make changes to the script, you must create a <strong>New deployment</strong> (not update the existing one) for the changes to take effect.</div>
       </div>
@@ -319,14 +295,33 @@ function handleAction(p) {
         </div>
       </div>
       <div class="step-body">
-        <p>Now connect Network Momentum to your sheet and optionally add your Anthropic API key to unlock AI suggestions.</p>
+        <p>Now connect Network Momentum to your sheet and add your AI API key to unlock AI-powered suggestions.</p>
         <ul class="instruction-list">
           <li><div class="i-num">1</div> Open <a href="app.html" style="color:var(--horizon);font-weight:600;">Network Momentum</a> and paste your Web App URL into the setup screen.</li>
-          <li><div class="i-num">2</div> To enable AI suggestions, paste your Anthropic API key. Get one free at <a href="https://console.anthropic.com" target="_blank" style="color:var(--horizon);font-weight:600;">console.anthropic.com</a>.</li>
+          <li><div class="i-num">2</div> Add your AI API key to unlock features like Suggest Next Action and Company Dossier. Network Momentum uses <strong>Anthropic (Claude)</strong> by default. Get a free Anthropic key at <a href="https://console.anthropic.com" target="_blank" style="color:var(--horizon);font-weight:600;">console.anthropic.com</a>. If you prefer OpenAI, you can use your own OpenAI API key instead -- create a free account at <a href="https://platform.openai.com" target="_blank" style="color:var(--horizon);font-weight:600;">platform.openai.com</a>, add billing, and paste your key here. You can skip this step and add a key later in Settings.</li>
           <li><div class="i-num">3</div> Set your weekly contact goal (5 is a solid starting point).</li>
           <li><div class="i-num">4</div> Click <strong>Connect my sheet</strong> and you're in.</li>
         </ul>
         <div class="callout"><strong>Your data is yours.</strong> Your API key and script URL are stored only in your browser. We never see them.</div>
+
+        <h3 style="font-size:1.1rem;font-weight:700;color:var(--ocean);margin:2rem 0 1rem;">Troubleshooting</h3>
+        <p><strong>"Could not connect" error:</strong></p>
+        <ul style="list-style:disc;padding-left:1.5rem;color:var(--slate);font-size:1rem;margin-bottom:1rem;">
+          <li>Make sure you copied the full Web App URL including <code>/exec</code> at the end.</li>
+          <li>Make sure deployment settings were: Execute as <strong>Me</strong>, Who has access <strong>Anyone</strong>.</li>
+          <li>Try redeploying: Deploy &gt; Manage deployments &gt; pencil icon &gt; New version &gt; Deploy.</li>
+        </ul>
+        <p><strong>No contacts loading:</strong></p>
+        <ul style="list-style:disc;padding-left:1.5rem;color:var(--slate);font-size:1rem;margin-bottom:1rem;">
+          <li>Check that your Google Sheet tab is named exactly <code>Contacts</code> with a capital C.</li>
+        </ul>
+        <p><strong>AI features not working:</strong></p>
+        <ul style="list-style:disc;padding-left:1.5rem;color:var(--slate);font-size:1rem;margin-bottom:1rem;">
+          <li>Anthropic API keys start with <code>sk-ant-</code>. Get one at <a href="https://console.anthropic.com" target="_blank" style="color:var(--horizon);">console.anthropic.com</a>.</li>
+          <li>OpenAI API keys start with <code>sk-</code>. Get one at <a href="https://platform.openai.com" target="_blank" style="color:var(--horizon);">platform.openai.com</a>. Note: a ChatGPT subscription does not include API access. You need a separate OpenAI platform account with billing enabled.</li>
+          <li>Add or update your key at any time in Settings (top right of the app).</li>
+        </ul>
+        <p style="font-size:0.95rem;color:var(--stone);">Need help? <a href="mailto:rebeca@plainspeakingcomms.com" style="color:var(--horizon);">rebeca@plainspeakingcomms.com</a></p>
       </div>
     </div>
 
@@ -338,14 +333,14 @@ function handleAction(p) {
   <div class="setup-cta-inner">
     <h2>Ready to build momentum?</h2>
     <p>You're all set. Open the app and add your first contact.</p>
-    <a class="btn-launch" href="app.html">Launch Network Momentum →</a>
+    <a class="btn-launch" href="app.html">Launch Network Momentum &rarr;</a>
   </div>
 </div>
 
 <footer>
   <div class="footer-brand">Network Momentum</div>
   <div class="footer-tagline">One contact away.</div>
-  <div class="footer-sub">Built by <a href="https://plainspeakingcomms.com" target="_blank">Plain Speaking Communications</a> &nbsp;·&nbsp; Your data lives in your own Google Sheet</div>
+  <div class="footer-sub">Built by <a href="https://plainspeakingcomms.com" target="_blank">Plain Speaking Communications</a> &nbsp;&middot;&nbsp; Your data lives in your own Google Sheet</div>
 </footer>
 
 <script>
