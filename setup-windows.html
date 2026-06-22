@@ -126,9 +126,9 @@ nav { padding: 0 1.5rem; }
       <div class="step-body">
         <p>Network Momentum stores your contacts in a Google Sheet that you own. Your data never leaves your Google account.</p>
         <ul class="instruction-list">
-          <li><div class="i-num">1</div> Open Chrome and go to <strong>sheets.google.com</strong>. Sign in with your Google account if prompted.</li>
-          <li><div class="i-num">2</div> Click the large <strong>+</strong> button (Blank spreadsheet) to create a new empty spreadsheet.</li>
-          <li><div class="i-num">3</div> At the bottom of the screen you will see a tab labeled <strong>Sheet1</strong>. Right-click it and select <strong>Rename</strong>. Type exactly:</li>
+          <li><div class="i-num">1</div><div>Open Chrome and go to <strong>sheets.google.com</strong>. Sign in with your Google account if prompted.</div></li>
+          <li><div class="i-num">2</div><div>Click the large <strong>+</strong> button (Blank spreadsheet) to create a new empty spreadsheet.</div></li>
+          <li><div class="i-num">3</div><div>At the bottom of the screen you will see a tab labeled <strong>Sheet1</strong>. Right-click it and select <strong>Rename</strong>. Type exactly:</div></li>
         </ul>
         <div class="code-block" style="padding:1rem 1.5rem;">
           <pre>Contacts</pre>
@@ -147,15 +147,15 @@ nav { padding: 0 1.5rem; }
         </div>
       </div>
       <div class="step-body">
-        <p>Google Apps Script is a free tool built into Google Sheets. Paste the script below exactly as written -- do not change anything.</p>
+        <p>Google Apps Script is a free tool built into Google Sheets. Paste the script below exactly as written do not change anything.</p>
         <ul class="instruction-list">
-          <li><div class="i-num">1</div> In your Google Sheet, click <strong>Extensions</strong> in the top menu, then click <strong>Apps Script</strong>. A new browser tab will open.</li>
-          <li><div class="i-num">2</div> Click inside the code editor. Press <strong>Ctrl+A</strong> to select all existing code, then press <strong>Delete</strong> to clear it.</li>
-          <li><div class="i-num">3</div> Copy all the code below using the <strong>Copy code</strong> button, then paste it into the Apps Script editor with <strong>Ctrl+V</strong>.</li>
-          <li><div class="i-num">4</div> Press <strong>Ctrl+S</strong> to save. The file name should show as <strong>Code.gs</strong>.</li>
+          <li><div class="i-num">1</div><div>In your Google Sheet, click <strong>Extensions</strong> in the top menu, then click <strong>Apps Script</strong>. A new browser tab will open.</div></li>
+          <li><div class="i-num">2</div><div>Click inside the code editor. Press <strong>Ctrl+A</strong> to select all existing code, then press <strong>Delete</strong> to clear it.</div></li>
+          <li><div class="i-num">3</div><div>Copy all the code below using the <strong>Copy code</strong> button, then paste it into the Apps Script editor with <strong>Ctrl+V</strong>.</div></li>
+          <li><div class="i-num">4</div><div>Press <strong>Ctrl+S</strong> to save. The file name should show as <strong>Code.gs</strong>.</div></li>
         </ul>
         <div class="code-block">
-          <div class="code-label">Code.gs -- Copy and paste all of this</div>
+          <div class="code-label">Code.gs Copy and paste all of this</div>
           <button class="copy-btn" onclick="copyCode()">Copy code</button>
           <pre id="codeBlock">function doGet(e) { return handleRequest(e); }
 
@@ -259,15 +259,15 @@ function handleAction(p) {
         <p>Deploying the script creates a secure URL that Network Momentum uses to communicate with your Google Sheet.</p>
         <div class="warning"><strong>Note:</strong> You will see a security warning during authorization. This is normal. Google shows this for all scripts not listed in the Google Workspace Marketplace. The script only accesses your own Google Sheet.</div>
         <ul class="instruction-list">
-          <li><div class="i-num">1</div> In the Apps Script editor, click the blue <strong>Deploy</strong> button in the top right corner.</li>
-          <li><div class="i-num">2</div> Select <strong>New deployment</strong>.</li>
-          <li><div class="i-num">3</div> Click the gear icon next to "Select type" and choose <strong>Web app</strong>.</li>
-          <li><div class="i-num">4</div> Set <strong>Execute as</strong> to <strong>Me</strong>.</li>
-          <li><div class="i-num">5</div> Set <strong>Who has access</strong> to <strong>Anyone</strong>.</li>
-          <li><div class="i-num">6</div> Click <strong>Deploy</strong>.</li>
-          <li><div class="i-num">7</div> Click <strong>Authorize access</strong>. Sign in with your Google account.</li>
-          <li><div class="i-num">8</div> If you see <strong>"Google hasn't verified this app"</strong>, click <strong>Advanced</strong> (bottom left), then click <strong>"Go to [script name] (unsafe)"</strong>, then click <strong>Allow</strong>.</li>
-          <li><div class="i-num">9</div> After authorizing, you will see a Web App URL. It looks like: <code>https://script.google.com/macros/s/XXXXXXXXXX/exec</code>. Click <strong>Copy</strong> next to it. You will need this in the next step.</li>
+          <li><div class="i-num">1</div><div>In the Apps Script editor, click the blue <strong>Deploy</strong> button in the top right corner.</div></li>
+          <li><div class="i-num">2</div><div>Select <strong>New deployment</strong>.</div></li>
+          <li><div class="i-num">3</div><div>Click the gear icon next to "Select type" and choose <strong>Web app</strong>.</div></li>
+          <li><div class="i-num">4</div><div>Set <strong>Execute as</strong> to <strong>Me</strong>.</div></li>
+          <li><div class="i-num">5</div><div>Set <strong>Who has access</strong> to <strong>Anyone</strong>.</div></li>
+          <li><div class="i-num">6</div><div>Click <strong>Deploy</strong>.</div></li>
+          <li><div class="i-num">7</div><div>Click <strong>Authorize access</strong>. Sign in with your Google account.</div></li>
+          <li><div class="i-num">8</div><div>If you see <strong>"Google hasn't verified this app"</strong>, click <strong>Advanced</strong> (bottom left), then click <strong>"Go to [script name] (unsafe)"</strong>, then click <strong>Allow</strong>.</div></li>
+          <li><div class="i-num">9</div><div>After authorizing, you will see a Web App URL. It looks like: <code>https://script.google.com/macros/s/XXXXXXXXXX/exec</code>. Click <strong>Copy</strong> next to it. You will need this in the next step.</div></li>
         </ul>
       </div>
     </div>
@@ -284,11 +284,11 @@ function handleAction(p) {
       <div class="step-body">
         <p>Now connect Network Momentum to your Google Sheet.</p>
         <ul class="instruction-list">
-          <li><div class="i-num">1</div> Go to <a href="app.html" style="color:var(--horizon);font-weight:600;">networkmomentum.app</a> in your browser.</li>
-          <li><div class="i-num">2</div> Paste your Web App URL into the <strong>Google Apps Script Web App URL</strong> field.</li>
-          <li><div class="i-num">3</div> Add your AI API key to unlock features like Suggest Next Action and Company Dossier. Network Momentum uses <strong>Anthropic (Claude)</strong> by default. If you prefer to use OpenAI instead, you can use your own OpenAI API key. Create a free account at <a href="https://platform.openai.com" target="_blank" style="color:var(--horizon);font-weight:600;">platform.openai.com</a>, add billing, generate a key, and paste it here. You can skip this step and add a key later in Settings.</li>
-          <li><div class="i-num">4</div> Set your weekly contact goal (5 is a good starting point).</li>
-          <li><div class="i-num">5</div> Click <strong>Connect my sheet</strong>.</li>
+          <li><div class="i-num">1</div><div>Go to <a href="app.html" style="color:var(--horizon);font-weight:600;">networkmomentum.app</a> in your browser.</div></li>
+          <li><div class="i-num">2</div><div>Paste your Web App URL into the <strong>Google Apps Script Web App URL</strong> field.</div></li>
+          <li><div class="i-num">3</div><div>Add your AI API key to unlock features like Suggest Next Action and Company Dossier.<br><br>Network Momentum uses <strong>Anthropic (Claude)</strong> by default. Get a free key at <a href="https://console.anthropic.com" target="_blank" style="color:var(--horizon);font-weight:600;">console.anthropic.com</a>. If you prefer <strong>OpenAI</strong>, you can use your own OpenAI API key instead. Create a free account at <a href="https://platform.openai.com" target="_blank" style="color:var(--horizon);font-weight:600;">platform.openai.com</a>, add billing, and paste your key here. Either way, you can skip this step and add a key later in Settings.</div></div></li>
+          <li><div class="i-num">4</div><div>Set your weekly contact goal (5 is a good starting point).</div></li>
+          <li><div class="i-num">5</div><div>Click <strong>Connect my sheet</strong>.</div></li>
         </ul>
         <div class="callout"><strong>Your data is yours.</strong> Your API key and Web App URL are stored only in your browser. We never see them.</div>
 

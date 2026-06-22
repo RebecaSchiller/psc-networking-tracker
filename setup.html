@@ -143,10 +143,10 @@ footer { background: var(--ink); padding: 2.5rem 3rem; text-align: center; }
       <div class="step-body">
         <p>Your contacts live in a Google Sheet that you own and control. Nothing is stored on our servers.</p>
         <ul class="instruction-list">
-          <li><div class="i-num">1</div> Go to <strong>sheets.google.com</strong> and sign in with your Google account.</li>
-          <li><div class="i-num">2</div> Click the <strong>+</strong> button to create a new blank spreadsheet.</li>
-          <li><div class="i-num">3</div> At the bottom of the screen, double-click the tab named <strong>Sheet1</strong> and rename it exactly: <code>Contacts</code> (capital C, no spaces).</li>
-          <li><div class="i-num">4</div> Give your spreadsheet a name at the top -- something like <strong>Network Momentum Contacts</strong>.</li>
+          <li><div class="i-num">1</div><div>Go to <strong>sheets.google.com</strong> and sign in with your Google account.</div></li>
+          <li><div class="i-num">2</div><div>Click the <strong>+</strong> button to create a new blank spreadsheet.</div></li>
+          <li><div class="i-num">3</div><div>At the bottom of the screen, double-click the tab named <strong>Sheet1</strong> and rename it exactly: <code>Contacts</code> (capital C, no spaces).</div></li>
+          <li><div class="i-num">4</div><div>Give your spreadsheet a name at the top, something like <strong>Network Momentum Contacts</strong>.</div></li>
         </ul>
         <div class="callout"><strong>Important:</strong> The tab must be named exactly <code>Contacts</code> or the app will not be able to read your data.</div>
       </div>
@@ -164,13 +164,13 @@ footer { background: var(--ink); padding: 2.5rem 3rem; text-align: center; }
       <div class="step-body">
         <p>Google Apps Script acts as the bridge between Network Momentum and your sheet. You'll paste a script that handles reading, writing, and AI suggestions.</p>
         <ul class="instruction-list">
-          <li><div class="i-num">1</div> In your Google Sheet, click <strong>Extensions</strong> in the top menu, then <strong>Apps Script</strong>.</li>
-          <li><div class="i-num">2</div> A new tab will open. Delete all the existing code in the editor (select all, then delete).</li>
-          <li><div class="i-num">3</div> Copy the full script below and paste it into the editor.</li>
-          <li><div class="i-num">4</div> Click the <strong>Save</strong> icon (or press Cmd+S).</li>
+          <li><div class="i-num">1</div><div>In your Google Sheet, click <strong>Extensions</strong> in the top menu, then <strong>Apps Script</strong>.</div></li>
+          <li><div class="i-num">2</div><div>A new tab will open. Delete all the existing code in the editor (select all, then delete).</div></li>
+          <li><div class="i-num">3</div><div>Copy the full script below and paste it into the editor.</div></li>
+          <li><div class="i-num">4</div><div>Click the <strong>Save</strong> icon (or press Cmd+S).</div></li>
         </ul>
         <div class="code-block">
-          <div class="code-label">Code.gs -- paste this entire block</div>
+          <div class="code-label">Code.gs paste this entire block</div>
           <button class="copy-btn" onclick="copyCode()">Copy</button>
           <pre id="codeBlock">function doGet(e) { return handleRequest(e); }
 
@@ -273,13 +273,13 @@ function handleAction(p) {
       <div class="step-body">
         <p>Deploying the script as a Web App gives Network Momentum a secure URL to communicate with your sheet.</p>
         <ul class="instruction-list">
-          <li><div class="i-num">1</div> In the Apps Script editor, click the blue <strong>Deploy</strong> button at the top right.</li>
-          <li><div class="i-num">2</div> Select <strong>New deployment</strong>.</li>
-          <li><div class="i-num">3</div> Click the gear icon next to "Select type" and choose <strong>Web app</strong>.</li>
-          <li><div class="i-num">4</div> Set <strong>Execute as</strong> to <strong>Me</strong>.</li>
-          <li><div class="i-num">5</div> Set <strong>Who has access</strong> to <strong>Anyone</strong>.</li>
-          <li><div class="i-num">6</div> Click <strong>Deploy</strong> and authorize the app when prompted.</li>
-          <li><div class="i-num">7</div> Copy the <strong>Web App URL</strong> that appears -- you'll need it in the next step.</li>
+          <li><div class="i-num">1</div><div>In the Apps Script editor, click the blue <strong>Deploy</strong> button at the top right.</div></li>
+          <li><div class="i-num">2</div><div>Select <strong>New deployment</strong>.</div></li>
+          <li><div class="i-num">3</div><div>Click the gear icon next to "Select type" and choose <strong>Web app</strong>.</div></li>
+          <li><div class="i-num">4</div><div>Set <strong>Execute as</strong> to <strong>Me</strong>.</div></li>
+          <li><div class="i-num">5</div><div>Set <strong>Who has access</strong> to <strong>Anyone</strong>.</div></li>
+          <li><div class="i-num">6</div><div>Click <strong>Deploy</strong> and authorize the app when prompted.</div></li>
+          <li><div class="i-num">7</div><div>Copy the <strong>Web App URL</strong> that appears you'll need it in the next step.</div></li>
         </ul>
         <div class="callout"><strong>Note:</strong> Any time you make changes to the script, you must create a <strong>New deployment</strong> (not update the existing one) for the changes to take effect.</div>
       </div>
@@ -297,10 +297,10 @@ function handleAction(p) {
       <div class="step-body">
         <p>Now connect Network Momentum to your sheet and add your AI API key to unlock AI-powered suggestions.</p>
         <ul class="instruction-list">
-          <li><div class="i-num">1</div> Open <a href="app.html" style="color:var(--horizon);font-weight:600;">Network Momentum</a> and paste your Web App URL into the setup screen.</li>
-          <li><div class="i-num">2</div> Add your AI API key to unlock features like Suggest Next Action and Company Dossier. Network Momentum uses <strong>Anthropic (Claude)</strong> by default. Get a free Anthropic key at <a href="https://console.anthropic.com" target="_blank" style="color:var(--horizon);font-weight:600;">console.anthropic.com</a>. If you prefer OpenAI, you can use your own OpenAI API key instead -- create a free account at <a href="https://platform.openai.com" target="_blank" style="color:var(--horizon);font-weight:600;">platform.openai.com</a>, add billing, and paste your key here. You can skip this step and add a key later in Settings.</li>
-          <li><div class="i-num">3</div> Set your weekly contact goal (5 is a solid starting point).</li>
-          <li><div class="i-num">4</div> Click <strong>Connect my sheet</strong> and you're in.</li>
+          <li><div class="i-num">1</div><div>Open <a href="app.html" style="color:var(--horizon);font-weight:600;">Network Momentum</a> and paste your Web App URL into the setup screen.</div></li>
+          <li><div class="i-num">2</div><div>Add your AI API key to unlock features like Suggest Next Action and Company Dossier.<br><br>Network Momentum uses <strong>Anthropic (Claude)</strong> by default. Get a free key at <a href="https://console.anthropic.com" target="_blank" style="color:var(--horizon);font-weight:600;">console.anthropic.com</a>. If you prefer <strong>OpenAI</strong>, you can use your own OpenAI API key instead. Create a free account at <a href="https://platform.openai.com" target="_blank" style="color:var(--horizon);font-weight:600;">platform.openai.com</a>, add billing, and paste your key here. Either way, you can skip this step and add a key later in Settings.</div></li>
+          <li><div class="i-num">3</div><div>Set your weekly contact goal (5 is a solid starting point).</div></li>
+          <li><div class="i-num">4</div><div>Click <strong>Connect my sheet</strong> and you're in.</div></li>
         </ul>
         <div class="callout"><strong>Your data is yours.</strong> Your API key and script URL are stored only in your browser. We never see them.</div>
 
