@@ -372,6 +372,7 @@
         <div class="input-group"><label class="input-label">Google Apps Script Web App URL</label><input id="inputScriptUrl" placeholder="https://script.google.com/macros/s/.../exec" /></div>
         <div class="input-group"><label class="input-label">Anthropic API Key <span style="font-weight:400;text-transform:none;letter-spacing:0;color:var(--text-3)">(optional — powers AI suggestions)</span></label><input id="inputAnthropicKey" type="password" placeholder="sk-ant-..." /><div style="font-size:12px;color:var(--text-3);margin-top:5px;"><i class="ti ti-lock" style="font-size:11px;"></i> Stored only in your browser. <a href="https://console.anthropic.com" target="_blank" style="color:var(--horizon);">Get a key →</a></div></div>
         <div class="input-group"><label class="input-label">Weekly goal <span style="font-weight:400;text-transform:none;letter-spacing:0;color:var(--text-3)">(new contacts per week)</span></label><input id="inputGoal" type="number" placeholder="5" min="1" max="50" value="5" /></div>
+        <div class="input-group"><label class="input-label">Your target role or field <span style="font-weight:400;text-transform:none;letter-spacing:0;color:var(--text-3)">(optional — personalizes company dossiers)</span></label><input id="inputTargetRole" placeholder="e.g. Finance Director, HR Manager, Software Engineer" /></div>
         <button class="btn-primary" id="connectBtn" onclick="connectSheet()"><i class="ti ti-plug-connected"></i> Connect my sheet</button>
         <button class="btn-secondary" onclick="saveSettingsOnly()"><i class="ti ti-device-floppy"></i> Save settings only</button>
         <div class="error-msg" id="setupError"></div>
@@ -631,16 +632,16 @@
 
 <script>
 const STORAGE_KEY='nm_tracker_v1';const OVERDUE_DAYS=7;
-let scriptUrl='',anthropicKey='',weeklyGoal=5,contacts=[],aiCache={};
+let scriptUrl='',anthropicKey='',weeklyGoal=5,targetRole='',contacts=[],aiCache={};
 let sortField='name',sortAsc=true,activeTag='';
 let currentNotesId=null,currentTemplateKey=null;
 
-function saveCfg(){localStorage.setItem(STORAGE_KEY,JSON.stringify({scriptUrl,anthropicKey,weeklyGoal}));}
-function loadCfg(){try{const d=localStorage.getItem(STORAGE_KEY);if(d){const p=JSON.parse(d);scriptUrl=p.scriptUrl||'';anthropicKey=p.anthropicKey||'';weeklyGoal=p.weeklyGoal||5;}}catch(e){}}
+function saveCfg(){localStorage.setItem(STORAGE_KEY,JSON.stringify({scriptUrl,anthropicKey,weeklyGoal,targetRole}));}
+function loadCfg(){try{const d=localStorage.getItem(STORAGE_KEY);if(d){const p=JSON.parse(d);scriptUrl=p.scriptUrl||'';anthropicKey=p.anthropicKey||'';weeklyGoal=p.weeklyGoal||5;targetRole=p.targetRole||'';}}catch(e){}}
 async function gas(params){const url=scriptUrl+'?'+new URLSearchParams(params).toString();const controller=new AbortController();const timer=setTimeout(()=>controller.abort(),20000);try{const r=await fetch(url,{signal:controller.signal});clearTimeout(timer);if(!r.ok)throw new Error('HTTP '+r.status);const data=await r.json();if(data.error)throw new Error(data.error);return data;}catch(e){clearTimeout(timer);throw e;}}
-function showSetup(){document.getElementById('setupScreen').style.display='block';document.getElementById('appScreen').classList.remove('show');document.getElementById('navTabs').style.display='none';document.getElementById('inputScriptUrl').value=scriptUrl||'';document.getElementById('inputAnthropicKey').value=anthropicKey||'';document.getElementById('inputGoal').value=weeklyGoal||5;}
-function saveSettingsOnly(){const key=document.getElementById('inputAnthropicKey').value.trim();const goal=parseInt(document.getElementById('inputGoal').value)||5;const url=document.getElementById('inputScriptUrl').value.trim();if(url)scriptUrl=url;anthropicKey=key;weeklyGoal=goal;saveCfg();showToast('Settings saved');if(scriptUrl){document.getElementById('setupScreen').style.display='none';document.getElementById('appScreen').classList.add('show');document.getElementById('navTabs').style.display='flex';document.getElementById('changeSheetBtn').style.display='flex';}}
-async function connectSheet(){const btn=document.getElementById('connectBtn');const err=document.getElementById('setupError');err.classList.remove('show');const url=document.getElementById('inputScriptUrl').value.trim();if(!url||!url.includes('script.google.com')){showError(err,'Please paste a valid Google Apps Script Web App URL.');return;}btn.disabled=true;btn.innerHTML='<span class="spinner"></span> Connecting...';try{scriptUrl=url;anthropicKey=document.getElementById('inputAnthropicKey').value.trim();weeklyGoal=parseInt(document.getElementById('inputGoal').value)||5;await gas({action:'headers'});saveCfg();await launchApp();}catch(e){let msg='Could not connect. ';if(e.name==='AbortError')msg+='Request timed out.';else if(e.message.includes('Failed to fetch'))msg+='Could not reach the script.';else msg+=e.message;showError(err,msg);btn.disabled=false;btn.innerHTML='<i class="ti ti-plug-connected"></i> Connect my sheet';}}
+function showSetup(){document.getElementById('setupScreen').style.display='block';document.getElementById('appScreen').classList.remove('show');document.getElementById('navTabs').style.display='none';document.getElementById('inputScriptUrl').value=scriptUrl||'';document.getElementById('inputAnthropicKey').value=anthropicKey||'';document.getElementById('inputGoal').value=weeklyGoal||5;document.getElementById('inputTargetRole').value=targetRole||'';}
+function saveSettingsOnly(){const key=document.getElementById('inputAnthropicKey').value.trim();const goal=parseInt(document.getElementById('inputGoal').value)||5;const url=document.getElementById('inputScriptUrl').value.trim();const role=document.getElementById('inputTargetRole').value.trim();if(url)scriptUrl=url;anthropicKey=key;weeklyGoal=goal;targetRole=role;saveCfg();showToast('Settings saved');if(scriptUrl){document.getElementById('setupScreen').style.display='none';document.getElementById('appScreen').classList.add('show');document.getElementById('navTabs').style.display='flex';document.getElementById('changeSheetBtn').style.display='flex';}}
+async function connectSheet(){const btn=document.getElementById('connectBtn');const err=document.getElementById('setupError');err.classList.remove('show');const url=document.getElementById('inputScriptUrl').value.trim();if(!url||!url.includes('script.google.com')){showError(err,'Please paste a valid Google Apps Script Web App URL.');return;}btn.disabled=true;btn.innerHTML='<span class="spinner"></span> Connecting...';try{scriptUrl=url;anthropicKey=document.getElementById('inputAnthropicKey').value.trim();weeklyGoal=parseInt(document.getElementById('inputGoal').value)||5;targetRole=document.getElementById('inputTargetRole').value.trim();await gas({action:'headers'});saveCfg();await launchApp();}catch(e){let msg='Could not connect. ';if(e.name==='AbortError')msg+='Request timed out.';else if(e.message.includes('Failed to fetch'))msg+='Could not reach the script.';else msg+=e.message;showError(err,msg);btn.disabled=false;btn.innerHTML='<i class="ti ti-plug-connected"></i> Connect my sheet';}}
 function showError(el,msg){el.textContent=msg;el.classList.add('show');}
 async function launchApp(){document.getElementById('setupScreen').style.display='none';document.getElementById('appScreen').classList.add('show');document.getElementById('navTabs').style.display='flex';document.getElementById('changeSheetBtn').style.display='flex';document.getElementById('sheetIndicator').className='sheet-indicator connected';document.getElementById('sheetIndicator').innerHTML='<i class="ti ti-table"></i> Sheet connected';renderTemplates();await loadContacts();}
 function switchTab(name){document.querySelectorAll('.nav-tab').forEach(t=>t.classList.remove('active'));document.querySelectorAll('.tab-panel').forEach(p=>p.classList.remove('active'));document.getElementById('tab-'+name).classList.add('active');document.getElementById('panel-'+name).classList.add('active');if(name==='kanban')renderKanban();if(name==='weekly')renderWeekly();}
@@ -754,7 +755,22 @@ async function generateDossier(id) {
   const loadingEl = document.getElementById('dossier-loading-' + id);
   loadingEl.style.display = 'inline-flex';
 
-  const prompt = 'You are a senior strategist. Generate a detailed pre-outreach company dossier for someone building a professional relationship with this organization. Be specific and direct. No filler.\n\nCompany: ' + c.company + '\nContact name: ' + c.name + '\nContact role: ' + c.role + '\n\nStructure your response in exactly these sections using these exact headings:\n\nCOMPANY OVERVIEW\n2-3 sentences on what they do, who they serve, and their mission.\n\nMARKETING AND COMMUNICATIONS ASSESSMENT\nAssess their public-facing communications: website quality, messaging clarity and consistency, tone of voice, content strategy, social media presence. Be honest about strengths and weaknesses.\n\nCOMMUNICATIONS GAPS\nIdentify 2-3 specific gaps or opportunities in their communications that would make for a compelling conversation.\n\nLIKELY CONTACTS\nList 3-4 typical titles at this type of organization worth connecting with. Include why each role matters for building a relationship.\n\nYOUR OUTREACH ANGLE\nBased on the gaps identified, suggest a specific, confident angle for outreach. What conversation starter or value proposition would resonate most?\n\nBe direct. Be specific. No generic advice.';
+  const userRole = targetRole || 'a professional building their network';
+  const isComms = !targetRole || /marketing|communications|comms|pr |public relations|brand|content/i.test(targetRole);
+
+  const assessmentSection = isComms
+    ? 'PROFESSIONAL ASSESSMENT\nAssess their public-facing communications: website quality, messaging clarity and consistency, tone of voice, content strategy, social media presence. Be honest about strengths and weaknesses.'
+    : 'PROFESSIONAL ASSESSMENT\nAssess this organization through the lens of someone targeting a ' + userRole + ' role. What does their public presence, structure, and operations suggest about how they function in that area? What strengths and weaknesses are visible from the outside?';
+
+  const gapsSection = isComms
+    ? 'GAPS AND OPPORTUNITIES\nIdentify 2-3 specific gaps or opportunities in their communications that would make for a compelling conversation.'
+    : 'GAPS AND OPPORTUNITIES\nIdentify 2-3 specific challenges or opportunities relevant to a ' + userRole + ' at this organization that would make for a compelling conversation.';
+
+  const angleSection = isComms
+    ? 'YOUR OUTREACH ANGLE\nBased on the gaps identified, suggest a specific, confident angle for outreach. What conversation starter or value proposition would resonate most?'
+    : 'YOUR OUTREACH ANGLE\nBased on the gaps identified, suggest a specific, confident angle for outreach as someone targeting a ' + userRole + ' role. What conversation starter or value proposition would resonate most with this organization?';
+
+  const prompt = 'You are a senior strategist. Generate a detailed pre-outreach company dossier for ' + userRole + ' building a professional relationship with this organization. Be specific and direct. No filler.\n\nCompany: ' + c.company + '\nContact name: ' + c.name + '\nContact role: ' + c.role + '\n\nStructure your response in exactly these sections using these exact headings:\n\nCOMPANY OVERVIEW\n2-3 sentences on what they do, who they serve, and their mission.\n\n' + assessmentSection + '\n\n' + gapsSection + '\n\nLIKELY CONTACTS\nList 3-4 typical titles at this type of organization worth connecting with for a ' + userRole + '. Include why each role matters for building a relationship.\n\n' + angleSection + '\n\nBe direct. Be specific. No generic advice.';
 
   try {
     const aiUrl = scriptUrl + '?' + new URLSearchParams({ action: 'ai_suggest', apiKey: anthropicKey, prompt }).toString();
@@ -813,9 +829,9 @@ function openDossierReport(c, content) {
   }
 
   var overview     = extractSection(content, 'COMPANY OVERVIEW');
-  var assessment   = extractSection(content, 'MARKETING AND COMMUNICATIONS ASSESSMENT');
-  var gaps         = extractSection(content, 'COMMUNICATIONS GAPS');
-  var contacts_sec = extractSection(content, 'LIKELY HIRING CONTACTS');
+  var assessment   = extractSection(content, 'PROFESSIONAL ASSESSMENT');
+  var gaps         = extractSection(content, 'GAPS AND OPPORTUNITIES');
+  var contacts_sec = extractSection(content, 'LIKELY CONTACTS');
   var angle        = extractSection(content, 'YOUR OUTREACH ANGLE');
 
   var html = '<!DOCTYPE html><html lang="en"><head><meta charset="UTF-8">' +
@@ -843,9 +859,9 @@ function openDossierReport(c, content) {
     '<p>Contact: ' + c.name + (c.role ? ' - ' + c.role : '') + ' &nbsp;|&nbsp; Generated: ' + today + '</p></div>' +
     '<div class="body">' +
     '<div class="section"><div class="label">Company overview</div><h2>Who they are</h2>' + formatBody(overview) + '</div>' +
-    '<div class="section"><div class="label">Marketing and communications assessment</div><h2>How they communicate</h2>' + formatBody(assessment) + '</div>' +
-    '<div class="section"><div class="label">Communications gaps</div><h2>Where the opportunities are</h2>' + formatBody(gaps) + '</div>' +
-    '<div class="section"><div class="label">Likely hiring contacts</div><h2>Who to reach out to</h2>' + formatBody(contacts_sec) + '</div>' +
+    '<div class="section"><div class="label">Professional assessment</div><h2>What to know</h2>' + formatBody(assessment) + '</div>' +
+    '<div class="section"><div class="label">Gaps and opportunities</div><h2>Where the opportunities are</h2>' + formatBody(gaps) + '</div>' +
+    '<div class="section"><div class="label">Likely contacts</div><h2>Who to reach out to</h2>' + formatBody(contacts_sec) + '</div>' +
     '<div class="section"><div class="label">Your outreach angle</div><h2>How to position yourself</h2><div class="angle-box">' + formatBody(angle) + '</div></div>' +
     '</div>' +
     '<div class="footer"><span>Generated by Network Momentum - networkmomentum.app</span><span>Built by Plain Speaking Communications - plainspeakingcomms.com</span></div>' +
