@@ -51,6 +51,7 @@
       --fog:         #1a2236;
       --mist:        #1e3a6e;
       --shadow:      0 1px 4px rgba(0,0,0,0.3);
+      --ocean:       #7aaee8;
     }
     [data-theme="dark"] input, [data-theme="dark"] select, [data-theme="dark"] textarea {
       background: #0f1624;
@@ -363,11 +364,13 @@
         <div class="setup-desc">Connect your Google Sheet to get started. Your contacts stay private and in your control.</div>
       </div>
       <div class="setup-body">
+        <div style="background:rgba(58,109,181,0.12);border:0.5px solid rgba(58,109,181,0.3);border-radius:var(--radius);padding:10px 14px;margin-bottom:1.25rem;font-size:13px;color:var(--text-2);line-height:1.6;">
+          <strong style="color:var(--horizon);">First time here?</strong> Follow the full setup guide before connecting: <a href="setup.html" target="_blank" style="color:var(--horizon);font-weight:600;">Mac</a> or <a href="setup-windows.html" target="_blank" style="color:var(--horizon);font-weight:600;">Windows</a>.
+        </div>
         <div class="steps">
           <div class="step"><div class="step-num">1</div><div class="step-content"><div class="step-title">Create a Google Sheet</div><div class="step-desc">Go to <strong>sheets.google.com</strong>, create a blank sheet, rename the first tab to <code>Contacts</code>.</div></div></div>
-          <div class="step"><div class="step-num">2</div><div class="step-content"><div class="step-title">Add the Apps Script</div><div class="step-desc">Click <strong>Extensions &gt; Apps Script</strong>, delete all existing code, paste in the script from your <code>Code.gs</code> file, and save.</div></div></div>
-          <div class="step"><div class="step-num">3</div><div class="step-content"><div class="step-title">Deploy as a Web App</div><div class="step-desc">Click <strong>Deploy &gt; New deployment</strong>. Set type to <strong>Web app</strong>, Execute as <strong>Me</strong>, Who has access <strong>Anyone</strong>. Deploy and authorize.</div></div></div>
-          <div class="step"><div class="step-num">4</div><div class="step-content"><div class="step-title">Paste your details below</div><div class="step-desc">Copy the Web App URL after deploying and paste it below along with your Anthropic API key for AI suggestions.</div></div></div>
+          <div class="step"><div class="step-num">2</div><div class="step-content"><div class="step-title">Add the Apps Script and deploy</div><div class="step-desc">Follow the full setup guide for step-by-step instructions: <a href="setup.html" target="_blank" style="color:var(--horizon);font-weight:600;">Mac setup guide</a> or <a href="setup-windows.html" target="_blank" style="color:var(--horizon);font-weight:600;">Windows setup guide</a>.</div></div></div>
+          <div class="step"><div class="step-num">3</div><div class="step-content"><div class="step-title">Paste your details below</div><div class="step-desc">Copy the Web App URL from your deployment and paste it below. Add your API key to unlock AI features.</div></div></div>
         </div>
         <div class="input-group"><label class="input-label">Google Apps Script Web App URL</label><input id="inputScriptUrl" placeholder="https://script.google.com/macros/s/.../exec" /></div>
         <div class="input-group"><label class="input-label">Anthropic API Key <span style="font-weight:400;text-transform:none;letter-spacing:0;color:var(--text-3)">(optional — powers AI suggestions)</span></label><input id="inputAnthropicKey" type="password" placeholder="sk-ant-..." /><div style="font-size:12px;color:var(--text-3);margin-top:5px;"><i class="ti ti-lock" style="font-size:11px;"></i> Stored only in your browser. <a href="https://console.anthropic.com" target="_blank" style="color:var(--horizon);">Get a key →</a></div></div>
