@@ -14,6 +14,17 @@
   <link rel="apple-touch-icon" href="https://rebecaschiller.github.io/psc-networking-tracker/icon-192.png" />
   <link rel="icon" type="image/png" sizes="16x16" href="https://rebecaschiller.github.io/psc-networking-tracker/favicon-16.png" />
   <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@tabler/icons-webfont@3.19.0/dist/tabler-icons.min.css" />
+  <!-- Google Analytics GA4 -->
+  <script async src="https://www.googletagmanager.com/gtag/js?id=G-6G0GLG3MKK"></script>
+  <script>
+    window.dataLayer = window.dataLayer || [];
+    function gtag(){dataLayer.push(arguments);}
+    gtag('js', new Date());
+    gtag('config', 'G-6G0GLG3MKK');
+    function trackEvent(name, params) {
+      if(typeof gtag === 'function') gtag('event', name, params || {});
+    }
+  </script>
   <link href="https://fonts.googleapis.com/css2?family=Josefin+Sans:wght@400;600;700&display=swap" rel="stylesheet" />
   <style>
     *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
@@ -643,8 +654,8 @@ function saveCfg(){localStorage.setItem(STORAGE_KEY,JSON.stringify({scriptUrl,an
 function loadCfg(){try{const d=localStorage.getItem(STORAGE_KEY);if(d){const p=JSON.parse(d);scriptUrl=p.scriptUrl||'';anthropicKey=p.anthropicKey||'';weeklyGoal=p.weeklyGoal||5;targetRole=p.targetRole||'';}}catch(e){}}
 async function gas(params){const url=scriptUrl+'?'+new URLSearchParams(params).toString();const controller=new AbortController();const timer=setTimeout(()=>controller.abort(),20000);try{const r=await fetch(url,{signal:controller.signal});clearTimeout(timer);if(!r.ok)throw new Error('HTTP '+r.status);const data=await r.json();if(data.error)throw new Error(data.error);return data;}catch(e){clearTimeout(timer);throw e;}}
 function showSetup(){document.getElementById('setupScreen').style.display='block';document.getElementById('appScreen').classList.remove('show');document.getElementById('navTabs').style.display='none';document.getElementById('inputScriptUrl').value=scriptUrl||'';document.getElementById('inputAnthropicKey').value=anthropicKey||'';document.getElementById('inputGoal').value=weeklyGoal||5;document.getElementById('inputTargetRole').value=targetRole||'';}
-function saveSettingsOnly(){const key=document.getElementById('inputAnthropicKey').value.trim();const goal=parseInt(document.getElementById('inputGoal').value)||5;const url=document.getElementById('inputScriptUrl').value.trim();const role=document.getElementById('inputTargetRole').value.trim();if(url)scriptUrl=url;anthropicKey=key;weeklyGoal=goal;targetRole=role;saveCfg();showToast('Settings saved');if(scriptUrl){document.getElementById('setupScreen').style.display='none';document.getElementById('appScreen').classList.add('show');document.getElementById('navTabs').style.display='flex';document.getElementById('changeSheetBtn').style.display='flex';}}
-async function connectSheet(){const btn=document.getElementById('connectBtn');const err=document.getElementById('setupError');err.classList.remove('show');const url=document.getElementById('inputScriptUrl').value.trim();if(!url||!url.includes('script.google.com')){showError(err,'Please paste a valid Google Apps Script Web App URL.');return;}btn.disabled=true;btn.innerHTML='<span class="spinner"></span> Connecting...';try{scriptUrl=url;anthropicKey=document.getElementById('inputAnthropicKey').value.trim();weeklyGoal=parseInt(document.getElementById('inputGoal').value)||5;targetRole=document.getElementById('inputTargetRole').value.trim();await gas({action:'headers'});saveCfg();await launchApp();}catch(e){let msg='Could not connect. ';if(e.name==='AbortError')msg+='Request timed out.';else if(e.message.includes('Failed to fetch'))msg+='Could not reach the script.';else msg+=e.message;showError(err,msg);btn.disabled=false;btn.innerHTML='<i class="ti ti-plug-connected"></i> Connect my sheet';}}
+function saveSettingsOnly(){const key=document.getElementById('inputAnthropicKey').value.trim();const goal=parseInt(document.getElementById('inputGoal').value)||5;const url=document.getElementById('inputScriptUrl').value.trim();const role=document.getElementById('inputTargetRole').value.trim();if(url)scriptUrl=url;anthropicKey=key;weeklyGoal=goal;targetRole=role;saveCfg();if(key){trackEvent('api_key_setup', {provider: key.startsWith('sk-ant') ? 'anthropic' : 'openai'});}trackEvent('settings_saved');showToast('Settings saved');if(scriptUrl){document.getElementById('setupScreen').style.display='none';document.getElementById('appScreen').classList.add('show');document.getElementById('navTabs').style.display='flex';document.getElementById('changeSheetBtn').style.display='flex';}}
+async function connectSheet(){const btn=document.getElementById('connectBtn');const err=document.getElementById('setupError');err.classList.remove('show');const url=document.getElementById('inputScriptUrl').value.trim();if(!url||!url.includes('script.google.com')){showError(err,'Please paste a valid Google Apps Script Web App URL.');return;}btn.disabled=true;btn.innerHTML='<span class="spinner"></span> Connecting...';try{scriptUrl=url;anthropicKey=document.getElementById('inputAnthropicKey').value.trim();weeklyGoal=parseInt(document.getElementById('inputGoal').value)||5;targetRole=document.getElementById('inputTargetRole').value.trim();await gas({action:'headers'});saveCfg();trackEvent('app_launch', {method: 'sheet_connected'});await launchApp();}catch(e){let msg='Could not connect. ';if(e.name==='AbortError')msg+='Request timed out.';else if(e.message.includes('Failed to fetch'))msg+='Could not reach the script.';else msg+=e.message;showError(err,msg);btn.disabled=false;btn.innerHTML='<i class="ti ti-plug-connected"></i> Connect my sheet';}}
 function showError(el,msg){el.textContent=msg;el.classList.add('show');}
 async function launchApp(){document.getElementById('setupScreen').style.display='none';document.getElementById('appScreen').classList.add('show');document.getElementById('navTabs').style.display='flex';document.getElementById('changeSheetBtn').style.display='flex';document.getElementById('sheetIndicator').className='sheet-indicator connected';document.getElementById('sheetIndicator').innerHTML='<i class="ti ti-table"></i> Sheet connected';renderTemplates();await loadContacts();}
 function switchTab(name){document.querySelectorAll('.nav-tab').forEach(t=>t.classList.remove('active'));document.querySelectorAll('.tab-panel').forEach(p=>p.classList.remove('active'));document.getElementById('tab-'+name).classList.add('active');document.getElementById('panel-'+name).classList.add('active');if(name==='kanban')renderKanban();if(name==='weekly')renderWeekly();}
@@ -875,6 +886,7 @@ function openDossierReport(c, content) {
   a.href = encoded;
   a.download = 'dossier-' + c.company.replace(/[^a-z0-9]/gi, '-').toLowerCase() + '.html';
   document.body.appendChild(a);
+  trackEvent('dossier_download', {company: c.company, contact_role: c.role});
   a.click();
   document.body.removeChild(a);
 }
@@ -995,7 +1007,7 @@ initOnboarding();
 
 
 <!-- FEEDBACK BUTTON -->
-<button class="feedback-btn" onclick="document.getElementById('feedbackModal').classList.add('show')">
+<button class="feedback-btn" onclick="trackEvent('feedback_open');document.getElementById('feedbackModal').classList.add('show')">
   💬 Feedback
 </button>
 
@@ -1009,21 +1021,21 @@ initOnboarding();
     <div class="feedback-modal-body">
       <p>What's on your mind? Choose a category and your email client will open with a pre-filled subject line.</p>
       <div class="feedback-types">
-        <a class="feedback-type-btn" href="mailto:rebeca@plainspeakingcomms.com?subject=Network Momentum: Bug Report&body=Describe the bug:%0A%0ASteps to reproduce:%0A%0AWhat you expected:%0A%0AWhat happened:">
+        <a class="feedback-type-btn" onclick="trackEvent('feedback_submit',{type:'bug'})" href="mailto:rebeca@plainspeakingcomms.com?subject=Network Momentum: Bug Report&body=Describe the bug:%0A%0ASteps to reproduce:%0A%0AWhat you expected:%0A%0AWhat happened:">
           <div class="feedback-type-icon">🐛</div>
           <div class="feedback-type-text">
             <span class="feedback-type-title">Bug report</span>
             <span class="feedback-type-desc">Something isn't working as expected</span>
           </div>
         </a>
-        <a class="feedback-type-btn" href="mailto:rebeca@plainspeakingcomms.com?subject=Network Momentum: Feature Request&body=What would you like to see added?%0A%0AWhy would this be helpful?">
+        <a class="feedback-type-btn" onclick="trackEvent('feedback_submit',{type:'feature_request'})" href="mailto:rebeca@plainspeakingcomms.com?subject=Network Momentum: Feature Request&body=What would you like to see added?%0A%0AWhy would this be helpful?">
           <div class="feedback-type-icon">✨</div>
           <div class="feedback-type-text">
             <span class="feedback-type-title">Feature request</span>
             <span class="feedback-type-desc">An idea that would make the app better</span>
           </div>
         </a>
-        <a class="feedback-type-btn" href="mailto:rebeca@plainspeakingcomms.com?subject=Network Momentum: Feedback&body=Your feedback:">
+        <a class="feedback-type-btn" onclick="trackEvent('feedback_submit',{type:'general'})" href="mailto:rebeca@plainspeakingcomms.com?subject=Network Momentum: Feedback&body=Your feedback:">
           <div class="feedback-type-icon">💬</div>
           <div class="feedback-type-text">
             <span class="feedback-type-title">General feedback</span>
