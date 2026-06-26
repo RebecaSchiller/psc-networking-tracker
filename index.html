@@ -3,8 +3,8 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Network Momentum: One contact away.</title>
-  <meta name="description" content="Track every professional relationship, follow-up, and next action. Network Momentum keeps your network moving." />
+  <title>Network Momentum: The relationship tracker that tells you what to do next.</title>
+  <meta name="description" content="Network Momentum is a free relationship tracker with AI-powered next steps. Your data lives in your own Google Sheet. No account required." />
   <link href="https://fonts.googleapis.com/css2?family=Josefin+Sans:wght@400;600;700&display=swap" rel="stylesheet" />
   <style>
     *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
@@ -59,12 +59,10 @@
     .ph-light { background: rgba(214,228,245,0.08); border: 2px dashed rgba(214,228,245,0.25); color: rgba(214,228,245,0.45); }
     .ph-note  { font-size: 11px; font-weight: 400; letter-spacing: 0; text-transform: none; }
 
-    /* AUDIENCE LIST */
-    .audience-list { list-style: none; display: flex; flex-direction: column; gap: 0.85rem; text-align: left; }
-    .audience-list li { font-size: 1.15rem; color: var(--slate); line-height: 1.5; display: flex; align-items: flex-start; gap: 10px; }
-    .audience-list li::before { content: '→'; color: var(--horizon); font-weight: 700; flex-shrink: 0; margin-top: 1px; }
-    .audience-list-light li { color: rgba(214,228,245,0.85); }
-    .audience-list-light li::before { color: var(--mist); }
+    /* AUDIENCE */
+    .audience-body { font-size: 1.15rem; color: var(--slate); line-height: 1.7; text-align: left; }
+    .audience-body p { margin-bottom: 1.25rem; }
+    .audience-body p:last-child { margin-bottom: 0; }
 
     /* HOW IT WORKS STEPS */
     .steps-list { display: flex; flex-direction: column; gap: 2rem; text-align: left; }
@@ -135,14 +133,14 @@
 </nav>
 
 <section class="hero">
-  <div class="hero-eyebrow">A networking tool built for job seekers and professionals</div>
-  <h1>Your network is your<br><em>next opportunity.</em></h1>
+  <div class="hero-eyebrow">Built for people who do serious networking without enterprise tools</div>
+  <h1>The people you already know are your<br><em>fastest path forward.</em></h1>
   <div class="hero-tagline">One contact away.</div>
   <div style="display:inline-flex;align-items:center;gap:8px;background:rgba(214,228,245,0.12);border:1px solid rgba(214,228,245,0.25);border-radius:99px;padding:6px 16px;margin:1rem 0;">
     <svg width="14" height="14" viewBox="0 0 24 24" fill="#D6E4F5"><path d="M12 2 L13.5 9.5 L21 8 L15 13 L18 21 L12 16.5 L6 21 L9 13 L3 8 L10.5 9.5 Z"/></svg>
     <span style="font-size:11px;font-weight:700;letter-spacing:0.08em;color:var(--mist);text-transform:uppercase;">AI powered by Claude</span>
   </div>
-  <p class="hero-sub">Your network is your greatest professional asset. Network Momentum helps you stay on top of every relationship and every conversation so nothing slips through.</p>
+  <p class="hero-sub">Most people lose track of their best contacts: not because they don't care, but because nothing reminds them. Network Momentum fixes that. It tracks your relationships, flags who's going cold, and tells you exactly what to do next.</p>
   <div class="hero-actions">
     <a class="btn-launch" href="app.html?v=2">Launch the app →</a>
     <a class="btn-ghost" href="#features">See how it works</a>
@@ -156,7 +154,7 @@
       <div class="block-label-dark">Track every contact</div>
       <h2 class="block-title-dark">Know exactly where every relationship stands.</h2>
       <p class="block-body-dark">Name, role, company, LinkedIn, status, priority, last contact date. All editable inline. No forms, no friction.</p>
-<img src="https://rebecaschiller.github.io/psc-networking-tracker/contacts.jpg" onerror="this.src='https://rebecaschiller.github.io/psc-networking-tracker/SS-Contacts.png'" style="width:100%;height:auto;border-radius:10px;box-shadow:0 4px 24px rgba(0,35,102,0.12);" alt="Network Momentum contact cards view" />
+      <img src="https://rebecaschiller.github.io/psc-networking-tracker/contacts.jpg" onerror="this.src='https://rebecaschiller.github.io/psc-networking-tracker/SS-Contacts.png'" style="width:100%;height:auto;border-radius:10px;box-shadow:0 4px 24px rgba(0,35,102,0.12);" alt="Network Momentum contact cards view" />
     </div>
   </div>
 </div>
@@ -166,9 +164,9 @@
   <div class="box-ocean">
     <div class="block-content">
       <div class="block-label-light">Never lose momentum</div>
-      <h2 class="block-title-light">Know who needs a follow-up today.</h2>
+      <h2 class="block-title-light">See who needs attention before anyone goes cold.</h2>
       <p class="block-body-light">See who needs a follow-up, set a follow-up date, and get a specific AI-powered suggestion for what to say next.</p>
-<img src="https://rebecaschiller.github.io/psc-networking-tracker/pipeline.jpg" style="width:100%;height:auto;border-radius:10px;box-shadow:0 4px 24px rgba(0,0,0,0.15);" alt="Network Momentum pipeline view" />
+      <img src="https://rebecaschiller.github.io/psc-networking-tracker/pipeline.jpg" style="width:100%;height:auto;border-radius:10px;box-shadow:0 4px 24px rgba(0,0,0,0.15);" alt="Network Momentum pipeline view" />
     </div>
   </div>
 </div>
@@ -180,7 +178,7 @@
       <div class="block-label-dark">See the big picture</div>
       <h2 class="block-title-dark">Your week, your goals, your progress.</h2>
       <p class="block-body-dark">See how many contacts you've added this week, who's overdue, and what meetings are coming up. All in one weekly snapshot.</p>
-<img src="https://rebecaschiller.github.io/psc-networking-tracker/weekly.jpg" style="width:100%;height:auto;border-radius:10px;box-shadow:0 4px 24px rgba(0,35,102,0.12);" alt="Network Momentum email templates" />
+      <img src="https://rebecaschiller.github.io/psc-networking-tracker/weekly.jpg" style="width:100%;height:auto;border-radius:10px;box-shadow:0 4px 24px rgba(0,35,102,0.12);" alt="Network Momentum weekly plan view" />
     </div>
   </div>
 </div>
@@ -192,7 +190,7 @@
       <div class="block-label-light">Always know what to say</div>
       <h2 class="block-title-light">12 email templates for every situation.</h2>
       <p class="block-body-light">First outreach, follow-ups, referral asks, alumni outreach, introduction requests, and more. Personalize with one click.</p>
-<img src="https://rebecaschiller.github.io/psc-networking-tracker/templates.jpg" style="width:100%;height:auto;border-radius:10px;box-shadow:0 4px 24px rgba(0,0,0,0.15);" alt="Network Momentum weekly plan" />
+      <img src="https://rebecaschiller.github.io/psc-networking-tracker/templates.jpg" style="width:100%;height:auto;border-radius:10px;box-shadow:0 4px 24px rgba(0,0,0,0.15);" alt="Network Momentum email templates" />
     </div>
   </div>
 </div>
@@ -202,18 +200,13 @@
   <div class="box-white">
     <div class="block-content">
       <div class="block-label-dark">Who it's for</div>
-      <h2 class="block-title-dark">Built for the networker<br>who means business.</h2>
-      <p class="block-body-dark">You're reaching out, following up, and building relationships every day. Network Momentum keeps every conversation organized so nothing slips through the cracks.</p>
-      <ul class="audience-list">
-        <li>Know exactly who to follow up with today</li>
-        <li>Track warm vs. cold contacts automatically</li>
-        <li>Get Claude AI-powered next-step suggestions and company dossiers before any outreach</li>
-        <li>Use 12 ready-made email templates for every networking situation</li>
-        <li>See your week at a glance with the weekly plan</li>
-        <li>Set follow-up dates so nothing slips through the cracks</li>
-        <li>Access curated networking tips, conversation starters, and reading</li>
-        <li>Dark mode included</li>
-      </ul>
+      <h2 class="block-title-dark">Built for people who do serious networking without enterprise tools.</h2>
+      <div class="audience-body">
+        <p>Network Momentum is for anyone managing professional relationships without a team behind them.</p>
+        <p>That's the freelancer keeping tabs on 30 potential clients. The job seeker working a warm network. The small agency account manager who can't justify a CRM license. The development director who laughed when someone suggested Salesforce.</p>
+        <p>What they have in common: they're doing real relationship work, and a spreadsheet isn't enough.</p>
+        <p>Network Momentum tracks every contact, surfaces who needs attention, and gives you a specific next step: not just a reminder that someone exists.</p>
+      </div>
     </div>
   </div>
 </div>
@@ -223,8 +216,8 @@
   <div class="box-ocean">
     <div class="block-content">
       <div class="block-label-light">How it works</div>
-      <h2 class="block-title-light">Up and running in minutes.</h2>
-      <p class="block-body-light">Network Momentum connects to a Google Sheet you control. Your data never touches our servers.</p>
+      <h2 class="block-title-light">Takes about 10 minutes to set up. Nothing to install.</h2>
+      <p class="block-body-light">Network Momentum connects to a Google Sheet you control. Your data never touches our servers. Setup requires a desktop or laptop — Google Sheets extensions are not available on mobile or tablet.</p>
       <div class="steps-list">
         <div class="step-item step-item-light">
           <div class="step-num-light">1</div>
@@ -293,20 +286,20 @@
 <!-- CTA: Ocean frame, white box -->
 <div class="cta-band">
   <div class="cta-inner">
-    <h2>Ready to start? Pick your setup guide.</h2>
-    <p>No account required. No data stored on our servers. AI features use your own API key, billed per use by your provider. Your contacts stay in your own Google Sheet.</p>
+    <h2>Takes about 10 minutes to set up. Nothing to install.</h2>
+    <p>No account required. No data stored on our servers. Setup requires a desktop or laptop. AI features use your own API key, billed per use by your provider. Your contacts stay in your own Google Sheet.</p>
     <div style="display:flex;gap:12px;justify-content:center;flex-wrap:wrap;align-items:center;">
       <a class="btn-launch" href="setup.html">Set up on Mac →</a>
       <a class="btn-launch" href="setup-windows.html" style="background:var(--horizon);">Set up on Windows →</a>
     </div>
-    <p style="font-size:13px;color:var(--stone);margin-top:1rem;">Already set up? <a href="app.html?v=2" style="color:var(--mist);">Launch the app →</a></p>
+    <p style="font-size:13px;color:var(--stone);margin-top:1rem;">Already set up? <a href="app.html?v=2" style="color:var(--horizon);">Launch the app →</a></p>
   </div>
 </div>
 
 <footer>
   <div class="footer-brand">Network Momentum</div>
   <div class="footer-tagline">One contact away.</div>
-  <div class="footer-sub">Built by <a href="https://plainspeakingcomms.com" target="_blank">Plain Speaking Communications</a> &nbsp;·&nbsp; AI powered by <a href="https://anthropic.com" target="_blank">Claude</a> &nbsp;·&nbsp; Your data lives in your own Google Sheet</div>
+  <div class="footer-sub">Network Momentum is part of the <a href="https://plainspeakingcomms.com/psc-tools" target="_blank">PSC Tools</a> suite &nbsp;·&nbsp; AI powered by <a href="https://anthropic.com" target="_blank">Claude</a> &nbsp;·&nbsp; Your data lives in your own Google Sheet</div>
 </footer>
 
 </body>
