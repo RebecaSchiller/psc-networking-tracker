@@ -1,4 +1,4 @@
-const CACHE_NAME = 'network-momentum-v2';
+const CACHE_NAME = 'network-momentum-v3';
 const URLS_TO_CACHE = [
   '/app.html',
   '/manifest.json',
@@ -34,7 +34,7 @@ self.addEventListener('activate', function(event) {
 
 self.addEventListener('fetch', function(event) {
   event.respondWith(
-    fetch(event.request).then(function(response) {
+    fetch(event.request, {cache: 'no-store'}).then(function(response) {
       const clone = response.clone();
       caches.open(CACHE_NAME).then(function(cache) {
         cache.put(event.request, clone);
