@@ -1,4 +1,4 @@
-const CACHE_NAME = 'network-momentum-v1';
+const CACHE_NAME = 'network-momentum-v2';
 const URLS_TO_CACHE = [
   '/app.html',
   '/manifest.json',
@@ -8,6 +8,7 @@ const URLS_TO_CACHE = [
 ];
 
 self.addEventListener('install', function(event) {
+  self.skipWaiting();
   event.waitUntil(
     caches.open(CACHE_NAME).then(function(cache) {
       return cache.addAll(URLS_TO_CACHE);
@@ -15,10 +16,32 @@ self.addEventListener('install', function(event) {
   );
 });
 
+self.addEventListener('activate', function(event) {
+  event.waitUntil(
+    caches.keys().then(function(cacheNames) {
+      return Promise.all(
+        cacheNames.filter(function(name) {
+          return name !== CACHE_NAME;
+        }).map(function(name) {
+          return caches.delete(name);
+        })
+      );
+    }).then(function() {
+      return self.clients.claim();
+    })
+  );
+});
+
 self.addEventListener('fetch', function(event) {
   event.respondWith(
-    caches.match(event.request).then(function(response) {
-      return response || fetch(event.request);
+    fetch(event.request).then(function(response) {
+      const clone = response.clone();
+      caches.open(CACHE_NAME).then(function(cache) {
+        cache.put(event.request, clone);
+      });
+      return response;
+    }).catch(function() {
+      return caches.match(event.request);
     })
   );
 });
