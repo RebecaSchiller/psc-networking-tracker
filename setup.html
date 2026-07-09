@@ -217,6 +217,20 @@ function handleAction(p) {
     sheet.getRange(parseInt(p.row), 1, 1, 12).clearContent();
     out = { success: true };
 
+  } else if (p.action === "create_event") {
+    var title = p.title || "Follow up";
+    var description = p.description || "";
+    var start = new Date(p.start);
+    var minutes = parseInt(p.duration) || 30;
+    var end = new Date(start.getTime() + minutes * 60000);
+    try {
+      var event = CalendarApp.getDefaultCalendar()
+        .createEvent(title, start, end, { description: description });
+      out = { success: true, eventId: event.getId() };
+    } catch (err) {
+      out = { error: err.message };
+    }
+
   } else if (p.action === "ai_suggest") {
     var apiKey = p.apiKey;
     var prompt = p.prompt;
