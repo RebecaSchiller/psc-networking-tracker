@@ -1,0 +1,18 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="360" height="80" viewBox="0 0 360 80">
+  <defs>
+    <linearGradient id="bg2a" x1="0" y1="1" x2="1" y2="0">
+      <stop offset="0" stop-color="#002366"></stop>
+      <stop offset="1" stop-color="#3A6DB5"></stop>
+    </linearGradient>
+  </defs>
+  <g transform="translate(0,8) scale(2)">
+    <rect width="32" height="32" rx="7" fill="url(#bg2a)"></rect>
+    <circle cx="7" cy="14" r="2.6" stroke="#D6E4F5" stroke-width="1.4" fill="none" opacity="0.75"></circle>
+    <path d="M3 27 Q3 20 7 20 Q11 20 11 27" stroke="#D6E4F5" stroke-width="1.4" stroke-linecap="round" fill="none" opacity="0.75"></path>
+    <circle cx="16" cy="10.5" r="3.8" stroke="#F0F4F9" stroke-width="2.1" fill="none"></circle>
+    <path d="M9.5 27 Q9.5 18 16 18 Q22.5 18 22.5 27" stroke="#F0F4F9" stroke-width="2.1" stroke-linecap="round" fill="none"></path>
+    <circle cx="25" cy="14" r="2.6" stroke="#3A6DB5" stroke-width="1.4" fill="none"></circle>
+    <path d="M21 27 Q21 20 25 20 Q29 20 29 27" stroke="#3A6DB5" stroke-width="1.4" stroke-linecap="round" fill="none"></path>
+  </g>
+  <text x="88" y="45" font-family="&#39;Josefin Sans&#39;, Helvetica, Arial, sans-serif" font-weight="700" font-size="28" letter-spacing="0.3" fill="#002366">Network<tspan fill="#3A6DB5">Momentum</tspan></text>
+</svg>
