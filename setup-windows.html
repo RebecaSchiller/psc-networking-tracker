@@ -107,6 +107,7 @@ nav { padding: 0 1.5rem; }
     <a class="progress-step" href="#step2"><div class="p-num">2</div> Add the script</a>
     <a class="progress-step" href="#step3"><div class="p-num">3</div> Deploy the web app</a>
     <a class="progress-step" href="#step4"><div class="p-num">4</div> Connect and go</a>
+    <a class="progress-step" href="#step5"><div class="p-num">5</div> Calendar (optional)</a>
   </div>
 </div>
 
@@ -166,6 +167,10 @@ function doPost(e) {
 function handleRequest(e) {
   var p = e.parameter;
   return handleAction(p);
+}
+
+function authorizeCalendar() {
+  CalendarApp.getDefaultCalendar();
 }
 
 function handleAction(p) {
@@ -323,6 +328,31 @@ function handleAction(p) {
           <li>Add or update your key at any time in Settings (top right of the app).</li>
         </ul>
         <p style="font-size:0.95rem;color:var(--stone);">Need help? <a href="mailto:rebeca@plainspeakingcomms.com" style="color:var(--horizon);">rebeca@plainspeakingcomms.com</a></p>
+      </div>
+    </div>
+
+    <!-- STEP 5 -->
+    <div class="setup-step" id="step5">
+      <div class="step-header">
+        <div class="step-badge">5</div>
+        <div class="step-header-text">
+          <div class="step-eyebrow">Step five &middot; optional</div>
+          <h2>Calendar scheduling</h2>
+        </div>
+      </div>
+      <div class="step-body">
+        <p>Network Momentum can help you block time for follow-ups two ways: a one-click button that adds an event straight to <strong>Google Calendar</strong>, or a <strong>downloadable calendar file (.ics)</strong> that works with macOS Calendar, Outlook, and most other calendar apps.</p>
+        <div class="callout"><strong>The .ics download needs no setup at all.</strong> It works immediately, for everyone, with no extra authorization. The steps below are only needed if you also want the one-click Google Calendar button.</div>
+        <p>If you followed <strong>Step 2</strong> above using the current code block, the Calendar feature is already included in your script. You just need to grant it permission once:</p>
+        <ul class="instruction-list">
+          <li><div class="i-num">1</div><div>In the Apps Script editor, find the function dropdown next to the <strong>Run</strong> button (it probably says <code>doGet</code>).</div></li>
+          <li><div class="i-num">2</div><div>Click the dropdown and select <strong>authorizeCalendar</strong> instead.</div></li>
+          <li><div class="i-num">3</div><div>Click <strong>Run</strong>. A permissions prompt will appear, click <strong>Review permissions</strong>, then <strong>Advanced</strong> &rarr; <strong>Go to [project name] (unsafe)</strong> &rarr; <strong>Allow</strong>. This is the same kind of warning you saw during the original setup, it's expected for your own script.</div></li>
+          <li><div class="i-num">4</div><div>You should see <strong>Execution completed</strong> in the log with no errors.</div></li>
+          <li><div class="i-num">5</div><div>Go to <strong>Deploy &gt; Manage deployments</strong>, click the pencil icon on your existing deployment, set Version to <strong>New version</strong>, and click <strong>Deploy</strong>.</div></li>
+        </ul>
+        <div class="callout"><strong>Already set up your sheet before this feature existed?</strong> Re-copy the full script from Step 2 above into your Apps Script editor (it now includes Calendar support), save, then follow the five steps above.</div>
+        <p style="font-size:0.95rem;color:var(--stone);">Seeing an error that says <code>unknown action</code> when you try to schedule something? That means your script doesn't have the Calendar code yet, re-copy Step 2 and try again. An error mentioning <code>permission</code> or <code>authorization</code> means you need to run the <code>authorizeCalendar</code> step above.</p>
       </div>
     </div>
 
