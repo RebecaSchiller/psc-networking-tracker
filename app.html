@@ -69,7 +69,7 @@
       color: var(--text-1);
       border-color: var(--border-mid);
     }
-    [data-theme="dark"] .contact-card { background: var(--card); }
+    [data-theme="dark"] .contact-card { background: var(--card); border-color: rgba(58,109,181,0.45); }
     [data-theme="dark"] .modal { background: var(--card); }
     [data-theme="dark"] .kanban-col { background: var(--card); }
     [data-theme="dark"] .kanban-card { background: #0f1624; }
@@ -162,7 +162,7 @@
 
     .cards-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 14px; }
     @media (max-width: 768px) { .cards-grid { grid-template-columns: 1fr; } }
-    .contact-card { background: var(--card); border: 0.5px solid var(--border); border-radius: var(--radius-lg); box-shadow: var(--shadow); overflow: hidden; transition: box-shadow 0.15s; }
+    .contact-card { background: var(--card); border: 1px solid rgba(58,109,181,0.35); border-radius: 0; box-shadow: var(--shadow); overflow: hidden; transition: box-shadow 0.15s; }
     .contact-card:hover { box-shadow: 0 4px 16px rgba(0,35,102,0.1); }
     .contact-card-top { padding: 10px 14px 8px; border-bottom: 0.5px solid var(--border); }
     .contact-card-name { font-size: 14px; font-weight: 700; color: var(--text-1); display: flex; align-items: center; gap: 6px; margin-bottom: 1px; }
