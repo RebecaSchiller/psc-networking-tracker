@@ -174,6 +174,7 @@
 
     .s-Not-contacted { background: var(--mist); color: var(--ocean); }
     .s-Contacted { background: #cffafe; color: #0e7490; }
+    .s-Follow-up-Email { background: #ede9fe; color: #5b21b6; }
     .s-Replied { background: #d1fae5; color: #065f46; }
     .s-Meeting-scheduled { background: #e0e7ff; color: #3730a3; }
     .s-Follow-up-needed { background: #fef3c7; color: #92400e; }
@@ -405,7 +406,7 @@
         <div class="card-label"><i class="ti ti-user-plus" style="margin-right:4px;"></i>Add a contact</div>
         <div class="form-grid"><input id="f-name" placeholder="Full name" /><input id="f-co" placeholder="Company" /><input id="f-role" placeholder="Their role / title" /><input id="f-linkedin" placeholder="LinkedIn URL (optional)" /></div>
         <div class="form-row">
-          <select id="f-status"><option value="Not contacted">Not contacted</option><option value="Contacted">Contacted</option><option value="Replied">Replied</option><option value="Meeting scheduled">Meeting scheduled</option><option value="Follow-up needed">Follow-up needed</option><option value="Closed">Closed</option></select>
+          <select id="f-status"><option value="Not contacted">Not contacted</option><option value="Contacted">Contacted</option><option value="Follow up Email">Follow up Email</option><option value="Replied">Replied</option><option value="Meeting scheduled">Meeting scheduled</option><option value="Follow-up needed">Follow-up needed</option><option value="Closed">Closed</option></select>
           <select id="f-priority"><option value="Medium">Medium priority</option><option value="High">High priority</option><option value="Low">Low priority</option></select>
           <input id="f-date" type="date" /><input id="f-tags" placeholder="Tags (comma separated)" />
         </div>
@@ -414,7 +415,7 @@
       </div>
       <div class="filter-bar">
         <label>Filter:</label>
-        <select id="filter-status" onchange="renderTable()"><option value="all">All statuses</option><option value="Not contacted">Not contacted</option><option value="Contacted">Contacted</option><option value="Replied">Replied</option><option value="Meeting scheduled">Meeting scheduled</option><option value="Follow-up needed">Follow-up needed</option><option value="Closed">Closed</option></select>
+        <select id="filter-status" onchange="renderTable()"><option value="all">All statuses</option><option value="Not contacted">Not contacted</option><option value="Contacted">Contacted</option><option value="Follow up Email">Follow up Email</option><option value="Replied">Replied</option><option value="Meeting scheduled">Meeting scheduled</option><option value="Follow-up needed">Follow-up needed</option><option value="Closed">Closed</option></select>
         <select id="filter-priority" onchange="renderTable()"><option value="all">All priorities</option><option value="High">High</option><option value="Medium">Medium</option><option value="Low">Low</option></select>
         <input id="filter-search" placeholder="Search name, company, tag..." oninput="renderTable()" style="min-width:180px;max-width:280px;flex:1;" />
         <select id="sort-field" onchange="setSortField(this.value)" style="font-size:13px;padding:6px 10px;width:auto;"><option value="name">Sort: Name</option><option value="company">Sort: Company</option><option value="status">Sort: Status</option><option value="priority">Sort: Priority</option><option value="lastContact">Sort: Last Contact</option><option value="addedAt">Sort: Date Added</option></select>
@@ -675,10 +676,10 @@ async function getAlertSuggestion(id){const box=document.getElementById('alert-a
 function sortBy(field){if(sortField===field)sortAsc=!sortAsc;else{sortField=field;sortAsc=true;}renderTable();}
 function setSortField(field){sortField=field;sortAsc=true;document.getElementById('sort-dir-btn').innerHTML='<i class="ti ti-sort-ascending"></i>';renderTable();}
 function toggleSortDir(){sortAsc=!sortAsc;document.getElementById('sort-dir-btn').innerHTML=sortAsc?'<i class="ti ti-sort-ascending"></i>':'<i class="ti ti-sort-descending"></i>';renderTable();}
-const statusClass={'Not contacted':'s-Not-contacted','Contacted':'s-Contacted','Replied':'s-Replied','Meeting scheduled':'s-Meeting-scheduled','Follow-up needed':'s-Follow-up-needed','Closed':'s-Closed'};
-const statusOptions=['Not contacted','Contacted','Replied','Meeting scheduled','Follow-up needed','Closed'];
-const kanbanColors={'Not contacted':'#D6E4F5','Contacted':'#cffafe','Replied':'#d1fae5','Meeting scheduled':'#e0e7ff','Follow-up needed':'#fef3c7','Closed':'#fee2e2'};
-const kanbanText={'Not contacted':'#002366','Contacted':'#0e7490','Replied':'#065f46','Meeting scheduled':'#3730a3','Follow-up needed':'#92400e','Closed':'#991b1b'};
+const statusClass={'Not contacted':'s-Not-contacted','Contacted':'s-Contacted','Follow up Email':'s-Follow-up-Email','Replied':'s-Replied','Meeting scheduled':'s-Meeting-scheduled','Follow-up needed':'s-Follow-up-needed','Closed':'s-Closed'};
+const statusOptions=['Not contacted','Contacted','Follow up Email','Replied','Meeting scheduled','Follow-up needed','Closed'];
+const kanbanColors={'Not contacted':'#D6E4F5','Contacted':'#cffafe','Follow up Email':'#ede9fe','Replied':'#d1fae5','Meeting scheduled':'#e0e7ff','Follow-up needed':'#fef3c7','Closed':'#fee2e2'};
+const kanbanText={'Not contacted':'#002366','Contacted':'#0e7490','Follow up Email':'#5b21b6','Replied':'#065f46','Meeting scheduled':'#3730a3','Follow-up needed':'#92400e','Closed':'#991b1b'};
 function isOverdue(c){if(!c.lastContact||c.status==='Closed'||c.status==='Follow-up needed'||c.status==='Not contacted')return false;const d=c.lastContact.includes('T')?c.lastContact.split('T')[0]:c.lastContact;return Math.floor((Date.now()-new Date(d))/86400000)>=OVERDUE_DAYS;}
 function isWarm(c){if(!c.lastContact)return false;const d=c.lastContact.includes('T')?c.lastContact.split('T')[0]:c.lastContact;return Math.floor((Date.now()-new Date(d))/86400000)<=30;}
 function cleanDate(d){if(!d)return '';return d.includes('T')?d.split('T')[0]:d;}
