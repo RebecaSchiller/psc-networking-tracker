@@ -256,6 +256,18 @@ function handleAction(p) {
     sheet.appendRow(row);
     out = { success: true };
 
+  } else if (p.action === "append_batch") {
+    var ss = SpreadsheetApp.getActiveSpreadsheet();
+    var sheet = ss.getSheetByName("Contacts");
+    var newRows = JSON.parse(p.rows);
+    if (!newRows || !newRows.length) {
+      out = { error: "No rows provided" };
+    } else {
+      var lastRow = sheet.getLastRow();
+      sheet.getRange(lastRow + 1, 1, newRows.length, newRows[0].length).setValues(newRows);
+      out = { success: true, count: newRows.length };
+    }
+
   } else if (p.action === "update") {
     var ss = SpreadsheetApp.getActiveSpreadsheet();
     var sheet = ss.getSheetByName("Contacts");

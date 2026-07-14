@@ -14,6 +14,7 @@
   <link rel="apple-touch-icon" href="https://rebecaschiller.github.io/psc-networking-tracker/icon-192.png" />
   <link rel="icon" type="image/png" sizes="16x16" href="https://rebecaschiller.github.io/psc-networking-tracker/favicon-16.png" />
   <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@tabler/icons-webfont@3.19.0/dist/tabler-icons.min.css" />
+  <script src="https://cdn.jsdelivr.net/npm/xlsx@0.18.5/dist/xlsx.full.min.js"></script>
   <!-- Google Analytics GA4 -->
   <script async src="https://www.googletagmanager.com/gtag/js?id=G-6G0GLG3MKK"></script>
   <script>
@@ -408,6 +409,8 @@
         </div>
         <div style="margin-bottom:10px;"><input id="f-notes" placeholder="Notes" /></div>
         <button class="btn" id="addBtn" onclick="addContact()"><i class="ti ti-plus"></i> Add contact</button>
+        <button class="btn btn-outline" id="importBtn" onclick="document.getElementById('linkedinFileInput').click()" style="margin-left:8px;"><i class="ti ti-brand-linkedin"></i> Import from LinkedIn</button>
+        <input type="file" id="linkedinFileInput" accept=".csv,.xlsx,.xls" style="display:none;" onchange="handleLinkedInFile(this)" />
       </div>
       <div class="filter-bar">
         <label>Filter:</label>
@@ -623,6 +626,17 @@
       <footer>Built by <a href="https://plainspeakingcomms.com" target="_blank" style="color:var(--horizon);">Plain Speaking Communications</a> · AI powered by Claude · Your data lives in your own Google Sheet.</footer>
     </div>
   </div>
+<div class="modal-overlay" id="importModal">
+  <div class="modal" style="max-width:640px;">
+    <div class="modal-header"><h3 id="importModalTitle">Import from LinkedIn</h3><button class="modal-close" onclick="closeModal('importModal')"><i class="ti ti-x"></i></button></div>
+    <div class="modal-body">
+      <div id="importSummary" style="margin-bottom:10px;font-size:14px;color:var(--text-2);"></div>
+      <div id="importPreviewTable" style="max-height:320px;overflow:auto;border:1px solid var(--border);border-radius:8px;"></div>
+      <div id="importProgress" style="display:none;align-items:center;gap:8px;margin-top:12px;font-size:13px;color:var(--text-2);"><span class="spinner"></span><span id="importProgressText"></span></div>
+    </div>
+    <div class="modal-footer"><button class="btn btn-outline" onclick="closeModal('importModal')">Cancel</button><button class="btn" id="importConfirmBtn" onclick="confirmLinkedInImport()"><i class="ti ti-upload"></i> Import contacts</button></div>
+  </div>
+</div>
 <div class="modal-overlay" id="notesModal">
   <div class="modal">
     <div class="modal-header"><h3 id="notesModalTitle">Notes history</h3><button class="modal-close" onclick="closeModal('notesModal')"><i class="ti ti-x"></i></button></div>
@@ -744,6 +758,186 @@ function followUpEmailBadge(c){
   if (days < 3) return '';
   if (days < 7) return `<span class="overdue-badge" style="background:#fef3c7;color:#92400e;">Follow-up Email &middot; ${days}d</span>`;
   return `<span class="overdue-badge">Stale &middot; ${days}d</span>`;
+}
+
+let pendingImportRows = [];
+
+function handleLinkedInFile(input){
+  const file = input.files[0];
+  if(!file) return;
+  const name = file.name.toLowerCase();
+  const reader = new FileReader();
+  reader.onload = function(e){
+    try{
+      let rows2D;
+      if(name.endsWith('.csv')){
+        rows2D = parseCSV(e.target.result);
+      } else {
+        const wb = XLSX.read(e.target.result, {type:'binary'});
+        const ws = wb.Sheets[wb.SheetNames[0]];
+        rows2D = XLSX.utils.sheet_to_json(ws, {header:1, raw:false, defval:''});
+      }
+      processLinkedInRows(rows2D);
+    }catch(err){
+      showToast('Could not read file: '+err.message);
+    }
+    input.value='';
+  };
+  reader.onerror = function(){ showToast('Could not read file'); input.value=''; };
+  if(name.endsWith('.csv')){
+    reader.readAsText(file);
+  } else {
+    reader.readAsBinaryString(file);
+  }
+}
+
+function parseCSV(text){
+  const rows=[];
+  let row=[],field='',inQuotes=false;
+  for(let i=0;i<text.length;i++){
+    const c=text[i];
+    if(inQuotes){
+      if(c==='"'){
+        if(text[i+1]==='"'){field+='"';i++;}
+        else inQuotes=false;
+      } else field+=c;
+    } else {
+      if(c==='"') inQuotes=true;
+      else if(c===','){row.push(field);field='';}
+      else if(c==='\n' || c==='\r'){
+        if(c==='\r' && text[i+1]==='\n') i++;
+        row.push(field);field='';
+        if(row.length>1 || row[0]!=='') rows.push(row);
+        row=[];
+      } else field+=c;
+    }
+  }
+  if(field.length || row.length){row.push(field);rows.push(row);}
+  return rows;
+}
+
+function findLinkedInHeaderRow(rows2D){
+  for(let i=0;i<Math.min(rows2D.length,15);i++){
+    const rowVals=(rows2D[i]||[]).map(v=>String(v||'').trim().toLowerCase());
+    if(rowVals.includes('first name') && rowVals.includes('last name')) return i;
+  }
+  return -1;
+}
+
+function parseConnectedOnDate(s){
+  if(!s) return '';
+  const m=String(s).trim().match(/^(\d{1,2})\s+([A-Za-z]{3})\s+(\d{4})$/);
+  if(!m) return '';
+  const months={Jan:'01',Feb:'02',Mar:'03',Apr:'04',May:'05',Jun:'06',Jul:'07',Aug:'08',Sep:'09',Oct:'10',Nov:'11',Dec:'12'};
+  const mo=months[m[2]];
+  if(!mo) return '';
+  return m[3]+'-'+mo+'-'+m[1].padStart(2,'0');
+}
+
+function processLinkedInRows(rows2D){
+  const headerIdx=findLinkedInHeaderRow(rows2D);
+  if(headerIdx===-1){
+    showToast('Could not find LinkedIn column headers (First Name / Last Name) in this file');
+    return;
+  }
+  const headers=rows2D[headerIdx].map(v=>String(v||'').trim().toLowerCase());
+  const idx={
+    first:headers.indexOf('first name'),
+    last:headers.indexOf('last name'),
+    url:headers.indexOf('url'),
+    company:headers.indexOf('company'),
+    position:headers.indexOf('position'),
+    connected:headers.indexOf('connected on')
+  };
+  const dataRows=rows2D.slice(headerIdx+1).filter(r=>r && r.some(v=>String(v||'').trim()!==''));
+  const existingLinkedIns=new Set(contacts.map(c=>(c.linkedin||'').trim()).filter(Boolean));
+  const seen=new Set();
+  pendingImportRows=[];
+  let skipped=0;
+  dataRows.forEach((r,i)=>{
+    const first=idx.first>-1?String(r[idx.first]||'').trim():'';
+    const last=idx.last>-1?String(r[idx.last]||'').trim():'';
+    const fullName=(first+' '+last).trim();
+    if(!fullName){skipped++;return;}
+    const url=idx.url>-1?String(r[idx.url]||'').trim():'';
+    if(url && (existingLinkedIns.has(url) || seen.has(url))){skipped++;return;}
+    if(url) seen.add(url);
+    const company=idx.company>-1?String(r[idx.company]||'').trim():'';
+    const role=idx.position>-1?String(r[idx.position]||'').trim():'';
+    const connectedRaw=idx.connected>-1?String(r[idx.connected]||'').trim():'';
+    const addedAt=parseConnectedOnDate(connectedRaw)||new Date().toISOString().split('T')[0];
+    const id='li_'+Date.now()+'_'+i;
+    pendingImportRows.push({
+      id,name:fullName,company,role,
+      row:[id,fullName,company,role,'Not contacted','','',addedAt,'Medium','linkedin-import',url,'']
+    });
+  });
+  renderImportPreview(skipped);
+}
+
+function renderImportPreview(skipped){
+  const summary=document.getElementById('importSummary');
+  const table=document.getElementById('importPreviewTable');
+  const btn=document.getElementById('importConfirmBtn');
+  if(!pendingImportRows.length){
+    summary.innerHTML='No new contacts found to import.'+(skipped?` (${skipped} skipped — already in your tracker or missing a name)`:'');
+    table.innerHTML='';
+    btn.disabled=true;
+  } else {
+    summary.innerHTML=`<strong>${pendingImportRows.length} contact${pendingImportRows.length>1?'s':''}</strong> ready to import.`+(skipped?` ${skipped} skipped (already in your tracker or missing a name).`:'')+` They'll be added with status <strong>Not contacted</strong> and tagged <strong>linkedin-import</strong> so you can find them later.`;
+    const preview=pendingImportRows.slice(0,8);
+    table.innerHTML=`<table style="width:100%;border-collapse:collapse;font-size:13px;"><thead><tr style="text-align:left;background:var(--fog);"><th style="padding:6px 8px;">Name</th><th style="padding:6px 8px;">Company</th><th style="padding:6px 8px;">Role</th></tr></thead><tbody>${preview.map(c=>`<tr><td style="padding:6px 8px;border-top:1px solid var(--border);">${esc(c.name)}</td><td style="padding:6px 8px;border-top:1px solid var(--border);">${esc(c.company)}</td><td style="padding:6px 8px;border-top:1px solid var(--border);">${esc(c.role)}</td></tr>`).join('')}</tbody></table>`+(pendingImportRows.length>8?`<div style="padding:6px 8px;color:var(--text-3);font-size:12px;">+ ${pendingImportRows.length-8} more</div>`:'');
+    btn.disabled=false;
+  }
+  document.getElementById('importProgress').style.display='none';
+  document.getElementById('importModal').classList.add('show');
+}
+
+function chunkRowsByUrlLength(rows, maxLen){
+  maxLen = maxLen || 4000;
+  const chunks=[];
+  let current=[],currentLen=0;
+  for(const r of rows){
+    const encoded=encodeURIComponent(JSON.stringify(r));
+    if(current.length && currentLen+encoded.length>maxLen){
+      chunks.push(current);
+      current=[];currentLen=0;
+    }
+    current.push(r);
+    currentLen+=encoded.length+1;
+  }
+  if(current.length) chunks.push(current);
+  return chunks;
+}
+
+async function confirmLinkedInImport(){
+  if(!pendingImportRows.length) return;
+  const btn=document.getElementById('importConfirmBtn');
+  btn.disabled=true;
+  const progress=document.getElementById('importProgress');
+  const progressText=document.getElementById('importProgressText');
+  progress.style.display='flex';
+  const rows=pendingImportRows.map(c=>c.row);
+  const chunks=chunkRowsByUrlLength(rows);
+  let imported=0;
+  try{
+    for(const chunk of chunks){
+      progressText.textContent=`Importing ${imported+1}-${Math.min(imported+chunk.length,rows.length)} of ${rows.length}...`;
+      await gas({action:'append_batch', rows: JSON.stringify(chunk)});
+      imported+=chunk.length;
+    }
+    showToast(`Imported ${imported} contact${imported>1?'s':''} from LinkedIn`);
+    closeModal('importModal');
+    pendingImportRows=[];
+    await loadContacts();
+    trackEvent('linkedin_import',{count:imported});
+  }catch(e){
+    await loadContacts().catch(()=>{});
+    pendingImportRows=[];
+    showToast('Import error: '+e.message+` (${imported} of ${rows.length} imported before the error. Re-select the file to retry — already-imported contacts will be skipped automatically.)`);
+  }
+  progress.style.display='none';
+  btn.disabled=false;
 }
 
 function setFollowUpDate(id, date) {
