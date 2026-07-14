@@ -109,6 +109,7 @@ nav { padding: 0 1.5rem; }
     <a class="progress-step" href="#step4"><div class="p-num">4</div> Connect and go</a>
     <a class="progress-step" href="#step5"><div class="p-num">5</div> Calendar (optional)</a>
     <a class="progress-step" href="#step6"><div class="p-num">6</div> Stale alerts (optional)</a>
+    <a class="progress-step" href="#step7"><div class="p-num">7</div> Weekly digest (optional)</a>
   </div>
 </div>
 
@@ -235,13 +236,114 @@ function checkStaleFollowUps() {
   );
 }
 
+function installWeeklyDigestTrigger() {
+  var triggers = ScriptApp.getProjectTriggers();
+  for (var i = 0; i < triggers.length; i++) {
+    if (triggers[i].getHandlerFunction() === "sendWeeklyDigest") {
+      ScriptApp.deleteTrigger(triggers[i]);
+    }
+  }
+  ScriptApp.newTrigger("sendWeeklyDigest")
+    .timeBased()
+    .onWeekDay(ScriptApp.WeekDay.MONDAY)
+    .atHour(7)
+    .create();
+}
+
+function sendWeeklyDigest() {
+  var ss = SpreadsheetApp.getActiveSpreadsheet();
+  var sheet = ss.getSheetByName("Contacts");
+  var rows = sheet.getDataRange().getValues();
+  var now = new Date();
+  var weekAgo = new Date(now.getTime() - 7 * 86400000);
+
+  var newThisWeek = [];
+  var overdue = [];
+  var stuckFollowUp = [];
+
+  for (var i = 1; i < rows.length; i++) {
+    var row = rows[i];
+    var name = row[1];
+    var company = row[2];
+    var status = row[4];
+    var lastContact = row[5];
+    var addedAt = row[7];
+    var tags = row[9] || "";
+
+    if (addedAt) {
+      var addedDate = new Date(addedAt);
+      if (addedDate >= weekAgo) {
+        newThisWeek.push({ name: name, company: company });
+      }
+    }
+
+    if (lastContact && status !== "Closed" && status !== "Follow-up needed" && status !== "Not contacted") {
+      var daysSinceContact = Math.floor((now - new Date(lastContact)) / 86400000);
+      if (daysSinceContact >= 7) {
+        overdue.push({ name: name, company: company, days: daysSinceContact });
+      }
+    }
+
+    if (status === "Follow up Email") {
+      var changedDate = addedAt;
+      var match = String(tags).match(/statuschanged:([0-9]{4}-[0-9]{2}-[0-9]{2})/);
+      if (match) changedDate = match[1];
+      if (changedDate) {
+        var daysInStatus = Math.floor((now - new Date(changedDate)) / 86400000);
+        if (daysInStatus >= 5) {
+          stuckFollowUp.push({ name: name, company: company, days: daysInStatus });
+        }
+      }
+    }
+  }
+
+  if (newThisWeek.length === 0 && overdue.length === 0 && stuckFollowUp.length === 0) return;
+
+  var body = "Your Network Momentum weekly digest:\n";
+
+  body += "\nNew contacts this week (" + newThisWeek.length + "):\n";
+  if (newThisWeek.length === 0) {
+    body += "- None\n";
+  } else {
+    newThisWeek.forEach(function(c) {
+      body += "- " + c.name + (c.company ? " (" + c.company + ")" : "") + "\n";
+    });
+  }
+
+  body += "\nOverdue, 7+ days since last contact (" + overdue.length + "):\n";
+  if (overdue.length === 0) {
+    body += "- None\n";
+  } else {
+    overdue.forEach(function(c) {
+      body += "- " + c.name + (c.company ? " (" + c.company + ")" : "") + " \u2014 " + c.days + "d\n";
+    });
+  }
+
+  body += "\nStuck in Follow up Email, 5+ days (" + stuckFollowUp.length + "):\n";
+  if (stuckFollowUp.length === 0) {
+    body += "- None\n";
+  } else {
+    stuckFollowUp.forEach(function(c) {
+      body += "- " + c.name + (c.company ? " (" + c.company + ")" : "") + " \u2014 " + c.days + "d\n";
+    });
+  }
+
+  body += "\nOpen Network Momentum: https://networkmomentum.app";
+
+  MailApp.sendEmail(
+    Session.getActiveUser().getEmail(),
+    "Network Momentum weekly digest",
+    body
+  );
+}
+
 function handleAction(p) {
   var out = {};
 
   if (p.action === "headers") {
     out = { headers: ["ID","Name","Company","Role","Status",
       "LastContact","Notes","AddedAt","Priority","Tags",
-      "LinkedIn","NotesHistory"] };
+      "LinkedIn","NotesHistory","Email"] };
 
   } else if (p.action === "read") {
     var ss = SpreadsheetApp.getActiveSpreadsheet();
@@ -277,7 +379,7 @@ function handleAction(p) {
   } else if (p.action === "clear") {
     var ss = SpreadsheetApp.getActiveSpreadsheet();
     var sheet = ss.getSheetByName("Contacts");
-    sheet.getRange(parseInt(p.row), 1, 1, 12).clearContent();
+    sheet.getRange(parseInt(p.row), 1, 1, 13).clearContent();
     out = { success: true };
 
   } else if (p.action === "create_event") {
@@ -449,6 +551,28 @@ function handleAction(p) {
           <li><div class="i-num">4</div><div>You should see <strong>Execution completed</strong> in the log with no errors. From now on, the script checks once a day and emails you at your Google account address if anything is stuck.</div></li>
         </ul>
         <div class="callout">This only sends an email when something is actually stale. No stale contacts means no email that day.</div>
+      </div>
+    </div>
+
+    <!-- STEP 7 -->
+    <div class="setup-step" id="step7">
+      <div class="step-header">
+        <div class="step-badge">7</div>
+        <div class="step-header-text">
+          <div class="step-eyebrow">Step seven &middot; optional</div>
+          <h2>Weekly digest email</h2>
+        </div>
+      </div>
+      <div class="step-body">
+        <p>Want a single weekly summary instead of checking the app? This sends one email every Monday morning covering: new contacts added that week, anyone overdue (7+ days since last contact), and anyone stuck in Follow up Email status (5+ days).</p>
+        <p>If you followed <strong>Step 2</strong> above using the current code block, this feature is already included in your script. You just need to install the weekly check once:</p>
+        <ul class="instruction-list">
+          <li><div class="i-num">1</div><div>In the Apps Script editor, find the function dropdown next to the <strong>Run</strong> button.</div></li>
+          <li><div class="i-num">2</div><div>Click the dropdown and select <strong>installWeeklyDigestTrigger</strong> instead.</div></li>
+          <li><div class="i-num">3</div><div>Click <strong>Run</strong>. Approve the permissions prompt if asked, the same way you did for Calendar.</div></li>
+          <li><div class="i-num">4</div><div>You should see <strong>Execution completed</strong> in the log with no errors. From now on, you'll get one email every Monday at 7am summarizing your week.</div></li>
+        </ul>
+        <div class="callout">This runs independently from the daily stale-alert check in Step 6 &mdash; you can turn on one, both, or neither.</div>
       </div>
     </div>
 
