@@ -630,6 +630,13 @@
   <div class="modal" style="max-width:640px;">
     <div class="modal-header"><h3 id="importModalTitle">Import from LinkedIn</h3><button class="modal-close" onclick="closeModal('importModal')"><i class="ti ti-x"></i></button></div>
     <div class="modal-body">
+      <div id="importDateFilterRow" style="display:none;align-items:center;gap:8px;flex-wrap:wrap;margin-bottom:12px;font-size:13px;color:var(--text-2);">
+        <span>Only import connections from</span>
+        <input type="date" id="importDateFrom" onchange="applyImportDateFilter()" style="width:auto;padding:4px 8px;" />
+        <span>through</span>
+        <input type="date" id="importDateTo" onchange="applyImportDateFilter()" style="width:auto;padding:4px 8px;" />
+        <button class="btn btn-outline" onclick="clearImportDateFilter()" style="padding:4px 10px;font-size:12px;">Clear</button>
+      </div>
       <div id="importSummary" style="margin-bottom:10px;font-size:14px;color:var(--text-2);"></div>
       <div id="importPreviewTable" style="max-height:320px;overflow:auto;border:1px solid var(--border);border-radius:8px;"></div>
       <div id="importProgress" style="display:none;align-items:center;gap:8px;margin-top:12px;font-size:13px;color:var(--text-2);"><span class="spinner"></span><span id="importProgressText"></span></div>
@@ -761,6 +768,8 @@ function followUpEmailBadge(c){
 }
 
 let pendingImportRows = [];
+let allParsedImportRows = [];
+let importSkippedCount = 0;
 
 function handleLinkedInFile(input){
   const file = input.files[0];
@@ -852,7 +861,7 @@ function processLinkedInRows(rows2D){
   const dataRows=rows2D.slice(headerIdx+1).filter(r=>r && r.some(v=>String(v||'').trim()!==''));
   const existingLinkedIns=new Set(contacts.map(c=>(c.linkedin||'').trim()).filter(Boolean));
   const seen=new Set();
-  pendingImportRows=[];
+  allParsedImportRows=[];
   let skipped=0;
   dataRows.forEach((r,i)=>{
     const first=idx.first>-1?String(r[idx.first]||'').trim():'';
@@ -867,26 +876,52 @@ function processLinkedInRows(rows2D){
     const connectedRaw=idx.connected>-1?String(r[idx.connected]||'').trim():'';
     const addedAt=parseConnectedOnDate(connectedRaw)||new Date().toISOString().split('T')[0];
     const id='li_'+Date.now()+'_'+i;
-    pendingImportRows.push({
-      id,name:fullName,company,role,
+    allParsedImportRows.push({
+      id,name:fullName,company,role,addedAt,
       row:[id,fullName,company,role,'Not contacted','','',addedAt,'Medium','linkedin-import',url,'']
     });
   });
-  renderImportPreview(skipped);
+  importSkippedCount=skipped;
+  document.getElementById('importDateFilterRow').style.display = allParsedImportRows.length ? 'flex' : 'none';
+  document.getElementById('importDateFrom').value='';
+  document.getElementById('importDateTo').value='';
+  pendingImportRows=allParsedImportRows.slice();
+  renderImportPreview();
 }
 
-function renderImportPreview(skipped){
+function applyImportDateFilter(){
+  const from=document.getElementById('importDateFrom').value;
+  const to=document.getElementById('importDateTo').value;
+  pendingImportRows=allParsedImportRows.filter(c=>{
+    if(from && c.addedAt < from) return false;
+    if(to && c.addedAt > to) return false;
+    return true;
+  });
+  renderImportPreview();
+}
+
+function clearImportDateFilter(){
+  document.getElementById('importDateFrom').value='';
+  document.getElementById('importDateTo').value='';
+  pendingImportRows=allParsedImportRows.slice();
+  renderImportPreview();
+}
+
+function renderImportPreview(){
   const summary=document.getElementById('importSummary');
   const table=document.getElementById('importPreviewTable');
   const btn=document.getElementById('importConfirmBtn');
+  const dateFiltered=allParsedImportRows.length-pendingImportRows.length;
+  const skipNote=importSkippedCount?` ${importSkippedCount} skipped (already in your tracker or missing a name).`:'';
+  const dateNote=dateFiltered?` ${dateFiltered} outside the selected date range.`:'';
   if(!pendingImportRows.length){
-    summary.innerHTML='No new contacts found to import.'+(skipped?` (${skipped} skipped — already in your tracker or missing a name)`:'');
+    summary.innerHTML=(allParsedImportRows.length?'No contacts match the current filters.':'No new contacts found to import.')+skipNote+dateNote;
     table.innerHTML='';
     btn.disabled=true;
   } else {
-    summary.innerHTML=`<strong>${pendingImportRows.length} contact${pendingImportRows.length>1?'s':''}</strong> ready to import.`+(skipped?` ${skipped} skipped (already in your tracker or missing a name).`:'')+` They'll be added with status <strong>Not contacted</strong> and tagged <strong>linkedin-import</strong> so you can find them later.`;
+    summary.innerHTML=`<strong>${pendingImportRows.length} contact${pendingImportRows.length>1?'s':''}</strong> ready to import.`+skipNote+dateNote+` They'll be added with status <strong>Not contacted</strong> and tagged <strong>linkedin-import</strong> so you can find them later.`;
     const preview=pendingImportRows.slice(0,8);
-    table.innerHTML=`<table style="width:100%;border-collapse:collapse;font-size:13px;"><thead><tr style="text-align:left;background:var(--fog);"><th style="padding:6px 8px;">Name</th><th style="padding:6px 8px;">Company</th><th style="padding:6px 8px;">Role</th></tr></thead><tbody>${preview.map(c=>`<tr><td style="padding:6px 8px;border-top:1px solid var(--border);">${esc(c.name)}</td><td style="padding:6px 8px;border-top:1px solid var(--border);">${esc(c.company)}</td><td style="padding:6px 8px;border-top:1px solid var(--border);">${esc(c.role)}</td></tr>`).join('')}</tbody></table>`+(pendingImportRows.length>8?`<div style="padding:6px 8px;color:var(--text-3);font-size:12px;">+ ${pendingImportRows.length-8} more</div>`:'');
+    table.innerHTML=`<table style="width:100%;border-collapse:collapse;font-size:13px;"><thead><tr style="text-align:left;background:var(--fog);"><th style="padding:6px 8px;">Name</th><th style="padding:6px 8px;">Company</th><th style="padding:6px 8px;">Role</th><th style="padding:6px 8px;">Connected</th></tr></thead><tbody>${preview.map(c=>`<tr><td style="padding:6px 8px;border-top:1px solid var(--border);">${esc(c.name)}</td><td style="padding:6px 8px;border-top:1px solid var(--border);">${esc(c.company)}</td><td style="padding:6px 8px;border-top:1px solid var(--border);">${esc(c.role)}</td><td style="padding:6px 8px;border-top:1px solid var(--border);">${esc(c.addedAt)}</td></tr>`).join('')}</tbody></table>`+(pendingImportRows.length>8?`<div style="padding:6px 8px;color:var(--text-3);font-size:12px;">+ ${pendingImportRows.length-8} more</div>`:'');
     btn.disabled=false;
   }
   document.getElementById('importProgress').style.display='none';
