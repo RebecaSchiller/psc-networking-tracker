@@ -124,6 +124,7 @@ footer { background: var(--ink); padding: 2.5rem 3rem; text-align: center; }
     <a class="progress-step" href="#step3"><div class="p-num">3</div> Deploy the web app</a>
     <a class="progress-step" href="#step4"><div class="p-num">4</div> Connect and go</a>
     <a class="progress-step" href="#step5"><div class="p-num">5</div> Calendar (optional)</a>
+    <a class="progress-step" href="#step6"><div class="p-num">6</div> Stale alerts (optional)</a>
   </div>
 </div>
 
@@ -186,6 +187,67 @@ function handleRequest(e) {
 
 function authorizeCalendar() {
   CalendarApp.getDefaultCalendar();
+}
+
+function installStaleFollowUpTrigger() {
+  var triggers = ScriptApp.getProjectTriggers();
+  for (var i = 0; i < triggers.length; i++) {
+    if (triggers[i].getHandlerFunction() === "checkStaleFollowUps") {
+      ScriptApp.deleteTrigger(triggers[i]);
+    }
+  }
+  ScriptApp.newTrigger("checkStaleFollowUps")
+    .timeBased()
+    .everyDays(1)
+    .atHour(6)
+    .create();
+}
+
+function checkStaleFollowUps() {
+  var ss = SpreadsheetApp.getActiveSpreadsheet();
+  var sheet = ss.getSheetByName("Contacts");
+  var rows = sheet.getDataRange().getValues();
+  var staleDays = 7;
+  var now = new Date();
+  var stale = [];
+
+  for (var i = 1; i < rows.length; i++) {
+    var row = rows[i];
+    var name = row[1];
+    var company = row[2];
+    var status = row[4];
+    var addedAt = row[7];
+    var tags = row[9] || "";
+
+    if (status !== "Follow up Email") continue;
+
+    var changedDate = addedAt;
+    var match = String(tags).match(/statuschanged:([0-9]{4}-[0-9]{2}-[0-9]{2})/);
+    if (match) changedDate = match[1];
+    if (!changedDate) continue;
+
+    var days = Math.floor((now - new Date(changedDate)) / 86400000);
+    if (days >= staleDays) {
+      stale.push({ name: name, company: company, days: days });
+    }
+  }
+
+  if (stale.length === 0) return;
+
+  var lines = stale.map(function(c) {
+    return "- " + c.name + (c.company ? " (" + c.company + ")" : "") +
+      " \u2014 " + c.days + " days in Follow up Email";
+  });
+
+  var body = "These contacts have been sitting in \"Follow up Email\" status for 7+ days:\n\n" +
+    lines.join("\n") +
+    "\n\nOpen Network Momentum: https://networkmomentum.app";
+
+  MailApp.sendEmail(
+    Session.getActiveUser().getEmail(),
+    "Network Momentum: " + stale.length + " stale follow-up" + (stale.length > 1 ? "s" : ""),
+    body
+  );
 }
 
 function handleAction(p) {
@@ -365,6 +427,28 @@ function handleAction(p) {
         </ul>
         <div class="callout"><strong>Already set up your sheet before this feature existed?</strong> Re-copy the full script from Step 2 above into your Apps Script editor (it now includes Calendar support), save, then follow the five steps above.</div>
         <p style="font-size:0.95rem;color:var(--stone);">Seeing an error that says <code>unknown action</code> when you try to schedule something? That means your script doesn't have the Calendar code yet, re-copy Step 2 and try again. An error mentioning <code>permission</code> or <code>authorization</code> means you need to run the <code>authorizeCalendar</code> step above.</p>
+      </div>
+    </div>
+
+    <!-- STEP 6 -->
+    <div class="setup-step" id="step6">
+      <div class="step-header">
+        <div class="step-badge">6</div>
+        <div class="step-header-text">
+          <div class="step-eyebrow">Step six &middot; optional</div>
+          <h2>Stale follow-up email alerts</h2>
+        </div>
+      </div>
+      <div class="step-body">
+        <p>Contacts sitting in <strong>Follow up Email</strong> status get a badge on their card after 3 days, and turn to a <strong>Stale</strong> badge after 7. If you'd also like a daily email reminder when contacts hit 7+ days, run this one-time setup:</p>
+        <p>If you followed <strong>Step 2</strong> above using the current code block, this feature is already included in your script. You just need to install the daily check once:</p>
+        <ul class="instruction-list">
+          <li><div class="i-num">1</div><div>In the Apps Script editor, find the function dropdown next to the <strong>Run</strong> button.</div></li>
+          <li><div class="i-num">2</div><div>Click the dropdown and select <strong>installStaleFollowUpTrigger</strong> instead.</div></li>
+          <li><div class="i-num">3</div><div>Click <strong>Run</strong>. Approve the permissions prompt the same way you did for Calendar, if asked.</div></li>
+          <li><div class="i-num">4</div><div>You should see <strong>Execution completed</strong> in the log with no errors. From now on, the script checks once a day and emails you at your Google account address if anything is stuck.</div></li>
+        </ul>
+        <div class="callout">This only sends an email when something is actually stale. No stale contacts means no email that day.</div>
       </div>
     </div>
 
