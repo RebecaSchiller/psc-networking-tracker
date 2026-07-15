@@ -1,0 +1,72 @@
+<svg viewBox="0 0 740 380" xmlns="http://www.w3.org/2000/svg" font-family="'Josefin Sans', Arial, sans-serif">
+  <rect x="0" y="0" width="740" height="380" rx="10" fill="#F0F4F9"/>
+
+  <!-- Card 1: First outreach -->
+  <g>
+    <rect x="20" y="20" width="220" height="340" fill="#FFFFFF" stroke="#D6E4F5" stroke-width="1" rx="8"/>
+    <text x="34" y="46" font-size="11" font-weight="700" letter-spacing="1" fill="#002366">FIRST OUTREACH</text>
+    <rect x="34" y="58" width="192" height="220" rx="6" fill="#F0F4F9"/>
+    <text x="44" y="78" font-size="11" fill="#4A5568">
+      <tspan x="44" dy="0">Hi [Name],</tspan>
+      <tspan x="44" dy="18"> </tspan>
+      <tspan x="44" dy="18">I came across your</tspan>
+      <tspan x="44" dy="16">profile and was really</tspan>
+      <tspan x="44" dy="16">impressed by your work</tspan>
+      <tspan x="44" dy="16">at [Company]. I'd love to</tspan>
+      <tspan x="44" dy="16">learn more and explore</tspan>
+      <tspan x="44" dy="16">how we might connect.</tspan>
+      <tspan x="44" dy="18">Would you be open to a</tspan>
+      <tspan x="44" dy="16">brief 15-minute call?</tspan>
+    </text>
+    <rect x="34" y="292" width="90" height="28" rx="6" fill="#FFFFFF" stroke="#3A6DB5" stroke-width="1"/>
+    <text x="79" y="310" font-size="10" fill="#3A6DB5" text-anchor="middle">Personalize</text>
+    <rect x="134" y="292" width="92" height="28" rx="6" fill="#3A6DB5"/>
+    <text x="180" y="310" font-size="10" fill="#FFFFFF" text-anchor="middle">Copy</text>
+  </g>
+
+  <!-- Card 2: Follow-up -->
+  <g>
+    <rect x="260" y="20" width="220" height="340" fill="#FFFFFF" stroke="#D6E4F5" stroke-width="1" rx="8"/>
+    <text x="274" y="46" font-size="11" font-weight="700" letter-spacing="1" fill="#92400E">FOLLOW-UP</text>
+    <rect x="274" y="58" width="192" height="220" rx="6" fill="#F0F4F9"/>
+    <text x="284" y="78" font-size="11" fill="#4A5568">
+      <tspan x="284" dy="0">Hi [Name],</tspan>
+      <tspan x="284" dy="18"> </tspan>
+      <tspan x="284" dy="18">I wanted to follow up on</tspan>
+      <tspan x="284" dy="16">my previous message.</tspan>
+      <tspan x="284" dy="16">I know you're busy, but</tspan>
+      <tspan x="284" dy="16">I'd still love to connect</tspan>
+      <tspan x="284" dy="16">and learn more about</tspan>
+      <tspan x="284" dy="16">your work at [Company].</tspan>
+      <tspan x="284" dy="18">Even 10 minutes would</tspan>
+      <tspan x="284" dy="16">be incredibly helpful.</tspan>
+    </text>
+    <rect x="274" y="292" width="90" height="28" rx="6" fill="#FFFFFF" stroke="#3A6DB5" stroke-width="1"/>
+    <text x="319" y="310" font-size="10" fill="#3A6DB5" text-anchor="middle">Personalize</text>
+    <rect x="374" y="292" width="92" height="28" rx="6" fill="#3A6DB5"/>
+    <text x="420" y="310" font-size="10" fill="#FFFFFF" text-anchor="middle">Copy</text>
+  </g>
+
+  <!-- Card 3: 15-Minute Coffee Chat -->
+  <g>
+    <rect x="500" y="20" width="220" height="340" fill="#FFFFFF" stroke="#D6E4F5" stroke-width="1" rx="8"/>
+    <text x="514" y="46" font-size="11" font-weight="700" letter-spacing="1" fill="#B45309">15-MINUTE COFFEE CHAT</text>
+    <rect x="514" y="58" width="192" height="220" rx="6" fill="#F0F4F9"/>
+    <text x="524" y="78" font-size="11" fill="#4A5568">
+      <tspan x="524" dy="0">Hi [Name],</tspan>
+      <tspan x="524" dy="18"> </tspan>
+      <tspan x="524" dy="18">I've been following your</tspan>
+      <tspan x="524" dy="16">work at [Company] and</tspan>
+      <tspan x="524" dy="16">would love to learn more</tspan>
+      <tspan x="524" dy="16">about your experience.</tspan>
+      <tspan x="524" dy="18">Would you be open to a</tspan>
+      <tspan x="524" dy="16">quick 15-minute virtual</tspan>
+      <tspan x="524" dy="16">coffee chat? I'm flexible</tspan>
+      <tspan x="524" dy="16">around your schedule.</tspan>
+    </text>
+    <rect x="514" y="292" width="90" height="28" rx="6" fill="#FFFFFF" stroke="#3A6DB5" stroke-width="1"/>
+    <text x="559" y="310" font-size="10" fill="#3A6DB5" text-anchor="middle">Personalize</text>
+    <rect x="614" y="292" width="92" height="28" rx="6" fill="#3A6DB5"/>
+    <text x="660" y="310" font-size="10" fill="#FFFFFF" text-anchor="middle">Copy</text>
+  </g>
+</svg>
