@@ -241,25 +241,41 @@ function handleAction(p) {
     if (!apiKey || !prompt) {
       out = { error: "Missing apiKey or prompt" };
     } else {
-      var payload = JSON.stringify({
-        model: "claude-sonnet-4-6",
-        max_tokens: 1000,
-        messages: [{ role: "user", content: prompt }]
-      });
+      // Provider is detected from the key itself: Anthropic keys start
+      // with "sk-ant", anything else is treated as an OpenAI key. No
+      // separate provider field is sent by the client.
+      var isAnthropic = apiKey.indexOf("sk-ant") === 0;
+      var url = isAnthropic
+        ? "https://api.anthropic.com/v1/messages"
+        : "https://api.openai.com/v1/chat/completions";
+      var payload = isAnthropic
+        ? JSON.stringify({
+            model: "claude-sonnet-4-6",
+            max_tokens: 1000,
+            messages: [{ role: "user", content: prompt }]
+          })
+        : JSON.stringify({
+            model: "gpt-4o-mini",
+            messages: [{ role: "user", content: prompt }]
+          });
       var options = {
         method: "post",
         contentType: "application/json",
-        headers: { "x-api-key": apiKey,
-          "anthropic-version": "2023-06-01" },
+        headers: isAnthropic
+          ? { "x-api-key": apiKey, "anthropic-version": "2023-06-01" }
+          : { "Authorization": "Bearer " + apiKey },
         payload: payload,
         muteHttpExceptions: true
       };
       try {
-        var resp = UrlFetchApp.fetch(
-          "https://api.anthropic.com/v1/messages", options);
+        var resp = UrlFetchApp.fetch(url, options);
         var result = JSON.parse(resp.getContentText());
-        if (result.content && result.content[0]) {
+        if (isAnthropic && result.content && result.content[0]) {
           out = { suggestion: result.content[0].text };
+        } else if (!isAnthropic && result.choices && result.choices[0]) {
+          out = { suggestion: result.choices[0].message.content };
+        } else if (result.error) {
+          out = { error: result.error.message || "AI provider returned an error" };
         } else {
           out = { error: "No response from AI" };
         }
