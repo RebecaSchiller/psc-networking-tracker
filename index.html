@@ -133,11 +133,11 @@
       <path d="M21 27 Q21 20 25 20 Q29 20 29 27" stroke="#3A6DB5" stroke-width="1.4" stroke-linecap="round" fill="none"></path>
     </svg>
     <div>
-      Network MomentumÃ¢ÂÂ¢
+      Network MomentumÃÂ¢ÃÂÃÂ¢
       <span class="brand-sub">One contact away.</span>
     </div>
   </a>
-  <a class="nav-cta" href="app.html?v=2">Launch the app Ã¢ÂÂ</a>
+  <a class="nav-cta" href="app.html?v=2">Launch the app ÃÂ¢ÃÂÃÂ</a>
 </nav>
 
 <section class="hero">
@@ -150,7 +150,7 @@
   </div>
   <p class="hero-sub">Most people lose track of their best contacts: not because they don't care, but because nothing reminds them. Network Momentum fixes that. It tracks your relationships, flags who's going cold, and tells you exactly what to do next.</p>
   <div class="hero-actions">
-    <a class="btn-launch" href="app.html?v=2">Launch the app Ã¢ÂÂ</a>
+    <a class="btn-launch" href="app.html?v=2">Launch the app ÃÂ¢ÃÂÃÂ</a>
     <a class="btn-ghost" href="#features">See how it works</a>
   </div>
 </section>
@@ -225,7 +225,7 @@
     <div class="block-content">
       <div class="block-label-light">How it works</div>
       <h2 class="block-title-light">Takes about 10 minutes to set up. Nothing to install.</h2>
-      <p class="block-body-light">Network Momentum connects to a Google Sheet you control. Your data never touches our servers. Setup requires a desktop or laptop Ã¢ÂÂ Google Sheets extensions are not available on mobile or tablet.</p>
+      <p class="block-body-light">Network Momentum connects to a Google Sheet you control. Your data never touches our servers. Setup requires a desktop or laptop ÃÂ¢ÃÂÃÂ Google Sheets extensions are not available on mobile or tablet.</p>
       <div class="steps-list">
         <div class="step-item step-item-light">
           <div class="step-num-light">1</div>
@@ -297,18 +297,31 @@
     <h2>Takes about 10 minutes to set up. Nothing to install.</h2>
     <p>No account required. No data stored on our servers. Setup requires a desktop or laptop. AI features use your own API key, billed per use by your provider. Your contacts stay in your own Google Sheet.</p>
     <div style="display:flex;gap:12px;justify-content:center;flex-wrap:wrap;align-items:center;">
-      <a class="btn-launch" href="setup.html">Set up on Mac Ã¢ÂÂ</a>
-      <a class="btn-launch" href="setup-windows.html" style="background:var(--horizon);">Set up on Windows Ã¢ÂÂ</a>
+      <a class="btn-launch" href="setup.html">Set up on Mac ÃÂ¢ÃÂÃÂ</a>
+      <a class="btn-launch" href="setup-windows.html" style="background:var(--horizon);">Set up on Windows ÃÂ¢ÃÂÃÂ</a>
     </div>
-    <p style="font-size:13px;color:var(--stone);margin-top:1rem;">Already set up? <a href="app.html?v=2" style="color:var(--horizon);">Launch the app Ã¢ÂÂ</a></p>
+    <p style="font-size:13px;color:var(--stone);margin-top:1rem;">Already set up? <a href="app.html?v=2" style="color:var(--horizon);">Launch the app ÃÂ¢ÃÂÃÂ</a></p>
   </div>
 </div>
 
 <footer>
   <div class="footer-brand">Network Momentum</div>
   <div class="footer-tagline">One contact away.</div>
-  <div class="footer-sub">Network Momentum is part of the <a href="https://plainspeakingcomms.com/psc-tools" target="_blank">PSC Tools</a> suite &nbsp;ÃÂ·&nbsp; AI powered by <a href="https://anthropic.com" target="_blank">Claude</a> &nbsp;ÃÂ·&nbsp; Your data lives in your own Google Sheet</div>
+  <div class="footer-sub">Network Momentum is part of the <a href="https://plainspeakingcomms.com/psc-tools" target="_blank">PSC Tools</a> suite &nbsp;ÃÂÃÂ·&nbsp; AI powered by <a href="https://anthropic.com" target="_blank">Claude</a> &nbsp;ÃÂÃÂ·&nbsp; Your data lives in your own Google Sheet</div>
 </footer>
 
+
+<!-- GA4 app launch click tracking -->
+<script>
+  document.addEventListener('click', function(e) {
+    var link = e.target.closest('a');
+    if (link && link.href && link.href.includes('app.html')) {
+      gtag('event', 'app_launch', {
+        'event_category': 'engagement',
+        'event_label': 'Launch the app'
+      });
+    }
+  });
+</script>
 </body>
 </html>
