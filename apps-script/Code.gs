@@ -250,8 +250,8 @@ function handleAction(p) {
         : "https://api.openai.com/v1/chat/completions";
       var payload = isAnthropic
         ? JSON.stringify({
-            model: "claude-sonnet-4-6",
-            max_tokens: 1000,
+            model: "claude-sonnet-5",
+            max_tokens: 2000,
             messages: [{ role: "user", content: prompt }]
           })
         : JSON.stringify({
