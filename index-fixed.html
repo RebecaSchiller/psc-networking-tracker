@@ -1,0 +1,327 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Network Momentum: The relationship tracker that tells you what to do next.</title>
+  <meta name="description" content="Network Momentum is a free relationship tracker with AI-powered next steps. Your data lives in your own Google Sheet. No account required." />
+  <!-- Google tag (gtag.js) -->
+<script async src="https://www.googletagmanager.com/gtag/js?id=G-6G0GLG3MKK"></script>
+<script>
+  window.dataLayer = window.dataLayer || [];
+  function gtag(){dataLayer.push(arguments);}
+  gtag('js', new Date());
+  gtag('config', 'G-6G0GLG3MKK');
+</script>
+<link href="https://fonts.googleapis.com/css2?family=Josefin+Sans:wght@400;600;700&display=swap" rel="stylesheet" />
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+    :root {
+      --ocean: #002366; --ocean-mid: #002d7a;
+      --horizon: #3A6DB5; --horizon-mid: #4d7dc0;
+      --mist: #D6E4F5; --fog: #F0F4F9;
+      --ink: #1A1F2E; --slate: #4A5568; --stone: #8A9BB0;
+      --white: #FFFFFF;
+    }
+    html { scroll-behavior: smooth; }
+    body { font-family: 'Josefin Sans', sans-serif; background: var(--ocean); color: var(--ink); font-size: 18px; line-height: 1.5; margin: 0; }
+
+    nav { background: var(--ocean); border-bottom: 2px solid var(--horizon); padding: 0 3rem; height: 72px; display: flex; align-items: center; justify-content: space-between; position: sticky; top: 0; z-index: 100; }
+    .nav-brand { display: flex; align-items: center; gap: 12px; color: #fff; font-size: 18px; font-weight: 700; text-decoration: none; letter-spacing: 0.02em; }
+    .nav-brand .brand-sub { font-size: 10px; font-weight: 400; color: var(--mist); letter-spacing: 0.1em; text-transform: uppercase; display: block; line-height: 1; margin-top: 3px; }
+    .nav-cta { background: var(--horizon); color: #fff; border: none; border-radius: 6px; padding: 10px 24px; font-size: 13px; font-family: inherit; font-weight: 700; letter-spacing: 0.08em; text-transform: uppercase; cursor: pointer; text-decoration: none; transition: background 0.15s; }
+    .nav-cta:hover { background: var(--horizon-mid); }
+
+    .hero { background: var(--ocean); padding: 7rem 3rem 6rem; text-align: center; }
+    .hero-eyebrow { display: inline-block; font-size: 11px; font-weight: 700; letter-spacing: 0.14em; text-transform: uppercase; color: var(--mist); background: rgba(214,228,245,0.12); border: 1px solid rgba(214,228,245,0.25); border-radius: 99px; padding: 6px 18px; margin-bottom: 2rem; }
+    .hero h1 { font-size: clamp(2.6rem, 6vw, 4.2rem); font-weight: 700; line-height: 1.1; margin-bottom: 1rem; color: #fff; max-width: 780px; margin-left: auto; margin-right: auto; }
+    .hero h1 em { font-style: normal; color: var(--mist); }
+    .hero-tagline { font-size: 1.4rem; color: var(--mist); font-style: italic; margin-bottom: 1.5rem; letter-spacing: 0.04em; }
+    .hero-sub { font-size: 1.2rem; color: rgba(214,228,245,0.85); max-width: 580px; margin: 0 auto 3rem; line-height: 1.5; }
+    .hero-actions { display: flex; gap: 14px; justify-content: center; flex-wrap: wrap; }
+    .btn-launch { background: var(--horizon); color: #fff; border: none; border-radius: 6px; padding: 16px 36px; font-size: 14px; font-family: inherit; font-weight: 700; letter-spacing: 0.08em; text-transform: uppercase; cursor: pointer; text-decoration: none; display: inline-flex; align-items: center; gap: 8px; transition: background 0.15s; }
+    .btn-launch:hover { background: var(--horizon-mid); }
+    .btn-ghost { background: transparent; color: #fff; border: 1px solid rgba(255,255,255,0.3); border-radius: 6px; padding: 16px 30px; font-size: 14px; font-family: inherit; font-weight: 600; letter-spacing: 0.06em; text-transform: uppercase; cursor: pointer; text-decoration: none; display: inline-flex; align-items: center; gap: 8px; transition: background 0.15s; }
+    .btn-ghost:hover { background: rgba(255,255,255,0.08); }
+
+    /* BUILDING BLOCKS */
+    .frame-ocean { background: var(--ocean); padding: 0 10rem; }
+    .frame-fog   { background: var(--fog);   padding: 0 10rem; }
+
+    .box-white  { background: var(--white); padding: 5rem 4rem; }
+    .box-ocean  { background: var(--ocean); padding: 5rem 4rem; }
+
+    /* CONSISTENT BLOCK TYPOGRAPHY */
+    .block-label-dark  { font-size: 18px; font-weight: 700; letter-spacing: 0.08em; text-transform: uppercase; color: var(--horizon); margin-bottom: 1rem; text-align: center; }
+    .block-label-light { font-size: 18px; font-weight: 700; letter-spacing: 0.08em; text-transform: uppercase; color: var(--mist);    margin-bottom: 1rem; text-align: center; }
+    .block-title-dark  { font-size: clamp(2rem, 4vw, 2.8rem); font-weight: 700; color: var(--ocean); line-height: 1.15; margin-bottom: 1.5rem; text-align: center; }
+    .block-title-light { font-size: clamp(2rem, 4vw, 2.8rem); font-weight: 700; color: #fff;          line-height: 1.15; margin-bottom: 1.5rem; text-align: center; }
+    .block-body-dark   { font-size: 1.15rem; color: var(--slate); line-height: 1.5; text-align: left; margin-bottom: 2rem; }
+    .block-body-light  { font-size: 1.15rem; color: rgba(214,228,245,0.85); line-height: 1.5; text-align: left; margin-bottom: 2rem; }
+
+    .block-content { max-width: 760px; margin: 0 auto; }
+
+    /* SCREENSHOT PLACEHOLDERS */
+    .screenshot-placeholder { border-radius: 10px; display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 12px; font-size: 13px; font-weight: 600; letter-spacing: 0.06em; text-transform: uppercase; }
+    .ph-dark  { background: var(--fog);   border: 2px dashed var(--mist);                  color: var(--stone); }
+    .ph-light { background: rgba(214,228,245,0.08); border: 2px dashed rgba(214,228,245,0.25); color: rgba(214,228,245,0.45); }
+    .ph-note  { font-size: 11px; font-weight: 400; letter-spacing: 0; text-transform: none; }
+
+    /* AUDIENCE */
+    .audience-body { font-size: 1.15rem; color: var(--slate); line-height: 1.7; text-align: left; }
+    .audience-body p { margin-bottom: 1.25rem; }
+    .audience-body p:last-child { margin-bottom: 0; }
+
+    /* HOW IT WORKS STEPS */
+    .steps-list { display: flex; flex-direction: column; gap: 2rem; text-align: left; }
+    .step-item { display: flex; gap: 1.25rem; align-items: flex-start; }
+    .step-num-dark  { width: 40px; height: 40px; border-radius: 50%; background: var(--ocean); color: var(--mist); font-size: 15px; font-weight: 700; display: flex; align-items: center; justify-content: center; flex-shrink: 0; }
+    .step-num-light { width: 40px; height: 40px; border-radius: 50%; background: var(--mist);  color: var(--ocean); font-size: 15px; font-weight: 700; display: flex; align-items: center; justify-content: center; flex-shrink: 0; }
+    .step-item h3 { font-size: 1rem; font-weight: 700; letter-spacing: 0.06em; text-transform: uppercase; margin-bottom: 4px; }
+    .step-item-dark  h3 { color: var(--ocean); }
+    .step-item-light h3 { color: var(--mist); }
+    .step-item-dark  p { font-size: 1.15rem; color: var(--slate); line-height: 1.5; }
+    .step-item-light p { font-size: 1.15rem; color: rgba(214,228,245,0.85); line-height: 1.5; }
+
+    /* FAQ */
+    .faq-list { display: flex; flex-direction: column; gap: 2rem; text-align: left; }
+    .faq-item h3 { font-size: 1rem; font-weight: 700; letter-spacing: 0.06em; text-transform: uppercase; color: var(--ocean); margin-bottom: 6px; }
+    .faq-item p { font-size: 1.15rem; color: var(--slate); line-height: 1.5; }
+    .faq-item a { color: var(--horizon); text-decoration: none; }
+    .faq-item a:hover { text-decoration: underline; }
+
+    /* CTA */
+    .cta-band { background: var(--ocean); padding: 0 10rem; }
+    .cta-inner { background: var(--white); padding: 5rem 4rem; text-align: center; }
+    .cta-band h2 { font-size: clamp(2rem, 4vw, 3rem); font-weight: 700; color: var(--ocean); margin-bottom: 0.75rem; }
+    .cta-tagline { font-size: 1.3rem; color: var(--horizon); font-style: italic; margin-bottom: 1.25rem; letter-spacing: 0.04em; }
+    .cta-band p { font-size: 1.05rem; color: var(--slate); margin-bottom: 2.5rem; }
+
+    footer { background: var(--ink); padding: 2.5rem 3rem; text-align: center; }
+    .footer-brand { font-size: 16px; font-weight: 700; color: #fff; margin-bottom: 4px; }
+    .footer-tagline { font-size: 13px; color: var(--mist); font-style: italic; margin-bottom: 8px; }
+    .footer-sub { font-size: 13px; color: var(--stone); }
+    .footer-sub a { color: var(--mist); text-decoration: none; }
+    .footer-sub a:hover { text-decoration: underline; }
+
+    @media (max-width: 900px) {
+      .frame-ocean, .frame-fog, .cta-band { padding: 0 2rem; }
+      .box-white, .box-ocean, .cta-inner { padding: 3.5rem 2rem; }
+      nav { padding: 0 1.5rem; }
+      .hero { padding: 4rem 1.5rem; }
+    }
+  </style>
+</head>
+<body>
+
+
+<nav>
+  <a class="nav-brand" href="#">
+    <svg width="52" height="52" viewBox="0 0 32 32">
+      <defs>
+        <linearGradient id="navmark" x1="0" y1="1" x2="1" y2="0">
+          <stop offset="0" stop-color="#002366"></stop>
+          <stop offset="1" stop-color="#3A6DB5"></stop>
+        </linearGradient>
+      </defs>
+      <rect width="32" height="32" rx="7" fill="url(#navmark)"></rect>
+      <circle cx="7" cy="14" r="2.6" stroke="#D6E4F5" stroke-width="1.4" fill="none" opacity="0.75"></circle>
+      <path d="M3 27 Q3 20 7 20 Q11 20 11 27" stroke="#D6E4F5" stroke-width="1.4" stroke-linecap="round" fill="none" opacity="0.75"></path>
+      <circle cx="16" cy="10.5" r="3.8" stroke="#F0F4F9" stroke-width="2.1" fill="none"></circle>
+      <path d="M9.5 27 Q9.5 18 16 18 Q22.5 18 22.5 27" stroke="#F0F4F9" stroke-width="2.1" stroke-linecap="round" fill="none"></path>
+      <circle cx="25" cy="14" r="2.6" stroke="#3A6DB5" stroke-width="1.4" fill="none"></circle>
+      <path d="M21 27 Q21 20 25 20 Q29 20 29 27" stroke="#3A6DB5" stroke-width="1.4" stroke-linecap="round" fill="none"></path>
+    </svg>
+    <div>
+      Network Momentum&trade;
+      <span class="brand-sub">One contact away.</span>
+    </div>
+  </a>
+  <a class="nav-cta" href="app.html?v=2">Launch the app &rarr;</a>
+</nav>
+
+<section class="hero">
+  <div class="hero-eyebrow">Built for people who do serious networking without enterprise tools</div>
+  <h1>The people you already know are your<br><em>fastest path forward.</em></h1>
+  <div class="hero-tagline">One contact away.</div>
+  <div style="display:inline-flex;align-items:center;gap:8px;background:rgba(214,228,245,0.12);border:1px solid rgba(214,228,245,0.25);border-radius:99px;padding:6px 16px;margin:1rem 0;">
+    <svg width="14" height="14" viewBox="0 0 24 24" fill="#D6E4F5"><path d="M12 2 L13.5 9.5 L21 8 L15 13 L18 21 L12 16.5 L6 21 L9 13 L3 8 L10.5 9.5 Z"/></svg>
+    <span style="font-size:11px;font-weight:700;letter-spacing:0.08em;color:var(--mist);text-transform:uppercase;">AI powered by Claude</span>
+  </div>
+  <p class="hero-sub">Most people lose track of their best contacts: not because they don't care, but because nothing reminds them. Network Momentum fixes that. It tracks your relationships, flags who's going cold, and tells you exactly what to do next.</p>
+  <div class="hero-actions">
+    <a class="btn-launch" href="app.html?v=2">Launch the app &rarr;</a>
+    <a class="btn-ghost" href="#features">See how it works</a>
+  </div>
+</section>
+
+<!-- BLOCK 1: Ocean frame, white box -->
+<div class="frame-ocean" id="features">
+  <div class="box-white">
+    <div class="block-content">
+      <div class="block-label-dark">Track every contact</div>
+      <h2 class="block-title-dark">Know exactly where every relationship stands.</h2>
+      <p class="block-body-dark">Name, role, company, email, LinkedIn, status, priority, last contact date. All editable inline. No forms, no friction. Already have a LinkedIn connections export? Import it in one click and skip the manual entry.</p>
+      <img src="https://rebecaschiller.github.io/psc-networking-tracker/contacts-mockup.svg" style="width:100%;height:auto;border-radius:10px;box-shadow:0 4px 24px rgba(0,35,102,0.12);" alt="Network Momentum contact cards view" />
+    </div>
+  </div>
+</div>
+
+<!-- BLOCK 2: Fog frame, ocean box -->
+<div class="frame-fog">
+  <div class="box-ocean">
+    <div class="block-content">
+      <div class="block-label-light">Never lose momentum</div>
+      <h2 class="block-title-light">See who needs attention before anyone goes cold.</h2>
+      <p class="block-body-light">See who needs a follow-up, set a follow-up date, and get a specific AI-powered suggestion for what to say next.</p>
+      <img src="https://rebecaschiller.github.io/psc-networking-tracker/pipeline-mockup.svg" style="width:100%;height:auto;border-radius:10px;box-shadow:0 4px 24px rgba(0,0,0,0.15);" alt="Network Momentum pipeline view" />
+    </div>
+  </div>
+</div>
+
+<!-- BLOCK 3: Ocean frame, white box -->
+<div class="frame-ocean">
+  <div class="box-white">
+    <div class="block-content">
+      <div class="block-label-dark">See the big picture</div>
+      <h2 class="block-title-dark">Your week, your goals, your progress.</h2>
+      <p class="block-body-dark">See how many contacts you've added this week, who's overdue, and what meetings are coming up. All in one weekly snapshot. Prefer your inbox? Turn on an optional weekly digest email instead of checking the app.</p>
+      <img src="https://rebecaschiller.github.io/psc-networking-tracker/weekly-mockup.svg" style="width:100%;height:auto;border-radius:10px;box-shadow:0 4px 24px rgba(0,35,102,0.12);" alt="Network Momentum weekly plan view" />
+    </div>
+  </div>
+</div>
+
+<!-- BLOCK 4: Fog frame, ocean box -->
+<div class="frame-fog">
+  <div class="box-ocean">
+    <div class="block-content">
+      <div class="block-label-light">Always know what to say</div>
+      <h2 class="block-title-light">12 email templates for every situation.</h2>
+      <p class="block-body-light">First outreach, follow-ups, referral asks, alumni outreach, introduction requests, and more. Personalize with one click.</p>
+      <img src="https://rebecaschiller.github.io/psc-networking-tracker/templates-mockup.svg" style="width:100%;height:auto;border-radius:10px;box-shadow:0 4px 24px rgba(0,0,0,0.15);" alt="Network Momentum email templates" />
+    </div>
+  </div>
+</div>
+
+<!-- BLOCK 5: Ocean frame, white box -->
+<div class="frame-ocean">
+  <div class="box-white">
+    <div class="block-content">
+      <div class="block-label-dark">Who it's for</div>
+      <h2 class="block-title-dark">Built for people who do serious networking without enterprise tools.</h2>
+      <div class="audience-body">
+        <p>Network Momentum is for anyone managing professional relationships without a team behind them.</p>
+        <p>That's the freelancer keeping tabs on 30 potential clients. The job seeker working a warm network. The small agency account manager who can't justify a CRM license. The development director who laughed when someone suggested Salesforce.</p>
+        <p>What they have in common: they're doing real relationship work, and a spreadsheet isn't enough.</p>
+        <p>Network Momentum tracks every contact, surfaces who needs attention, and gives you a specific next step: not just a reminder that someone exists.</p>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- BLOCK 6: Fog frame, ocean box -->
+<div class="frame-fog">
+  <div class="box-ocean">
+    <div class="block-content">
+      <div class="block-label-light">How it works</div>
+      <h2 class="block-title-light">Takes about 10 minutes to set up. Nothing to install.</h2>
+      <p class="block-body-light">Network Momentum connects to a Google Sheet you control. Your data never touches our servers. Setup requires a desktop or laptop &mdash; Google Sheets extensions are not available on mobile or tablet.</p>
+      <div class="steps-list">
+        <div class="step-item step-item-light">
+          <div class="step-num-light">1</div>
+          <div><h3>Create a Google Sheet</h3><p>Go to sheets.google.com, create a blank spreadsheet, and rename the first tab to Contacts.</p></div>
+        </div>
+        <div class="step-item step-item-light">
+          <div class="step-num-light">2</div>
+          <div><h3>Add the Apps Script</h3><p>Paste a small script that bridges the app and your sheet. Follow the full setup guide: <a href="setup.html" style="color:var(--mist);text-decoration:underline;">Mac</a> or <a href="setup-windows.html" style="color:var(--mist);text-decoration:underline;">Windows</a>.</p></div>
+        </div>
+        <div class="step-item step-item-light">
+          <div class="step-num-light">3</div>
+          <div><h3>Connect and go</h3><p>Paste your Web App URL. Then add your AI API key to unlock AI-powered suggestions. Network Momentum works with Anthropic (Claude) by default. Prefer OpenAI? You can use your own OpenAI API key instead. Get one at <a href="https://platform.openai.com" target="_blank" style="color:var(--mist);text-decoration:underline;">platform.openai.com</a>. The API is a separate product from Claude.ai and ChatGPT. It is billed per use regardless of any existing subscription.</p></div>
+        </div>
+        <div class="step-item step-item-light">
+          <div class="step-num-light">4</div>
+          <div><h3>Start tracking</h3><p>Add your first contact, set a weekly goal, and let the app help you stay consistent.</p></div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- BLOCK 7: Ocean frame, white box - FAQ -->
+<div class="frame-ocean" id="faq">
+  <div class="box-white">
+    <div class="block-content">
+      <div class="block-label-dark">FAQ</div>
+      <h2 class="block-title-dark">Common questions.</h2>
+      <div class="faq-list">
+
+        <div class="faq-item">
+          <h3>Does Network Momentum cost anything?</h3>
+          <p>The app itself has no subscription, no account, and no data stored on our servers. Your contacts live in your own Google Sheet. AI features require your own API key and are billed per use directly by your provider, either Anthropic or OpenAI. For light personal use, costs are minimal, typically a few cents a month.</p>
+        </div>
+
+        <div class="faq-item">
+          <h3>Do I need an AI API key?</h3>
+          <p>Only if you want AI-powered features like next-step suggestions and company dossiers. Without a key, the rest of the app (contact tracking, pipeline view, email templates, and weekly planning) works just fine.</p>
+        </div>
+
+        <div class="faq-item">
+          <h3>Which AI providers does Network Momentum support?</h3>
+          <p>Network Momentum is built with Anthropic's Claude as the default AI provider. If you already have an OpenAI account and prefer to use that instead, you can use your own OpenAI API key. Either way, you connect your key directly inside the app.</p>
+        </div>
+
+        <div class="faq-item">
+          <h3>Does my ChatGPT subscription give me API access?</h3>
+          <p>No. A ChatGPT Plus (or any ChatGPT) subscription is a separate product from OpenAI's API and does not include API access. To use OpenAI's API with Network Momentum, you need a separate OpenAI platform account with its own billing. Create one at <a href="https://platform.openai.com" target="_blank">platform.openai.com</a>. You pay OpenAI directly based on usage, with no fixed monthly fee.</p>
+        </div>
+
+        <div class="faq-item">
+          <h3>Who pays for the AI usage?</h3>
+          <p>You do, directly to whichever AI provider you choose. Network Momentum never touches your API key billing. For most users, the cost is minimal, just a few cents per month at typical networking volumes.</p>
+        </div>
+
+        <div class="faq-item">
+          <h3>Is my data private?</h3>
+          <p>Yes. Your contact data never touches our servers. Everything is stored in a Google Sheet you own and control. The only external calls made are to whichever AI provider you've connected, using your own API key.</p>
+        </div>
+
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- CTA: Ocean frame, white box -->
+<div class="cta-band">
+  <div class="cta-inner">
+    <h2>Takes about 10 minutes to set up. Nothing to install.</h2>
+    <p>No account required. No data stored on our servers. Setup requires a desktop or laptop. AI features use your own API key, billed per use by your provider. Your contacts stay in your own Google Sheet.</p>
+    <div style="display:flex;gap:12px;justify-content:center;flex-wrap:wrap;align-items:center;">
+      <a class="btn-launch" href="setup.html">Set up on Mac &rarr;</a>
+      <a class="btn-launch" href="setup-windows.html" style="background:var(--horizon);">Set up on Windows &rarr;</a>
+    </div>
+    <p style="font-size:13px;color:var(--stone);margin-top:1rem;">Already set up? <a href="app.html?v=2" style="color:var(--horizon);">Launch the app &rarr;</a></p>
+  </div>
+</div>
+
+<footer>
+  <div class="footer-brand">Network Momentum</div>
+  <div class="footer-tagline">One contact away.</div>
+  <div class="footer-sub">Network Momentum is part of the <a href="https://plainspeakingcomms.com/psc-tools" target="_blank">PSC Tools</a> suite &nbsp;&middot;&nbsp; AI powered by <a href="https://anthropic.com" target="_blank">Claude</a> &nbsp;&middot;&nbsp; Your data lives in your own Google Sheet</div>
+</footer>
+
+
+<!-- GA4 app launch click tracking -->
+<script>
+  document.addEventListener('click', function(e) {
+    var link = e.target.closest('a');
+    if (link && link.href && link.href.includes('app.html')) {
+      gtag('event', 'app_launch', {
+        'event_category': 'engagement',
+        'event_label': 'Launch the app'
+      });
+    }
+  });
+</script>
+</body>
+</html>
